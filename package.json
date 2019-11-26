@@ -6,7 +6,7 @@
   "types": "types/index.d.ts",
   "scripts": {
     "build": "tsc & dart-sass ./src/css/index.sass ./bin/stamp.css",
-    "postinstall": "postinstall-build"
+    "postinstall": "postinstall-build bin"
   },
   "repository": {
     "type": "git",
