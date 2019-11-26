@@ -1,0 +1,45 @@
+@keyframes stretch
+  0%
+    transform: scaleX(1.0)
+  20%
+    transform: scaleX(1.75)
+
+  $start: 22
+  $end: 50
+  @for $i from 0 through ($end - $start) / 2
+    $s: 1.65
+    @if $i % 2 != 0
+      $s: 1.85
+
+    #{$start + $i*2}%
+      transform: scaleX($s)
+
+  52%
+    transform: scaleX(1.75)
+  62%
+    transform: scaleX(0.8)
+  68%
+    transform: scaleX(1.0)
+
+@keyframes stretch-v
+  0%
+    transform: scaleY(1.0)
+  20%
+    transform: scaleY(1.75)
+
+  $start: 22
+  $end: 50
+  @for $i from 0 through ($end - $start) / 2
+    $s: 1.65
+    @if $i % 2 != 0
+      $s: 1.85
+
+    #{$start + $i*2}%
+      transform: scaleY($s)
+
+  52%
+    transform: scaleY(1.75)
+  62%
+    transform: scaleY(0.8)
+  68%
+    transform: scaleY(1.0)

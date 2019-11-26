@@ -1,0 +1,13 @@
+@keyframes happa
+  $len: 8
+  @for $i from 0 to $len
+    $y: 0
+    @if $i % 2 != 0
+      $y: -0.2em
+
+    $r: 0
+    @if $i >= ($len / 2)
+      $r: 0.5turn
+
+    #{percentage($i / $len)}
+      transform: translateY($y) rotateY($r)

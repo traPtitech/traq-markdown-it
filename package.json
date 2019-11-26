@@ -1,0 +1,47 @@
+{
+  "name": "traq-markdown-it",
+  "version": "1.0.0",
+  "description": "Markdown parser for traQ.",
+  "main": "bin/index.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "build": "tsc & dart-sass ./src/css/index.sass ./bin/stamp.css",
+    "postinstall": "postinstall-build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/traPtitech/traq-markdown-it.git"
+  },
+  "author": "traP (https://github.com/traPtitech)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/traPtitech/traq-markdown-it/issues"
+  },
+  "homepage": "https://github.com/traPtitech/traq-markdown-it#readme",
+  "dependencies": {
+    "@traPtitech/markdown-it-katex": "github:traPtitech/markdown-it-katex",
+    "highlight.js": "^9.16.2",
+    "katex": "^0.11.1",
+    "markdown-it": "^10.0.0",
+    "markdown-it-image-filter": "^1.1.0",
+    "markdown-it-json": "^1.0.2",
+    "markdown-it-link-attributes": "^3.0.0",
+    "markdown-it-mark": "^3.0.0",
+    "markdown-it-regexp": "^0.4.0",
+    "markdown-it-spoiler": "^1.1.0",
+    "postinstall-build": "^5.0.3"
+  },
+  "devDependencies": {
+    "@types/highlightjs": "^9.12.0",
+    "@types/katex": "^0.10.2",
+    "@types/markdown-it": "0.0.9",
+    "@typescript-eslint/eslint-plugin": "^2.9.0",
+    "@typescript-eslint/parser": "^2.9.0",
+    "dart-sass": "^1.23.7",
+    "eslint": "^6.7.1",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "prettier": "^1.19.1",
+    "typescript": "^3.7.2"
+  }
+}
