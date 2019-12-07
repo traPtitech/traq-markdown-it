@@ -15,12 +15,20 @@ import defaultWhitelist from './default/domain_whitelist'
 import { Store } from './Store'
 export { Store } from './Store'
 
+// https://github.com/DefinitelyTyped/DefinitelyTyped/blob/f460f9a287a015b6d156f511209da74245344639/types/markdown-it/lib/index.d.ts#L36
+interface MarkdownItE extends MarkdownIt {
+  use<T extends Array<unknown> = unknown[]>(
+    plugin: (md: MarkdownIt, ...params: T) => void,
+    ...params: T
+  ): MarkdownItE
+}
+
 export default class {
   readonly md = new MarkdownIt({
     breaks: true,
     linkify: true,
     highlight
-  })
+  }) as MarkdownItE
 
   constructor(store: Store, whitelist: string[] = defaultWhitelist) {
     this.setRendererRule()
@@ -28,23 +36,24 @@ export default class {
   }
 
   setPlugin(store: Store, whitelist: string[]): void {
-    this.md.use(MarkdownItMark)
-    this.md.use(spoiler, true)
-    this.md.use(json, store)
-    this.md.use(stamp, store)
-    this.md.use(katex, {
-      katex: katexE,
-      output: 'html',
-      maxSize: 100,
-      blockClass: 'is-scroll'
-    })
-    this.md.use(mila, {
-      attrs: {
-        target: '_blank',
-        rel: 'nofollow noopener noreferrer'
-      }
-    })
-    this.md.use(filter(whitelist, { httpsOnly: true }))
+    this.md
+      .use(MarkdownItMark)
+      .use(spoiler, true)
+      .use(json, store)
+      .use(stamp, store)
+      .use(katex, {
+        katex: katexE,
+        output: 'html',
+        maxSize: 100,
+        blockClass: 'is-scroll'
+      })
+      .use(mila, {
+        attrs: {
+          target: '_blank',
+          rel: 'nofollow noopener noreferrer'
+        }
+      })
+      .use(filter(whitelist, { httpsOnly: true }))
   }
 
   setRendererRule(): void {
