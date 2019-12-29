@@ -20,7 +20,7 @@
   "homepage": "https://github.com/traPtitech/traq-markdown-it#readme",
   "dependencies": {
     "@traPtitech/markdown-it-katex": "github:traPtitech/markdown-it-katex",
-    "highlight.js": "^9.16.2",
+    "highlight.js": "^9.17.1",
     "katex": "^0.11.1",
     "markdown-it": "^10.0.0",
     "markdown-it-image-filter": "^1.1.0",
@@ -35,13 +35,13 @@
     "@types/highlightjs": "^9.12.0",
     "@types/katex": "^0.11.0",
     "@types/markdown-it": "0.0.9",
-    "@typescript-eslint/eslint-plugin": "^2.9.0",
-    "@typescript-eslint/parser": "^2.9.0",
-    "dart-sass": "^1.23.7",
-    "eslint": "^6.7.1",
-    "eslint-config-prettier": "^6.7.0",
-    "eslint-plugin-prettier": "^3.1.1",
+    "@typescript-eslint/eslint-plugin": "^2.13.0",
+    "@typescript-eslint/parser": "^2.13.0",
+    "dart-sass": "^1.24.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "prettier": "^1.19.1",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.4"
   }
 }
