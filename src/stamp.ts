@@ -4,6 +4,7 @@ import { escapeHtml } from './util'
 import { Store } from './Store'
 
 let store: Store
+let baseUrl = ''
 
 const animeEffectSet = new Set([
   'rotate',
@@ -160,7 +161,7 @@ export const renderStamp = (match: RegExpMatchArray): string => {
       match[0],
       stampName,
       store.getStampFromName(stampName).name,
-      `/api/1.0/files/${store.getStampFromName(stampName).fileId}`,
+      `${baseUrl}/api/1.0/files/${store.getStampFromName(stampName).fileId}`,
       effects
     )
   } else if (store.getUserByName(stampName)) {
@@ -170,7 +171,7 @@ export const renderStamp = (match: RegExpMatchArray): string => {
       match[0],
       stampName,
       stampName,
-      `/api/1.0/files/${user.iconFileId}`,
+      `${baseUrl}/api/1.0/files/${user.iconFileId}`,
       effects
     )
   }
@@ -178,8 +179,15 @@ export const renderStamp = (match: RegExpMatchArray): string => {
   return match[0]
 }
 
-export default function stampPlugin(md: MarkdownIt, _store: Store): void {
+export default function stampPlugin(
+  md: MarkdownIt,
+  _store: Store,
+  _baseUrl?: string
+): void {
   store = _store
+  if (_baseUrl) {
+    baseUrl = _baseUrl
+  }
   regexp(
     /:((?:[a-zA-Z0-9+_-]{1,32}|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/,
     renderStamp

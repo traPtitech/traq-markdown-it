@@ -8,12 +8,14 @@ import katex from '@traPtitech/markdown-it-katex'
 import katexE from 'katex'
 import mila from 'markdown-it-link-attributes'
 import filter from 'markdown-it-image-filter'
-import { highlight } from './highlight'
+import { createHighlightFunc } from './highlight'
 import StateBlock from 'markdown-it/lib/rules_block/state_block'
 import defaultWhitelist from './default/domain_whitelist'
 
 import { Store } from './Store'
+
 export { Store } from './Store'
+export { createHighlightFunc } from './highlight'
 
 // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/f460f9a287a015b6d156f511209da74245344639/types/markdown-it/lib/index.d.ts#L36
 interface MarkdownItE extends MarkdownIt {
@@ -27,7 +29,7 @@ export default class {
   readonly md = new MarkdownIt({
     breaks: true,
     linkify: true,
-    highlight
+    highlight: createHighlightFunc('traq-code traq-lang')
   }) as MarkdownItE
 
   constructor(store: Store, whitelist: string[] = defaultWhitelist) {
@@ -107,3 +109,9 @@ export default class {
     return rendered.join('')
   }
 }
+
+export const markPlugin = MarkdownItMark
+export const spoilerPlugin = spoiler
+export const stampPlugin = stamp
+export const jsonPlugin = json
+export const katexPlugin = katex

@@ -3,19 +3,30 @@ import { escapeHtml } from './util'
 
 const noHighlightRe = /^(no-?highlight|plain|text)$/i
 
-export const highlight = (code: string, lang: string): string => {
-  const [langName, langCaption] = lang.split(':')
-  const citeTag = langCaption ? `<cite>${langCaption}</cite>` : ''
+export const createHighlightFunc = (preClass: string, withCaption = true) => (
+  code: string,
+  lang: string
+): string => {
+  let langName: string, langCaption: string
+  let citeTag = ''
+  if (withCaption) {
+    ;[langName, langCaption] = lang.split(':')
+    if (langCaption) {
+      citeTag = `<cite>${langCaption}</cite>`
+    }
+  } else {
+    langName = lang
+  }
 
   if (hljs.getLanguage(langName)) {
     const result = hljs.highlight(langName, code)
-    return `<pre class="traq-code traq-lang">${citeTag}<code class="lang-${result.language}">${result.value}</code></pre>`
+    return `<pre class="${preClass}">${citeTag}<code class="lang-${result.language}">${result.value}</code></pre>`
   } else if (noHighlightRe.test(langName)) {
-    return `<pre class="traq-code traq-lang">${citeTag}<code>${escapeHtml(
+    return `<pre class="${preClass}">${citeTag}<code>${escapeHtml(
       code
     )}</code></pre>`
   } else {
     const result = hljs.highlightAuto(code)
-    return `<pre class="traq-code traq-lang">${citeTag}<code class="lang-${result.language}">${result.value}</code></pre>`
+    return `<pre class="${preClass}">${citeTag}<code class="lang-${result.language}">${result.value}</code></pre>`
   }
 }
