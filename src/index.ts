@@ -115,3 +115,4 @@ export const stampPlugin = stamp
 export const jsonPlugin = json
 export const katexPlugin = katex
 export { useContainer } from './container'
+export { stampCssPlugin } from './stampCss'
