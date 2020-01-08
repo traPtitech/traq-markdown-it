@@ -13,9 +13,7 @@ import StateBlock from 'markdown-it/lib/rules_block/state_block'
 import defaultWhitelist from './default/domain_whitelist'
 
 import { Store } from './Store'
-
 export { Store } from './Store'
-export { createHighlightFunc } from './highlight'
 
 // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/f460f9a287a015b6d156f511209da74245344639/types/markdown-it/lib/index.d.ts#L36
 interface MarkdownItE extends MarkdownIt {
@@ -110,8 +108,10 @@ export default class {
   }
 }
 
+export { createHighlightFunc } from './highlight'
 export const markPlugin = MarkdownItMark
 export const spoilerPlugin = spoiler
 export const stampPlugin = stamp
 export const jsonPlugin = json
 export const katexPlugin = katex
+export { useContainer } from './container'
