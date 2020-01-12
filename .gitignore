@@ -88,6 +88,3 @@ typings/
 .dynamodb/
 
 .vscode
-
-/bin
-/types
