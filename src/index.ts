@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import MarkdownIt from 'markdown-it'
 import MarkdownItMark from 'markdown-it-mark'
-import spoiler from 'markdown-it-spoiler'
+import spoiler from '@traptitech/markdown-it-spoiler'
 import stamp, { renderStamp } from './stamp'
 import json from './json'
-import katex from '@traPtitech/markdown-it-katex'
+import katex from '@traptitech/markdown-it-katex'
 import katexE from 'katex'
 import mila from 'markdown-it-link-attributes'
 import filter from 'markdown-it-image-filter'
