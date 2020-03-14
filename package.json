@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/traPtitech/traq-markdown-it#readme",
   "dependencies": {
-    "@traPtitech/markdown-it-katex": "github:traPtitech/markdown-it-katex",
+    "@traptitech/markdown-it-katex": "^3.2.1",
+    "@traptitech/markdown-it-spoiler": "^1.1.2",
     "highlight.js": "^9.18.1",
     "katex": "^0.11.1",
     "markdown-it": "^10.0.0",
@@ -27,8 +28,7 @@
     "markdown-it-json": "^1.0.2",
     "markdown-it-link-attributes": "^3.0.0",
     "markdown-it-mark": "^3.0.0",
-    "markdown-it-regexp": "^0.4.0",
-    "markdown-it-spoiler": "^1.1.1"
+    "markdown-it-regexp": "^0.4.0"
   },
   "devDependencies": {
     "@types/highlightjs": "^9.12.0",
