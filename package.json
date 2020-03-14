@@ -1,6 +1,6 @@
 {
   "name": "traq-markdown-it",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Markdown parser for traQ.",
   "main": "bin/index.js",
   "types": "types/index.d.ts",
