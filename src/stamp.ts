@@ -163,7 +163,7 @@ export const renderStamp = (match: RegExpMatchArray): string => {
       match[0],
       stampName,
       stamp.name ?? '',
-      `${baseUrl}/api/1.0/files/${stamp.fileId ?? ''}`,
+      `${baseUrl}/api/v3/files/${stamp.fileId ?? ''}`,
       effects
     )
   } else if (user) {
@@ -172,7 +172,7 @@ export const renderStamp = (match: RegExpMatchArray): string => {
       match[0],
       stampName,
       stampName,
-      `${baseUrl}/api/1.0/files/${user.iconFileId ?? ''}`,
+      `${baseUrl}/api/v3/files/${user.iconFileId ?? ''}`,
       effects
     )
   }
