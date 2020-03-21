@@ -46,7 +46,7 @@ const wrapWithEffect = (
     .map(
       (e, i) =>
         `<span class="emoji-effect ${e}${
-          i == 0 && sizeEffect ? ` ${sizeEffect}` : ''
+          i === 0 && sizeEffect ? ` ${sizeEffect}` : ''
         }">`
     )
     .join('')
