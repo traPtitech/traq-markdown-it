@@ -2,10 +2,22 @@
   "name": "@traptitech/traq-markdown-it",
   "version": "1.1.2",
   "description": "Markdown parser for traQ.",
-  "main": "bin/index.js",
-  "types": "types/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/traq-markdown-it.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
   "scripts": {
-    "build": "tsc & dart-sass ./src/css/index.sass ./bin/stamp.css"
+    "start": "tsdx watch",
+    "build": "tsdx build & dart-sass ./src/css/index.sass ./dist/stamp.css",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build"
   },
   "repository": {
     "type": "git",
@@ -20,6 +32,7 @@
   "dependencies": {
     "@traptitech/markdown-it-katex": "^3.2.1",
     "@traptitech/markdown-it-spoiler": "^1.1.2",
+    "core-js": "^3.6.4",
     "highlight.js": "^9.18.1",
     "katex": "^0.11.1",
     "markdown-it": "^10.0.0",
@@ -31,6 +44,7 @@
     "markdown-it-regexp": "^0.4.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.9.0",
     "@traptitech/traq": "^3.0.0-9",
     "@types/highlightjs": "^9.12.0",
     "@types/katex": "^0.11.0",
@@ -41,7 +55,15 @@
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-prettier": "^3.1.2",
+    "husky": "^4.2.3",
     "prettier": "^1.19.1",
+    "tsdx": "^0.13.0",
+    "tslib": "^1.11.1",
     "typescript": "^3.8.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
   }
 }
