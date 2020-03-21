@@ -1,3 +1,4 @@
+/// <reference types="../src/types/markdown-it-mark" />
 /* eslint-disable @typescript-eslint/camelcase */
 import MarkdownIt from 'markdown-it'
 import MarkdownItMark from 'markdown-it-mark'
