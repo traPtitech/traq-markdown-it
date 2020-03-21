@@ -56,10 +56,7 @@ const transform = (state: StateCore, data: any): void => {
   } else if (data['type'] === 'channel' && channel) {
     attributes.push([
       'href',
-      `javascript:changeChannel('${store.getChannelPath(
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        channel.id ?? ''
-      )}')`
+      `javascript:changeChannel('${store.getChannelPath(channel.id ?? '')}')`
     ])
     attributes.push(['class', 'message-channel-link'])
     meta.data = data['raw']
