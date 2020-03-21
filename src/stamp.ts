@@ -155,23 +155,24 @@ export const renderStamp = (match: RegExpMatchArray): string => {
   const stampName = splitted[0]
   const effects = splitted.length > 1 ? splitted.slice(1) : []
 
-  if (store.getStampFromName(stampName)) {
+  const stamp = store.getStampByName(stampName)
+  const user = store.getUserByName(stampName)
+  if (stamp) {
     // 通常スタンプ
     return renderStampDom(
       match[0],
       stampName,
-      store.getStampFromName(stampName).name,
-      `${baseUrl}/api/1.0/files/${store.getStampFromName(stampName).fileId}`,
+      stamp.name ?? '',
+      `${baseUrl}/api/1.0/files/${stamp.fileId ?? ''}`,
       effects
     )
-  } else if (store.getUserByName(stampName)) {
+  } else if (user) {
     // ユーザーアイコン
-    const user = store.getUserByName(stampName)
     return renderStampDom(
       match[0],
       stampName,
       stampName,
-      `${baseUrl}/api/1.0/files/${user.iconFileId}`,
+      `${baseUrl}/api/1.0/files/${user.iconFileId ?? ''}`,
       effects
     )
   }
