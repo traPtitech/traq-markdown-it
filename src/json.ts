@@ -31,13 +31,14 @@ const transform = (state: StateCore, data: any): void => {
   const attributes = []
   const meta = { type: data['type'], data: '' }
   const user = store.getUser(data['id'])
+  const me = store.getMe()
   const channel = store.getChannel(data['id'])
   const userGroup = store.getUserGroup(data['id'])
 
   if (data['type'] === 'user' && user) {
     attributes.push(['href', `javascript:openUserModal('${data['id']}')`])
     meta.data = data['id']
-    if (data['id'] === store.getMe().id) {
+    if (data['id'] === me?.id) {
       attributes.push([
         'class',
         'message-user-link-highlight message-user-link'
@@ -74,7 +75,7 @@ const transform = (state: StateCore, data: any): void => {
 
     if (
       userGroup.members &&
-      userGroup.members.filter(user => user.id === store.getMe().id).length > 0
+      userGroup.members.filter(user => user.id === me?.id).length > 0
     ) {
       attributes.push([
         'class',
