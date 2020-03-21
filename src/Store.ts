@@ -1,18 +1,11 @@
-interface Group {
-  members: string[]
-}
-
-interface Stamp {
-  name: string
-  fileId: string
-}
+import { User, Channel, UserGroup, Stamp } from '@traptitech/traq'
 
 export interface Store {
-  getMember(id: string): unknown
-  getChannel(id: string): { channelId: string } | undefined
-  getChannelPath(id: string): unknown
-  getGroup(id: string): Group | undefined
-  getMe(): { userId: string }
-  getStampFromName(name: string): Stamp
-  getUserByName(name: string): { iconFileId: string }
+  getUser(id: string): User | undefined
+  getChannel(id: string): Channel | undefined
+  getChannelPath(id: string): string
+  getUserGroup(id: string): UserGroup | undefined
+  getMe(): User
+  getStampByName(name: string): Stamp | undefined
+  getUserByName(name: string): User | undefined
 }

@@ -14,11 +14,11 @@ const validate = (data: any): boolean => {
   ) {
     return false
   }
-  if (data['type'] === 'user' && store.getMember(data['id'])) {
+  if (data['type'] === 'user' && store.getUser(data['id'])) {
     return true
   } else if (data['type'] === 'channel' && store.getChannel(data['id'])) {
     return true
-  } else if (data['type'] === 'group' && store.getGroup(data['id'])) {
+  } else if (data['type'] === 'group' && store.getUserGroup(data['id'])) {
     return true
   } else if (data['type'] === 'file' || data['type'] === 'message') {
     return true
@@ -30,10 +30,14 @@ const validate = (data: any): boolean => {
 const transform = (state: StateCore, data: any): void => {
   const attributes = []
   const meta = { type: data['type'], data: '' }
-  if (data['type'] === 'user' && store.getMember(data['id'])) {
+  const user = store.getUser(data['id'])
+  const channel = store.getChannel(data['id'])
+  const userGroup = store.getUserGroup(data['id'])
+
+  if (data['type'] === 'user' && user) {
     attributes.push(['href', `javascript:openUserModal('${data['id']}')`])
     meta.data = data['id']
-    if (data['id'] === store.getMe().userId) {
+    if (data['id'] === store.getMe().id) {
       attributes.push([
         'class',
         'message-user-link-highlight message-user-link'
@@ -48,12 +52,12 @@ const transform = (state: StateCore, data: any): void => {
     t = state.push('text', '', 0)
     t.content = data['raw']
     state.push('traq_extends_link_close', 'a', -1)
-  } else if (data['type'] === 'channel' && store.getChannel(data['id'])) {
+  } else if (data['type'] === 'channel' && channel) {
     attributes.push([
       'href',
       `javascript:changeChannel('${store.getChannelPath(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        store.getChannel(data['id'])!.channelId
+        channel.id ?? ''
       )}')`
     ])
     attributes.push(['class', 'message-channel-link'])
@@ -65,13 +69,12 @@ const transform = (state: StateCore, data: any): void => {
     t = state.push('text', '', 0)
     t.content = data['raw']
     state.push('traq_extends_link_close', 'a', -1)
-  } else if (data['type'] === 'group' && store.getGroup(data['id'])) {
+  } else if (data['type'] === 'group' && userGroup) {
     attributes.push(['href', `javascript:openGroupModal('${data['id']}')`])
+
     if (
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      store
-        .getGroup(data['id'])!
-        .members.filter(userId => userId === store.getMe().userId).length > 0
+      userGroup.members &&
+      userGroup.members.filter(user => user.id === store.getMe().id).length > 0
     ) {
       attributes.push([
         'class',

@@ -31,6 +31,7 @@
     "markdown-it-regexp": "^0.4.0"
   },
   "devDependencies": {
+    "@traptitech/traq": "^3.0.0-7",
     "@types/highlightjs": "^9.12.0",
     "@types/katex": "^0.11.0",
     "@types/markdown-it": "0.0.9",
