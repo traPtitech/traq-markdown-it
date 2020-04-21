@@ -12,7 +12,7 @@ export const createHighlightFunc = (preClass: string, withCaption = true) => (
   if (withCaption) {
     ;[langName, langCaption] = lang.split(':')
     if (langCaption) {
-      citeTag = `<cite>${langCaption}</cite>`
+      citeTag = `<cite>${escapeHtml(langCaption)}</cite>`
     }
   } else {
     langName = lang
