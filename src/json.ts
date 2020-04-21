@@ -1,7 +1,8 @@
 import json from 'markdown-it-json'
 import { Store } from './Store'
 import MarkdownIt from 'markdown-it'
-import StateCore from 'markdown-it/lib/rules_core/state_core'
+import StateInline from 'markdown-it/lib/rules_inline/state_inline'
+import StateBlock from 'markdown-it/lib/rules_block/state_block'
 
 let store: Store
 
@@ -27,8 +28,8 @@ const validate = (data: any): boolean => {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const transform = (state: StateCore, data: any): void => {
-  const attributes = []
+const transform = (state: StateBlock | StateInline, data: any): void => {
+  const attributes: [string, string][] = []
   const meta = { type: data['type'], data: '' }
   const user = store.getUser(data['id'])
   const me = store.getMe()

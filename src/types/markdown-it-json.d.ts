@@ -1,10 +1,11 @@
 declare module 'markdown-it-json' {
   import Md from 'markdown-it'
-  import StateCore from 'markdown-it/lib/rules_core/state_core'
+  import StateBlock from 'markdown-it/lib/rules_block/state_block'
+  import StateInline from 'markdown-it/lib/rules_inline/state_inline'
 
   function json(
     validate: (object: unknown) => boolean,
-    transform: (state: StateCore, obj: unknown) => void
+    transform: (state: StateBlock | StateInline, obj: unknown) => void
   ): (md: Md) => void
 
   export = json
