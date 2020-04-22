@@ -167,7 +167,7 @@ export const renderStamp = (match: RegExpMatchArray): string => {
       match[0],
       stampName,
       stampName,
-      `${baseUrl}/api/v3/files/${user.iconFileId ?? ''}`,
+      `${baseUrl}/api/v3/files/${user.iconFileId}`,
       effects
     )
   }
@@ -180,8 +180,8 @@ export const renderStamp = (match: RegExpMatchArray): string => {
   return renderStampDom(
     match[0],
     stampName,
-    stamp.name ?? '',
-    `${baseUrl}/api/v3/files/${stamp.fileId ?? ''}`,
+    stamp.name,
+    `${baseUrl}/api/v3/files/${stamp.fileId}`,
     effects
   )
 }
