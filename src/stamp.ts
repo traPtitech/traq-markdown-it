@@ -155,19 +155,14 @@ export const renderStamp = (match: RegExpMatchArray): string => {
   const stampName = splitted[0]
   const effects = splitted.length > 1 ? splitted.slice(1) : []
 
-  const stamp = store.getStampByName(stampName)
-  const user = store.getUserByName(stampName)
-  if (stamp) {
-    // 通常スタンプ
-    return renderStampDom(
-      match[0],
-      stampName,
-      stamp.name ?? '',
-      `${baseUrl}/api/v3/files/${stamp.fileId ?? ''}`,
-      effects
-    )
-  } else if (user) {
-    // ユーザーアイコン
+  // ユーザーアイコン
+  if (stampName.startsWith('@')) {
+    // 先頭の@を除いたものがユーザー名
+    const user = store.getUserByName(stampName.slice(1))
+    if (!user) {
+      return match[0]
+    }
+
     return renderStampDom(
       match[0],
       stampName,
@@ -177,8 +172,26 @@ export const renderStamp = (match: RegExpMatchArray): string => {
     )
   }
 
-  return match[0]
+  // 通常スタンプ
+  const stamp = store.getStampByName(stampName)
+  if (!stamp) {
+    return match[0]
+  }
+  return renderStampDom(
+    match[0],
+    stampName,
+    stamp.name ?? '',
+    `${baseUrl}/api/v3/files/${stamp.fileId ?? ''}`,
+    effects
+  )
 }
+
+/**
+ * `@?[a-zA-Z0-9+_-]{1,32}`の部分が通常のスタンプ
+ * `\w+\([^:<>"'=+!?]+\)`の部分が色のスタンプ
+ * [\w+-.]*の部分がスタンプエフェクト
+ */
+const stampRegExp = /:((?:@?[a-zA-Z0-9+_-]{1,32}|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
 
 export default function stampPlugin(
   md: MarkdownIt,
@@ -189,8 +202,5 @@ export default function stampPlugin(
   if (_baseUrl) {
     baseUrl = _baseUrl
   }
-  regexp(
-    /:((?:[a-zA-Z0-9+_-]{1,32}|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/,
-    renderStamp
-  )(md)
+  regexp(stampRegExp, renderStamp)(md)
 }
