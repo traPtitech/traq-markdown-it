@@ -135,11 +135,13 @@ const transform: TransformFunc = (state, data) => {
     transformUserGroup(state, data)
     return
   }
+  // @deprecated
   if (data.type === 'file') {
     transformFile(state, data)
     return
   }
 
+  // @deprecated
   state.push('traq_extends_plain_open', 'a', 1)
   const t = state.push('text', '', 0)
   t.content = data.raw
