@@ -14,10 +14,10 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build & dart-sass ./src/css/index.sass ./dist/stamp.css",
+    "build": "tsdx build && dart-sass ./src/css/index.sass ./dist/stamp.css",
     "test": "tsdx test",
     "lint": "tsdx lint",
-    "prepare": "tsdx build & dart-sass ./src/css/index.sass ./dist/stamp.css"
+    "prepare": "tsdx build && dart-sass ./src/css/index.sass ./dist/stamp.css"
   },
   "repository": {
     "type": "git",
