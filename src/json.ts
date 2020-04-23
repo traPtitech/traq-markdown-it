@@ -18,9 +18,9 @@ interface ValidStructData extends StructData {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isStructData = (data: any): data is StructData =>
-  typeof data['type'] !== 'string' ||
-  typeof data['raw'] !== 'string' ||
-  typeof data['id'] !== 'string'
+  typeof data['type'] === 'string' &&
+  typeof data['raw'] === 'string' &&
+  typeof data['id'] === 'string'
 
 const validate = (data: unknown): data is ValidStructData => {
   if (!isStructData(data)) {
