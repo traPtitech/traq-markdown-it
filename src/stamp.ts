@@ -197,7 +197,7 @@ export const renderStamp = (match: RegExpMatchArray): string => {
  * `\w+\([^:<>"'=+!?]+\)`の部分が色のスタンプ
  * [\w+-.]*の部分がスタンプエフェクト
  */
-const stampRegExp = /:(?<name>(?:@?[a-zA-Z0-9+_-]{1,32}|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
+const stampRegExp = /:(?<inner>(?:@?[a-zA-Z0-9+_-]{1,32}|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
 interface StampRegExpGroups {
   /**
    * :を除いた部分
