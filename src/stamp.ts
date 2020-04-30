@@ -109,7 +109,7 @@ const renderStampDom = (
 
 const stampReg = /[a-zA-Z0-9+_-]{1,32}/
 const hslReg = /(hsl\(\d+,\s*[\d]+(?:\.[\d]+)?%,\s*[\d]+(?:\.[\d]+)?%\))(.*)/
-const hexReg = /0x([0-9a-f]{6})(.*)/
+const hexReg = /0x([0-9a-fA-F]{6})(.*)/
 
 const renderHslStamp = (match: RegExpExecArray): string => {
   // HSL: hsl(..., ...%, ...%)
