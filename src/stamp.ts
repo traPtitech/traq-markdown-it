@@ -143,7 +143,8 @@ const renderHexStamp = (match: RegExpExecArray): string => {
 }
 
 export const renderStamp = (match: RegExpMatchArray): string => {
-  const { inner } = (match.groups as unknown) as StampRegExpGroups
+  // ここはbabelの変換が効かない
+  const { inner }: StampRegExpGroups = { inner: match[1] }
 
   const hexMatch = hexReg.exec(inner)
   if (hexMatch) {
@@ -196,8 +197,10 @@ export const renderStamp = (match: RegExpMatchArray): string => {
  * `@?[a-zA-Z0-9+_-]{1,32}`の部分が通常のスタンプ
  * `\w+\([^:<>"'=+!?]+\)`の部分が色のスタンプ
  * [\w+-.]*の部分がスタンプエフェクト
+ *
+ * babelの変換が効かないので今はnamed capture groupsを使わない
  */
-const stampRegExp = /:(?<inner>(?:@?[a-zA-Z0-9+_-]{1,32}|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
+const stampRegExp = /:((?:@?[a-zA-Z0-9+_-]{1,32}|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
 interface StampRegExpGroups {
   /**
    * :を除いた部分
