@@ -108,52 +108,58 @@ const renderStampDom = (
   )
 
 const stampReg = /[a-zA-Z0-9+_-]{1,32}/
-const hslReg = /(hsl\(\d+,\s*[\d]+(?:\.[\d]+)?%,\s*[\d]+(?:\.[\d]+)?%\))(.*)/
-const hexReg = /0x([0-9a-fA-F]{6})(.*)/
+const hslReg = /(?<color>hsl\(\d+,\s*[\d]+(?:\.[\d]+)?%,\s*[\d]+(?:\.[\d]+)?%\))(?<effects>.*)/
+const hexReg = /0x(?<color>[0-9a-fA-F]{6})(?<effects>.*)/
+
+interface ColorRegExpGroup {
+  color: string
+  effects: string
+}
 
 const renderHslStamp = (match: RegExpExecArray): string => {
   // HSL: hsl(..., ...%, ...%)
-  const effects = match[2] === '' ? [] : match[2].split('.').slice(1)
+  const { color, effects } = (match.groups as unknown) as ColorRegExpGroup
+
   return renderStampDomWithStyle(
     `:${match[0]}:`,
-    match[1],
-    match[1],
-    `background-color: ${match[1]}`,
-    effects
+    color,
+    color,
+    `background-color: ${color}`,
+    effects === '' ? [] : effects.split('.').slice(1)
   )
 }
 
 const renderHexStamp = (match: RegExpExecArray): string => {
   // Hex: 0x......
-  const effects = match[2] === '' ? [] : match[2].split('.').slice(1)
+  const { color, effects } = (match.groups as unknown) as ColorRegExpGroup
+
   return renderStampDomWithStyle(
     `:${match[0]}:`,
-    `0x${match[1]}`,
-    `0x${match[1]}`,
-    `background-color: #${match[1]}`,
-    effects
+    `0x${color}`,
+    `0x${color}`,
+    `background-color: #${color}`,
+    effects === '' ? [] : effects.split('.').slice(1)
   )
 }
 
 export const renderStamp = (match: RegExpMatchArray): string => {
-  // match[1] は:を除いた部分
-  const hexMatch = hexReg.exec(match[1])
+  const { inner } = (match.groups as unknown) as StampRegExpGroups
+
+  const hexMatch = hexReg.exec(inner)
   if (hexMatch) {
     return renderHexStamp(hexMatch)
   }
 
-  const hslMatch = hslReg.exec(match[1])
+  const hslMatch = hslReg.exec(inner)
   if (hslMatch) {
     return renderHslStamp(hslMatch)
   }
 
-  if (!stampReg.exec(match[1])) {
+  if (!stampReg.exec(inner)) {
     return match[0]
   }
 
-  const splitted = match[1].split('.')
-  const stampName = splitted[0]
-  const effects = splitted.length > 1 ? splitted.slice(1) : []
+  const [stampName, ...effects] = inner.split('.')
 
   // ユーザーアイコン
   if (stampName.startsWith('@')) {
@@ -191,7 +197,13 @@ export const renderStamp = (match: RegExpMatchArray): string => {
  * `\w+\([^:<>"'=+!?]+\)`の部分が色のスタンプ
  * [\w+-.]*の部分がスタンプエフェクト
  */
-const stampRegExp = /:((?:@?[a-zA-Z0-9+_-]{1,32}|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
+const stampRegExp = /:(?<name>(?:@?[a-zA-Z0-9+_-]{1,32}|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
+interface StampRegExpGroups {
+  /**
+   * :を除いた部分
+   */
+  inner: string
+}
 
 export default function stampPlugin(
   md: MarkdownIt,
