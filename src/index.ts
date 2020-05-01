@@ -36,6 +36,8 @@ export default class {
       .use(katex, {
         katex: katexE,
         output: 'html',
+        strict: (errCode: string) =>
+          errCode === 'unicodeTextInMathMode' ? 'ignore' : 'warn',
         maxSize: 100,
         blockClass: 'is-scroll'
       })
