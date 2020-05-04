@@ -1,6 +1,6 @@
 {
   "name": "@traptitech/traq-markdown-it",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Markdown parser for traQ.",
   "main": "dist/index.js",
   "module": "dist/traq-markdown-it.esm.js",
