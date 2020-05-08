@@ -51,15 +51,6 @@ export default class {
   }
 
   setRendererRule(): void {
-    this.md.renderer.rules.table_open = (): string =>
-      '<table class="is-scroll">'
-    this.md.renderer.rules.blockquote_open = (): string =>
-      '<blockquote class="is-scroll">'
-    this.md.renderer.rules.bullet_list_open = (): string =>
-      '<ul class="is-scroll">'
-    this.md.renderer.rules.ordered_list_open = (): string =>
-      '<ol class="is-scroll">'
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const blockState = this.md.block.State
     blockState.prototype.skipEmptyLines = function skipEmptyLines(
