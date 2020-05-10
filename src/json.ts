@@ -28,19 +28,13 @@ const validate = (data: unknown): data is ValidStructData => {
   }
 
   const { type, id } = data
-  if (type === 'user' && store.getUser(id)) {
-    return true
-  }
-  if (type === 'channel' && store.getChannel(id)) {
-    return true
-  }
-  if (type === 'group' && store.getUserGroup(id)) {
-    return true
-  }
-  if (type === 'file' || type === 'message') {
-    return true
-  }
-  return false
+  return (
+    type === 'user' ||
+    (type === 'channel' && !!store.getChannel(id)) ||
+    type === 'group' ||
+    type === 'file' ||
+    type === 'message'
+  )
 }
 
 type TransformFunc = (
@@ -70,13 +64,12 @@ const transformUser: TransformFunc = (state, { type, id, raw }) => {
 
 const transformUserGroup: TransformFunc = (state, { type, id, raw }) => {
   const attributes: [string, string][] = []
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const userGroup = store.getUserGroup(id)!
+  const userGroup = store.getUserGroup(id)
   const me = store.getMe()
 
   attributes.push(['href', `javascript:openGroupModal('${id}')`])
 
-  if (userGroup.members.findIndex(user => user.id === me?.id) > 0) {
+  if (userGroup?.members?.some(user => user.id === me?.id) ?? false) {
     attributes.push([
       'class',
       'message-group-link-highlight message-group-link'
@@ -123,7 +116,7 @@ const transformFile: TransformFunc = (state, { type, id, raw }) => {
 }
 
 const transform: TransformFunc = (state, data) => {
-  if (data.type === 'user' && store.getUser(data.id)) {
+  if (data.type === 'user') {
     transformUser(state, data)
     return
   }
@@ -131,7 +124,7 @@ const transform: TransformFunc = (state, data) => {
     transformChannel(state, data)
     return
   }
-  if (data.type === 'group' && store.getUserGroup(data.id)) {
+  if (data.type === 'group') {
     transformUserGroup(state, data)
     return
   }
