@@ -1,5 +1,5 @@
 {
-  "include": ["src", "types"],
+  "include": ["src", "tests", "types"],
   "compilerOptions": {
     "module": "esnext",
     "lib": ["esnext", "dom", "dom.iterable"],
@@ -19,7 +19,10 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
-    "baseUrl": "./",
+    "baseUrl": ".",
+    "paths": {
+      "#/*": ["src/*"]
+    },
     "jsx": "react",
     "esModuleInterop": true
   }
