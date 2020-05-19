@@ -1,12 +1,14 @@
 import hljs from 'highlight.js'
+import defaultSubset from './default/language_subset'
 import { escapeHtml } from './util'
 
 const noHighlightRe = /^(no-?highlight|plain|text)$/i
 
-export const createHighlightFunc = (preClass: string, withCaption = true) => (
-  code: string,
-  lang: string
-): string => {
+export const createHighlightFunc = (
+  preClass: string,
+  withCaption = true,
+  useSubsetForAuto = true
+) => (code: string, lang: string): string => {
   let langName: string, langCaption: string
   let citeTag = ''
   if (withCaption) {
@@ -26,7 +28,10 @@ export const createHighlightFunc = (preClass: string, withCaption = true) => (
       code
     )}</code></pre>`
   } else {
-    const result = hljs.highlightAuto(code)
+    const result = hljs.highlightAuto(
+      code,
+      useSubsetForAuto ? defaultSubset : undefined
+    )
     return `<pre class="${preClass}">${citeTag}<code class="lang-${result.language}">${result.value}</code></pre>`
   }
 }
