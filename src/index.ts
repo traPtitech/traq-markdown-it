@@ -15,14 +15,37 @@ import defaultWhitelist from './default/domain_whitelist'
 import { Store } from './Store'
 export { Store } from './Store'
 
+import {
+  createEmbeddingRegexp,
+  embeddingExtractor,
+  EmbeddingsExtractedMessage,
+  embeddingReplacer
+} from './embeddingExtractor'
+export {
+  Embedding,
+  EmbeddingFile,
+  EmbeddingMessage,
+  EmbeddingsExtractedMessage
+} from './embeddingExtractor'
+
+export type MarkdownRenderResult = EmbeddingsExtractedMessage & {
+  renderedText: string
+}
+
 export default class {
   readonly md = new MarkdownIt({
     breaks: true,
     linkify: true,
     highlight: createHighlightFunc('traq-code traq-lang')
   })
+  readonly embeddingRegExp: RegExp
 
-  constructor(store: Store, whitelist: string[] = defaultWhitelist) {
+  constructor(
+    store: Store,
+    whitelist: string[] = defaultWhitelist,
+    embeddingOrigin: string
+  ) {
+    this.embeddingRegExp = createEmbeddingRegexp(embeddingOrigin)
     this.setRendererRule()
     this.setPlugin(store, whitelist)
   }
@@ -66,12 +89,18 @@ export default class {
     }
   }
 
-  render(text: string): string {
-    return this.md.render(text, {})
+  render(text: string): MarkdownRenderResult {
+    const data = embeddingExtractor(text, this.embeddingRegExp)
+    return {
+      ...data,
+      renderedText: this.md.render(data.text, {})
+    }
   }
 
-  renderInline(text: string): string {
-    const parsed = this.md.parseInline(text, {})
+  renderInline(text: string): MarkdownRenderResult {
+    const data = embeddingReplacer(text, this.embeddingRegExp)
+
+    const parsed = this.md.parseInline(data.text, {})
     const tokens = parsed[0].children || []
     const rendered = []
     for (const token of tokens) {
@@ -89,7 +118,11 @@ export default class {
         rendered.push(this.md.utils.escapeHtml(token.content))
       }
     }
-    return rendered.join('')
+
+    return {
+      ...data,
+      renderedText: rendered.join('')
+    }
   }
 }
 
