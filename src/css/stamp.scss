@@ -1,0 +1,31 @@
+.emoji {
+  display: inline-block;
+  text-indent: 999%;
+  white-space: nowrap;
+  overflow: hidden;
+  color: transparent;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  vertical-align: middle;
+}
+
+.emoji-effect {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.emoji {
+  width: 1em;
+  height: 1em;
+
+  &.ex-large {
+    font-size: 48px;
+  }
+  &.large {
+    font-size: 32px;
+  }
+  &.small {
+    font-size: 16px;
+  }
+}
