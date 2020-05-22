@@ -72,8 +72,7 @@ export default class {
   }
 
   setRendererRule(): void {
-    const blockState = this.md.block.State
-    blockState.prototype.skipEmptyLines = function skipEmptyLines(
+    this.md.block.State.prototype.skipEmptyLines = function skipEmptyLines(
       from: number
     ): number {
       for (let max = this.lineMax; from < max; from++) {
