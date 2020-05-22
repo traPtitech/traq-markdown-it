@@ -1,5 +1,4 @@
 /// <reference types="../src/types/markdown-it-mark" />
-/* eslint-disable @typescript-eslint/camelcase */
 import MarkdownIt from 'markdown-it'
 import MarkdownItMark from 'markdown-it-mark'
 import spoiler from '@traptitech/markdown-it-spoiler'
@@ -73,7 +72,6 @@ export default class {
   }
 
   setRendererRule(): void {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const blockState = this.md.block.State
     blockState.prototype.skipEmptyLines = function skipEmptyLines(
       from: number
