@@ -13,14 +13,13 @@ import { createHighlightFunc } from './highlight'
 import defaultWhitelist from './default/domain_whitelist'
 
 import { Store } from './Store'
-export { Store } from './Store'
-
 import {
   createEmbeddingRegexp,
   embeddingExtractor,
   EmbeddingsExtractedMessage,
   embeddingReplacer
 } from './embeddingExtractor'
+export { Store } from './Store'
 export {
   Embedding,
   EmbeddingFile,
