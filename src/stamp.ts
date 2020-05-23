@@ -87,7 +87,7 @@ const renderStampDomWithStyle = (
   // 複数サイズ指定が合った場合は最後のものを適用
   const sizeEffectClass = sizeEffects[sizeEffects.length - 1] || ''
 
-  const stampHtml = `<i class="emoji s24 message-emoji ${sizeEffectClass}" title=":${escapedTitle}:" style="${escapedStyle};">:${escapedName}:</i>`
+  const stampHtml = `<i class="emoji message-emoji ${sizeEffectClass}" title=":${escapedTitle}:" style="${escapedStyle};">:${escapedName}:</i>`
 
   return wrapWithEffect(stampHtml, replacedAnimeEffects, sizeEffectClass)
 }
