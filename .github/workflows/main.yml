@@ -83,7 +83,4 @@ jobs:
       - name: npm ci
         run: npm ci
       - name: run test
-        uses: ziishaned/jest-reporter-action@872c1051350ecaf625ba2490d68e7cb63854b44c
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          test-command: "npm run test -- --coverage"
+        run: npm run test
