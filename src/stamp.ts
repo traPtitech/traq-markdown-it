@@ -142,7 +142,11 @@ export const renderHexStamp = (match: RegExpExecArray): string => {
   )
 }
 
-export const renderUserStamp = (stampName: string, raw: string, effects: string[]): string => {
+export const renderUserStamp = (
+  stampName: string,
+  raw: string,
+  effects: string[]
+): string => {
   // 先頭の@を除いたものがユーザー名
   const userName = stampName.slice(1)
   const user = store.getUserByName(userName)
@@ -159,7 +163,11 @@ export const renderUserStamp = (stampName: string, raw: string, effects: string[
   )
 }
 
-export const renderNormalStamp = (stampName: string, raw: string, effects: string[]): string => {
+export const renderNormalStamp = (
+  stampName: string,
+  raw: string,
+  effects: string[]
+): string => {
   const stamp = store.getStampByName(stampName)
   if (!stamp) {
     return raw
