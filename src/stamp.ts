@@ -3,7 +3,7 @@ import regexp from 'markdown-it-regexp'
 import { escapeHtml } from './util'
 import { Store } from './Store'
 
-let store: Store
+let store: Pick<Store, 'getUserByName' | 'getStampByName'>
 let baseUrl = ''
 
 const animeEffectSet = new Set([
@@ -108,15 +108,15 @@ const renderStampDom = (
   )
 
 const stampReg = /[a-zA-Z0-9+_-]{1,32}/
-const hslReg = /(?<color>hsl\(\d+,\s*[\d]+(?:\.[\d]+)?%,\s*[\d]+(?:\.[\d]+)?%\))(?<effects>.*)/
-const hexReg = /0x(?<color>[0-9a-fA-F]{6})(?<effects>.*)/
+export const hslReg = /(?<color>hsl\(\d+,\s*[\d]+(?:\.[\d]+)?%,\s*[\d]+(?:\.[\d]+)?%\))(?<effects>.*)/
+export const hexReg = /0x(?<color>[0-9a-fA-F]{6})(?<effects>.*)/
 
 interface ColorRegExpGroup {
   color: string
   effects: string
 }
 
-const renderHslStamp = (match: RegExpExecArray): string => {
+export const renderHslStamp = (match: RegExpExecArray): string => {
   // HSL: hsl(..., ...%, ...%)
   const { color, effects } = (match.groups as unknown) as ColorRegExpGroup
 
@@ -129,7 +129,7 @@ const renderHslStamp = (match: RegExpExecArray): string => {
   )
 }
 
-const renderHexStamp = (match: RegExpExecArray): string => {
+export const renderHexStamp = (match: RegExpExecArray): string => {
   // Hex: 0x......
   const { color, effects } = (match.groups as unknown) as ColorRegExpGroup
 
@@ -220,7 +220,7 @@ interface StampRegExpGroups {
 
 export default function stampPlugin(
   md: MarkdownIt,
-  _store: Store,
+  _store: Pick<Store, 'getUserByName' | 'getStampByName'>,
   _baseUrl?: string
 ): void {
   store = _store
