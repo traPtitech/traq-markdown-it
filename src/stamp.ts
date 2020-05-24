@@ -142,6 +142,38 @@ const renderHexStamp = (match: RegExpExecArray): string => {
   )
 }
 
+export const renderUserStamp = (stampName: string, raw: string, effects: string[]): string => {
+  // 先頭の@を除いたものがユーザー名
+  const userName = stampName.slice(1)
+  const user = store.getUserByName(userName)
+  if (!user) {
+    return raw
+  }
+
+  return renderStampDom(
+    raw,
+    stampName,
+    stampName,
+    `${baseUrl}/api/v3/files/${user.iconFileId}`,
+    effects
+  )
+}
+
+export const renderNormalStamp = (stampName: string, raw: string, effects: string[]): string => {
+  const stamp = store.getStampByName(stampName)
+  if (!stamp) {
+    return raw
+  }
+
+  return renderStampDom(
+    raw,
+    stampName,
+    stamp.name,
+    `${baseUrl}/api/v3/files/${stamp.fileId}`,
+    effects
+  )
+}
+
 export const renderStamp = (match: RegExpMatchArray): string => {
   // ここはbabelの変換が効かない
   const { inner }: StampRegExpGroups = { inner: match[1] }
@@ -164,33 +196,11 @@ export const renderStamp = (match: RegExpMatchArray): string => {
 
   // ユーザーアイコン
   if (stampName.startsWith('@')) {
-    // 先頭の@を除いたものがユーザー名
-    const user = store.getUserByName(stampName.slice(1))
-    if (!user) {
-      return match[0]
-    }
-
-    return renderStampDom(
-      match[0],
-      stampName,
-      stampName,
-      `${baseUrl}/api/v3/files/${user.iconFileId}`,
-      effects
-    )
+    return renderUserStamp(stampName, match[0], effects)
   }
 
   // 通常スタンプ
-  const stamp = store.getStampByName(stampName)
-  if (!stamp) {
-    return match[0]
-  }
-  return renderStampDom(
-    match[0],
-    stampName,
-    stamp.name,
-    `${baseUrl}/api/v3/files/${stamp.fileId}`,
-    effects
-  )
+  return renderNormalStamp(stampName, match[0], effects)
 }
 
 /**
