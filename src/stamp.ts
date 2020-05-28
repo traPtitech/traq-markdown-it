@@ -26,7 +26,9 @@ const animeEffectSet = new Set([
   'conga-inv',
   'marquee',
   'marquee-inv',
-  'rainbow'
+  'rainbow',
+  'ascension',
+  'shake'
 ])
 const sizeEffectSet = new Set(['ex-large', 'large', 'small'])
 

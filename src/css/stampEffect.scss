@@ -85,4 +85,10 @@
   &.rainbow {
     animation: rainbow linear 3s infinite;
   }
+  &.ascension {
+    animation: ascension linear 2s infinite;
+  }
+  &.shake {
+    animation: shake linear 0.5s infinite;
+  }
 }
