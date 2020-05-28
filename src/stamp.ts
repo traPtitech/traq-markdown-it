@@ -71,8 +71,12 @@ const renderStampDomWithStyle = (
   const escapedStyle = escapeHtml(style)
   const escapedName = escapeHtml(stampName)
 
-  const sizeEffects = effects.filter((e): e is SizeEffect => sizeEffectSet.has(e as SizeEffect))
-  const animeEffects = effects.filter((e): e is AnimeEffect => animeEffectSet.has(e as AnimeEffect))
+  const sizeEffects = effects.filter((e): e is SizeEffect =>
+    sizeEffectSet.has(e as SizeEffect)
+  )
+  const animeEffects = effects.filter((e): e is AnimeEffect =>
+    animeEffectSet.has(e as AnimeEffect)
+  )
 
   // 知らないエフェクトはダメ
   if (sizeEffects.length + animeEffects.length < effects.length) {
