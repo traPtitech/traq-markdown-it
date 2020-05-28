@@ -29,10 +29,14 @@ const animeEffectSet = new Set([
   'rainbow',
   'ascension',
   'shake'
-])
-const sizeEffectSet = new Set(['ex-large', 'large', 'small'])
+] as const)
+const sizeEffectSet = new Set(['ex-large', 'large', 'small'] as const)
 
-const animeEffectAliasMap = new Map([
+type SetOf<T> = T extends Set<infer S> ? S : never
+type AnimeEffect = SetOf<typeof animeEffectSet>
+type SizeEffect = SetOf<typeof sizeEffectSet>
+
+const animeEffectAliasMap = new Map<AnimeEffect, AnimeEffect>([
   ['marquee', 'conga'],
   ['marquee-inv', 'conga-inv']
 ])
@@ -41,8 +45,8 @@ const maxEffectCount = 5
 
 const wrapWithEffect = (
   stampHtml: string,
-  animeEffects: string[],
-  sizeEffect: string
+  animeEffects: AnimeEffect[],
+  sizeEffect: SizeEffect
 ): string => {
   const filterOpenTag = animeEffects
     .map(
@@ -67,8 +71,8 @@ const renderStampDomWithStyle = (
   const escapedStyle = escapeHtml(style)
   const escapedName = escapeHtml(stampName)
 
-  const sizeEffects = effects.filter(e => sizeEffectSet.has(e))
-  const animeEffects = effects.filter(e => animeEffectSet.has(e))
+  const sizeEffects = effects.filter((e): e is SizeEffect => sizeEffectSet.has(e as SizeEffect))
+  const animeEffects = effects.filter((e): e is AnimeEffect => animeEffectSet.has(e as AnimeEffect))
 
   // 知らないエフェクトはダメ
   if (sizeEffects.length + animeEffects.length < effects.length) {
