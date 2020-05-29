@@ -229,7 +229,7 @@ export const renderStamp = (match: RegExpMatchArray): string => {
  *
  * babelの変換が効かないので今はnamed capture groupsを使わない
  */
-const stampRegExp = /:((?:[a-zA-Z0-9+_-]{1,32}|@|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
+const stampRegExp = /:((?:[a-zA-Z0-9+_-]{1,32}|@(?:Webhook#)?[a-zA-Z0-9_-]+|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
 interface StampRegExpGroups {
   /**
    * :を除いた部分
