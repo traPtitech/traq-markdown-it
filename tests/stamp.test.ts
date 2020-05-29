@@ -7,7 +7,9 @@ const setup = () => {
 
   const nameIdTable: Record<string, string> = {
     one:'e97518db-ebb8-450f-9b4a-273234e68491',
-    two: 'd7461966-e5d3-4c6d-9538-7c8605f45a1e'
+    two: 'd7461966-e5d3-4c6d-9538-7c8605f45a1e',
+    longlonglonglonglonglonglonglonglonglonglonglong:'e97518db-ebb8-450f-9b4a-273234e68491',
+    'Webhook#random-Va1ue':'e97518db-ebb8-450f-9b4a-273234e68491'
   }
 
   const store: Pick<Store, 'getUserByName' | 'getStampByName'> = {
@@ -34,6 +36,16 @@ describe('stamp', () => {
   it('can render user stamp', () => {
     const actual = renderUserStamp('@one', ':@one:', [])
     const expected = '<i class="emoji message-emoji " title=":@one:" style="background-image: url(/api/v3/files/e97518db-ebb8-450f-9b4a-273234e68491);">:@one:</i>'
+    expect(actual).toBe(expected)
+  })
+  it('can render long user stamp', () => {
+    const actual = renderUserStamp('@longlonglonglonglonglonglonglonglonglonglonglong', ':@longlonglonglonglonglonglonglonglonglonglonglong:', [])
+    const expected = '<i class="emoji message-emoji " title=":@longlonglonglonglonglonglonglonglonglonglonglong:" style="background-image: url(/api/v3/files/e97518db-ebb8-450f-9b4a-273234e68491);">:@longlonglonglonglonglonglonglonglonglonglonglong:</i>'
+    expect(actual).toBe(expected)
+  })
+  it('can render webhook user stamp', () => {
+    const actual = renderUserStamp('@Webhook#random-Va1ue', ':@Webhook#random-Va1ue:', [])
+    const expected = '<i class="emoji message-emoji " title=":@Webhook#random-Va1ue:" style="background-image: url(/api/v3/files/e97518db-ebb8-450f-9b4a-273234e68491);">:@Webhook#random-Va1ue:</i>'
     expect(actual).toBe(expected)
   })
   it('can render hex color stamp', () => {

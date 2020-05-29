@@ -222,13 +222,14 @@ export const renderStamp = (match: RegExpMatchArray): string => {
 }
 
 /**
- * `@?[a-zA-Z0-9+_-]{1,32}`の部分が通常のスタンプ
+ * `[a-zA-Z0-9+_-]{1,32}`の部分が通常のスタンプ
+ * `@(?:Webhook#)?[a-zA-Z0-9_-]+`の部分がユーザーアイコンスタンプ
  * `\w+\([^:<>"'=+!?]+\)`の部分が色のスタンプ
  * [\w+-.]*の部分がスタンプエフェクト
  *
  * babelの変換が効かないので今はnamed capture groupsを使わない
  */
-const stampRegExp = /:((?:@?[a-zA-Z0-9+_-]{1,32}|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
+const stampRegExp = /:((?:[a-zA-Z0-9+_-]{1,32}|@|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
 interface StampRegExpGroups {
   /**
    * :を除いた部分
