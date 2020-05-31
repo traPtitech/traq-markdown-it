@@ -91,4 +91,11 @@
   &.shake {
     animation: shake linear 0.5s infinite;
   }
+  &.party {
+    animation: party linear 0.5s infinite;
+    transform-origin: center bottom;
+  }
+  &.rainbow {
+    animation: rainbow linear 0.5s infinite;
+  }
 }
