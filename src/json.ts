@@ -16,13 +16,17 @@ interface ValidStructData extends StructData {
   type: 'user' | 'channel' | 'group' | 'file' | 'message'
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isStructData = (data: any): data is StructData =>
-  typeof data['type'] === 'string' &&
-  typeof data['raw'] === 'string' &&
-  typeof data['id'] === 'string'
+export const isStructData = (data: unknown): data is StructData => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const anyData = data as any
+  return (
+    typeof anyData['type'] === 'string' &&
+    typeof anyData['raw'] === 'string' &&
+    typeof anyData['id'] === 'string'
+  )
+}
 
-const validate = (data: unknown): data is ValidStructData => {
+export const validate = (data: unknown): data is ValidStructData => {
   if (!isStructData(data)) {
     return false
   }
