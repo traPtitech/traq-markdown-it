@@ -84,7 +84,19 @@ jobs:
         run: npm ci
       - name: run test
         run: npm run test
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+      - uses: actions/upload-artifact@v1
         with:
-          file: ./coverage/lconv.info
+          name: coverage
+          path: ./coverage
+  codecov:
+    name: Upload coverage to Codecov
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+      - uses: actions/download-artifact@v1
+        with:
+          name: coverage
+          path: ./coverage
+      - uses: codecov/codecov-action@v1
