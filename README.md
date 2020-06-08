@@ -1,5 +1,8 @@
 # traq-markdown-it
 
+[![npm version](https://badge.fury.io/js/%40traptitech%2Ftraq-markdown-it.svg)](https://badge.fury.io/js/%40traptitech%2Ftraq-markdown-it)
+[![codecov](https://codecov.io/gh/traPtitech/traq-markdown-it/branch/master/graph/badge.svg)](https://codecov.io/gh/traPtitech/traq-markdown-it)
+
 Markdown parser for traQ.
 
 This project was bootstrapped with [TSDX](https://github.com/jaredpalmer/tsdx).
