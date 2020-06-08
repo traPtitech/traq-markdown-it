@@ -17,7 +17,7 @@ const id2 = 'd7461966-e5d3-4c6d-9538-7c8605f45a1e'
 const path1 = `${basePath}/files/${id1}`
 const path2 = `${basePath}/messages/${id2}`
 
-describe('embeddingExtractor', () => {
+describe('embeddingReplacer', () => {
   it('can extract a file from url', () => {
     const message = `${path1}`
     const result = extractor(message)
