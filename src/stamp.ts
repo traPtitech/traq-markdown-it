@@ -119,7 +119,7 @@ const renderStampDom = (
     effects
   )
 
-const stampReg = /[a-zA-Z0-9+_-]{1,32}/
+const stampReg = /^[a-zA-Z0-9+_-]{1,32}$/
 export const hslReg = /(?<color>hsl\(\d+,\s*[\d]+(?:\.[\d]+)?%,\s*[\d]+(?:\.[\d]+)?%\))(?<effects>.*)/
 export const hexReg = /0x(?<color>[0-9a-fA-F]{6})(?<effects>.*)/
 
@@ -208,15 +208,15 @@ export const renderStamp = (match: RegExpMatchArray): string => {
     return renderHslStamp(hslMatch)
   }
 
-  if (!stampReg.exec(inner)) {
-    return match[0]
-  }
-
   const [stampName, ...effects] = inner.split('.')
 
   // ユーザーアイコン
   if (stampName.startsWith('@')) {
     return renderUserStamp(stampName, match[0], effects)
+  }
+
+  if (!stampReg.exec(stampName)) {
+    return match[0]
   }
 
   // 通常スタンプ
@@ -239,6 +239,9 @@ interface StampRegExpGroups {
   inner: string
 }
 
+/**
+ * @param _baseUrl スタンプの画像の`/api/v3`の前につくURLの部分 (tailing slashなし)
+ */
 export default function stampPlugin(
   md: MarkdownIt,
   _store: Pick<Store, 'getUserByName' | 'getStampByName'>,

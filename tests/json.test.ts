@@ -120,7 +120,12 @@ describe('json', () => {
     expect(actual).toBe(expected)
   })
 
-  it('can render invalid json', () => {
+  it('can render invalid json (1)', () => {
+    const actual = md.render('!{"type": "message", "raw": "po", "id": "00000000-0000-0000-0000-000000000000"}').trim()
+    const expected = '<p><a>po</a></p>'
+    expect(actual).toBe(expected)
+  })
+  it('can render invalid json (2)', () => {
     const actual = md.render('!{"type": "message", "raw": "po"}').trim()
     const expected = '<p>!{&quot;type&quot;: &quot;message&quot;, &quot;raw&quot;: &quot;po&quot;}</p>'
     expect(actual).toBe(expected)
