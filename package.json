@@ -47,7 +47,7 @@
     "@babel/preset-env": "^7.10.2",
     "@traptitech/traq": "3.1.2-5",
     "@types/highlightjs": "^9.12.0",
-    "@types/jest": "^25.2.3",
+    "@types/jest": "^26.0.0",
     "@types/katex": "^0.11.0",
     "@types/markdown-it": "10.0.1",
     "@typescript-eslint/eslint-plugin": "^3.1.0",
