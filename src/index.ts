@@ -98,16 +98,30 @@ export default class {
 
     const parsed = this.md.parseInline(data.text, {})
     const tokens = parsed[0].children || []
-    const rendered = []
-    for (const token of tokens) {
+
+    const rendered: string[] = []
+    /** spoilerのトークンの位置を記録 組み合わないものを元に戻すため */
+    let spoilerTokenIndex: number[] = []
+    for (const [index, token] of Object.entries(tokens)) {
       if (token.type === 'regexp-0') {
         // stamp
         rendered.push(renderStamp(token.meta.match))
       } else if (token.type === 'spoiler_open') {
+        spoilerTokenIndex.push(+index)
         rendered.push('<span class="spoiler">')
       } else if (token.type === 'spoiler_close') {
-        rendered.push('</span>')
+        if (spoilerTokenIndex.length > 0) {
+          spoilerTokenIndex.pop()
+          rendered.push('</span>')
+        } else {
+          rendered.push('!!')
+        }
       } else if (token.type === 'softbreak') {
+        spoilerTokenIndex.forEach(i => {
+          rendered[i] = '!!'
+        })
+        spoilerTokenIndex = []
+
         // newline
         rendered.push(' ')
       } else {
