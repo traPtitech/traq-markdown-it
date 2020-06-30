@@ -102,12 +102,12 @@ export default class {
     const rendered: string[] = []
     /** spoilerのトークンの位置を記録 組み合わないものを元に戻すため */
     let spoilerTokenIndex: number[] = []
-    for (const [index, token] of tokens.entries()) {
+    for (const [index, token] of Object.entries(tokens)) {
       if (token.type === 'regexp-0') {
         // stamp
         rendered.push(renderStamp(token.meta.match))
       } else if (token.type === 'spoiler_open') {
-        spoilerTokenIndex.push(index)
+        spoilerTokenIndex.push(+index)
         rendered.push('<span class="spoiler">')
       } else if (token.type === 'spoiler_close') {
         if (spoilerTokenIndex.length > 0) {
