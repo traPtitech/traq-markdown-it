@@ -107,7 +107,41 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
 - a!!aaa
 - a!!aa
 `,
-      renderedText: ` - a!!aaa - a!!aa `
+      // FIXME: https://github.com/traPtitech/traq-markdown-it/issues/59
+      renderedText: ` - a<span class="spoiler">aaa - a</span>aa `
+      //renderedText: ` - a!!aaa - a!!aa `
+    }
+    expect(actual).toStrictEqual(expected)
+  })
+  it('can render inline (3)', () => {
+    const actual = md.renderInline(`
+  !!p
+  o!!
+
+  !!
+  po
+  !!
+  `
+    )
+    const expected = {
+      embeddings: [],
+      rawText: `
+  !!p
+  o!!
+
+  !!
+  po
+  !!
+  `,
+      text: `
+  !!p
+  o!!
+
+  !!
+  po
+  !!
+  `,
+      renderedText: ` <span class="spoiler">p o</span>  !! po !! `
     }
     expect(actual).toStrictEqual(expected)
   })
