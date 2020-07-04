@@ -1,7 +1,26 @@
+import LinkifyIt from 'linkify-it'
+
+const spaceRegexp = /^\s*$/
+const uuidRegexp = /[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}/
+
 type FileId = string
 type MessageId = string
 
 export type Embedding = EmbeddingFile | EmbeddingMessage
+export type EmbeddingOrUrl = NormalUrl | InternalUrl | Embedding
+
+export type NormalUrl = {
+  type: 'url'
+  url: string
+  startIndex: number
+  endIndex: number
+}
+
+export type InternalUrl = {
+  type: 'internal'
+  startIndex: number
+  endIndex: number
+}
 
 export type EmbeddingFile = {
   type: 'file'
@@ -20,35 +39,65 @@ export type EmbeddingMessage = {
 export type EmbeddingsExtractedMessage = {
   rawText: string
   text: string
-  embeddings: Embedding[]
+  embeddings: EmbeddingOrUrl[]
 }
 
-export const createEmbeddingRegexp = (embeddingOrigin: string): RegExp =>
-  RegExp(
-    `${embeddingOrigin}/(files|messages)/([\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12})(\\s*)`,
-    'g'
-  )
+export type EmbeddingTypeExtractor = (url: URL) => EmbeddingOrUrl['type']
+export type EmbeddingIdExtractor = (
+  url: URL,
+  ty: EmbeddingOrUrl['type']
+) => Embedding['id'] | undefined
+
+const pathNameEmbeddingTypeMap: Record<
+  string,
+  Embedding['type'] | undefined
+> = {
+  files: 'file',
+  messages: 'message'
+}
+
+export const createTypeExtractor = (
+  embeddingOrigin: string
+): EmbeddingTypeExtractor => (url: URL) => {
+  if (url.origin !== embeddingOrigin) return 'url'
+  const name = url.pathname.split('/')[1] ?? ''
+  return pathNameEmbeddingTypeMap[name] ?? 'internal'
+}
+
+export const createIdExtractor = (
+  embeddingOrigin: string
+): EmbeddingIdExtractor => (url: URL, ty: EmbeddingOrUrl['type']) => {
+  if (url.origin !== embeddingOrigin || ty === 'url' || ty === 'internal')
+    return undefined
+  const id = url.pathname.split('/')[2] ?? ''
+  return uuidRegexp.test(id) ? id : undefined
+}
+
+const checkBlank = (
+  rawMessage: string,
+  prevEndIndex: number,
+  startIndex: number
+) => {
+  const substrFromPrev = rawMessage.substring(prevEndIndex, startIndex)
+  return spaceRegexp.test(substrFromPrev)
+}
 
 /**
- * markdownから埋め込みURLを抽出する
+ * markdownからURL・埋め込みURLを抽出する
  *
- * @param regexp
- * マッチに使う正規表現。グループは順に
- *
- * - 種別
- * - UUID
- * - 削除されるスペース
- *
- * であることを期待する
+ * @param typeIdExtractor マッチ結果から埋め込み/通常URLの種別を返す関数
+ * @param idExtractor マッチ結果から埋め込みidを返す関数（通常URL時は`undefined`）
  */
 export const embeddingExtractor = (
   rawMessage: string,
-  regexp: RegExp
+  linkify: LinkifyIt.LinkifyIt,
+  typeExtractor: EmbeddingTypeExtractor,
+  idExtractor: EmbeddingIdExtractor
 ): EmbeddingsExtractedMessage => {
-  const embeddings: Embedding[] = []
+  const embeddings: EmbeddingOrUrl[] = []
   const knownIdSet: Set<FileId> = new Set()
 
-  const matches = rawMessage.matchAll(regexp)
+  const matches = linkify.match(rawMessage) ?? []
 
   /** 連続したマッチの開始インデックス */
   let sequenceStartIndex = 0
@@ -56,35 +105,44 @@ export const embeddingExtractor = (
   /** スペースを含んだ、連続したマッチ全体の終了インデックス */
   let sequenceEndIndex = 0
 
+  /** 1つ前のマッチの`endIndex` */
+  let prevEndIndex = 0
+
   for (const match of matches) {
-    const matchIndex = match.index ?? 0
-    const matchLength = match[0]?.length ?? 0
-    const spaceLength = match[3]?.length ?? 0
+    const startIndex = match.index
+    const endIndex = match.lastIndex
+    const url = new URL(match.url)
 
-    const type = match[1] ?? ''
-    const id = match[2] ?? ''
+    const ty = typeExtractor(url)
+    const id = idExtractor(url, ty)
 
-    const startIndex = matchIndex
-    const endIndex = matchIndex + matchLength - spaceLength
-
-    if (!knownIdSet.has(id)) {
-      if (type === 'files') {
-        embeddings.push({ type: 'file', id, startIndex, endIndex })
-      }
-      if (type === 'messages') {
-        embeddings.push({ type: 'message', id, startIndex, endIndex })
-      }
+    if (ty === 'internal') {
+      // 埋め込みと同じオリジンだが埋め込みに該当しない場合、urlではないとみなす
+      // このためにシーケンスをここで終了する
+      sequenceStartIndex = endIndex
+      prevEndIndex = endIndex
+      continue
+    } else if (ty === 'url') {
+      embeddings.push({ type: 'url', url: match.url, startIndex, endIndex })
+    } else if (id && !knownIdSet.has(id)) {
+      embeddings.push({ type: ty, id, startIndex, endIndex })
       knownIdSet.add(id)
     }
 
-    if (startIndex !== sequenceEndIndex) {
+    // 前のマッチから連続しているかどうかの判定
+    if (!checkBlank(rawMessage, prevEndIndex, startIndex)) {
       // 連続したマッチではなかった
       sequenceStartIndex = startIndex
     }
-    sequenceEndIndex = matchIndex + matchLength
+    sequenceEndIndex = endIndex
+    prevEndIndex = endIndex
   }
 
-  const hasSequenceReachedEos = sequenceEndIndex === rawMessage.length
+  const hasSequenceReachedEos = checkBlank(
+    rawMessage,
+    sequenceEndIndex,
+    rawMessage.length
+  )
 
   return {
     rawText: rawMessage,
@@ -98,20 +156,21 @@ export const embeddingExtractor = (
 /**
  * markdownから埋め込みURLを抽出してすべて置換する
  *
- * @param regexp
- * マッチに使う正規表現。グループは順に
- *
- * - 種別
- * - UUID
- * - 削除されるスペース
- *
- * であることを期待する
+ * @param typeIdExtractor マッチ結果から埋め込み/通常URLの種別を返す関数
+ * @param idExtractor マッチ結果から埋め込みidを返す関数（通常URL時は`undefined`）
  */
 export const embeddingReplacer = (
   rawMessage: string,
-  regexp: RegExp
+  linkify: LinkifyIt.LinkifyIt,
+  typeExtractor: EmbeddingTypeExtractor,
+  idExtractor: EmbeddingIdExtractor
 ): EmbeddingsExtractedMessage => {
-  const { text, embeddings } = embeddingExtractor(rawMessage, regexp)
+  const { text, embeddings } = embeddingExtractor(
+    rawMessage,
+    linkify,
+    typeExtractor,
+    idExtractor
+  )
 
   let newText = text
   // 置換で文字数がずれるのでずれた数を保持する
@@ -119,7 +178,14 @@ export const embeddingReplacer = (
 
   for (const embedding of embeddings) {
     // 末尾のものは抽出で消えているので置換しない
-    if (text.length <= embedding.startIndex) break
+    // 通常のURL・内部URLも必要がないので置換しない
+    if (
+      text.length <= embedding.startIndex ||
+      embedding.type === 'url' ||
+      embedding.type === 'internal'
+    ) {
+      break
+    }
 
     let replaced
     if (embedding.type === 'file') {

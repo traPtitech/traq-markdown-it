@@ -1,16 +1,16 @@
 import {
   embeddingReplacer,
-  EmbeddingsExtractedMessage
+  EmbeddingsExtractedMessage,
+  createTypeExtractor,
+  createIdExtractor
 } from '#/embeddingExtractor'
+import LinkifyIt from "linkify-it"
 
 const basePath = `https://example.com`
-const regexp = RegExp(
-  `${basePath}/(files|messages)/([\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12})(\\s*)`,
-  'g'
-)
+const linkify = new LinkifyIt()
 
 const extractor = (message: string): EmbeddingsExtractedMessage =>
-  embeddingReplacer(message, regexp)
+  embeddingReplacer(message, linkify, createTypeExtractor(basePath), createIdExtractor(basePath))
 
 const id1 = 'e97518db-ebb8-450f-9b4a-273234e68491'
 const id2 = 'd7461966-e5d3-4c6d-9538-7c8605f45a1e'
