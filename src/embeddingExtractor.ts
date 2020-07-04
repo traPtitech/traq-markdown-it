@@ -33,9 +33,6 @@ export type EmbeddingMessage = {
   endIndex: number
 }
 
-export const isEmbedding = (e: EmbeddingOrUrl): e is Embedding =>
-  e.type !== 'url' && e.type !== 'internal'
-
 export type EmbeddingsExtractedMessage = {
   rawText: string
   text: string
