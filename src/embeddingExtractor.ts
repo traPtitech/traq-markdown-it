@@ -3,13 +3,19 @@ import { LinkifyIt } from 'linkify-it'
 const spaceRegexp = /^\s*$/
 const uuidRegexp = /[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}/
 
-type FileId = string
-type MessageId = string
-
 export type Embedding = EmbeddingFile | EmbeddingMessage
 export type EmbeddingOrUrl = NormalUrl | InternalUrl | Embedding
 
-export type NormalUrl = {
+type MessageFragment = {
+  startIndex: number
+  endIndex: number
+}
+type EmbeddingBase = MessageFragment & {
+  type: EmbeddingType
+  id: string
+}
+
+export type NormalUrl = MessageFragment & {
   type: 'url'
   url: string
   startIndex: number
@@ -17,20 +23,16 @@ export type NormalUrl = {
 }
 export type InternalUrl = {
   type: 'internal'
-  startIndex: number
-  endIndex: number
+  url: string
 }
-export type EmbeddingFile = {
+
+type EmbeddingType = 'file' | 'message'
+
+export type EmbeddingFile = EmbeddingBase & {
   type: 'file'
-  id: FileId
-  startIndex: number
-  endIndex: number
 }
-export type EmbeddingMessage = {
+export type EmbeddingMessage = EmbeddingBase & {
   type: 'message'
-  id: MessageId
-  startIndex: number
-  endIndex: number
 }
 
 export type EmbeddingsExtractedMessage = {
@@ -89,7 +91,7 @@ export const embeddingExtractor = (
   idExtractor: EmbeddingIdExtractor
 ): EmbeddingsExtractedMessage => {
   const embeddings: EmbeddingOrUrl[] = []
-  const knownIdSet: Set<FileId> = new Set()
+  const knownIdSet: Set<string> = new Set()
 
   const matches = linkify.match(rawMessage) ?? []
 
@@ -180,9 +182,9 @@ export const embeddingReplacer = (
     // 末尾のものは抽出で消えているので置換しない
     // 通常のURL・内部URLも必要がないので置換しない
     if (
-      text.length <= embedding.startIndex ||
       embedding.type === 'url' ||
-      embedding.type === 'internal'
+      embedding.type === 'internal' ||
+      text.length <= embedding.startIndex
     ) {
       break
     }
