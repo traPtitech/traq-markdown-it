@@ -1,4 +1,4 @@
-import LinkifyIt from 'linkify-it'
+import { LinkifyIt } from 'linkify-it'
 
 const spaceRegexp = /^\s*$/
 const uuidRegexp = /[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}/
@@ -45,25 +45,22 @@ export type EmbeddingIdExtractor = (
   ty: EmbeddingOrUrl['type']
 ) => Embedding['id'] | undefined
 
-const pathNameEmbeddingTypeMap: Record<
-  string,
-  Embedding['type'] | undefined
-> = {
-  files: 'file',
-  messages: 'message'
-}
+const pathNameEmbeddingTypeMap: Map<string, Embedding['type']> = new Map([
+  ['files', 'file'],
+  ['messages', 'message']
+])
 
 export const createTypeExtractor = (
   embeddingOrigin: string
-): EmbeddingTypeExtractor => (url: URL) => {
+): EmbeddingTypeExtractor => url => {
   if (url.origin !== embeddingOrigin) return 'url'
   const name = url.pathname.split('/')[1] ?? ''
-  return pathNameEmbeddingTypeMap[name] ?? 'internal'
+  return pathNameEmbeddingTypeMap.get(name) ?? 'internal'
 }
 
 export const createIdExtractor = (
   embeddingOrigin: string
-): EmbeddingIdExtractor => (url: URL, ty: EmbeddingOrUrl['type']) => {
+): EmbeddingIdExtractor => (url, ty) => {
   if (url.origin !== embeddingOrigin || ty === 'url' || ty === 'internal')
     return undefined
   const id = url.pathname.split('/')[2] ?? ''
@@ -87,7 +84,7 @@ const checkBlank = (
  */
 export const embeddingExtractor = (
   rawMessage: string,
-  linkify: LinkifyIt.LinkifyIt,
+  linkify: LinkifyIt,
   typeExtractor: EmbeddingTypeExtractor,
   idExtractor: EmbeddingIdExtractor
 ): EmbeddingsExtractedMessage => {
@@ -108,7 +105,13 @@ export const embeddingExtractor = (
   for (const match of matches) {
     const startIndex = match.index
     const endIndex = match.lastIndex
-    const url = new URL(match.url)
+
+    let url: URL
+    try {
+      url = new URL(match.url)
+    } catch {
+      continue // 不正なURLがlinkify-itから渡されたので無視
+    }
 
     const ty = typeExtractor(url)
     const id = idExtractor(url, ty)
@@ -158,7 +161,7 @@ export const embeddingExtractor = (
  */
 export const embeddingReplacer = (
   rawMessage: string,
-  linkify: LinkifyIt.LinkifyIt,
+  linkify: LinkifyIt,
   typeExtractor: EmbeddingTypeExtractor,
   idExtractor: EmbeddingIdExtractor
 ): EmbeddingsExtractedMessage => {
