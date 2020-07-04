@@ -15,26 +15,26 @@ export type NormalUrl = {
   startIndex: number
   endIndex: number
 }
-
 export type InternalUrl = {
   type: 'internal'
   startIndex: number
   endIndex: number
 }
-
 export type EmbeddingFile = {
   type: 'file'
   id: FileId
   startIndex: number
   endIndex: number
 }
-
 export type EmbeddingMessage = {
   type: 'message'
   id: MessageId
   startIndex: number
   endIndex: number
 }
+
+export const isEmbedding = (e: EmbeddingOrUrl): e is Embedding =>
+  e.type !== 'url' && e.type !== 'internal'
 
 export type EmbeddingsExtractedMessage = {
   rawText: string

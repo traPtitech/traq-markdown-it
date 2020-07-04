@@ -27,7 +27,8 @@ export {
   Embedding,
   EmbeddingFile,
   EmbeddingMessage,
-  EmbeddingsExtractedMessage
+  EmbeddingsExtractedMessage,
+  isEmbedding
 } from './embeddingExtractor'
 
 export type MarkdownRenderResult = EmbeddingsExtractedMessage & {
