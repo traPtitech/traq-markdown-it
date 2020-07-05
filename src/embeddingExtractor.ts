@@ -4,7 +4,7 @@ const spaceRegexp = /^\s*$/
 const uuidRegexp = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}/
 
 export type Embedding = EmbeddingFile | EmbeddingMessage
-export type EmbeddingOrUrl = NormalUrl | InternalUrl | Embedding
+export type EmbeddingOrUrl = ExternalUrl | InternalUrl | Embedding
 
 type MessageFragment = {
   startIndex: number
@@ -15,7 +15,7 @@ type EmbeddingBase = MessageFragment & {
   id: string
 }
 
-export type NormalUrl = MessageFragment & {
+export type ExternalUrl = MessageFragment & {
   type: 'url'
   url: string
 }
