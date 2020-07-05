@@ -54,7 +54,7 @@ export default class {
 
   constructor(
     store: Store,
-    whitelist: string[] = defaultWhitelist,
+    whitelist: readonly string[] = defaultWhitelist,
     embeddingOrigin: string
   ) {
     this.typeExtractor = createTypeExtractor(embeddingOrigin)
@@ -63,7 +63,7 @@ export default class {
     this.setPlugin(store, whitelist)
   }
 
-  setPlugin(store: Store, whitelist: string[]): void {
+  setPlugin(store: Store, whitelist: readonly string[]): void {
     this.md
       .use(MarkdownItMark)
       .use(spoiler, true)

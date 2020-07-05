@@ -1,7 +1,10 @@
 import MarkdownIt from 'markdown-it'
 import regexp from 'markdown-it-regexp'
 
-export const stampCssPlugin = (md: MarkdownIt, stamps: string[]): void => {
+export const stampCssPlugin = (
+  md: MarkdownIt,
+  stamps: readonly string[]
+): void => {
   regexp(/:([\w-_]+?)[:;]/, ([wrappedName, name]): string => {
     if (!stamps.includes(name)) return wrappedName
 

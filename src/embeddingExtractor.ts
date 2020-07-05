@@ -39,9 +39,11 @@ export type EmbeddingsExtractedMessage = {
   embeddings: EmbeddingOrUrl[]
 }
 
-export type EmbeddingTypeExtractor = (url: URL) => EmbeddingOrUrl['type']
+export type EmbeddingTypeExtractor = (
+  url: Readonly<URL>
+) => EmbeddingOrUrl['type']
 export type EmbeddingIdExtractor = (
-  url: URL,
+  url: Readonly<URL>,
   ty: EmbeddingOrUrl['type']
 ) => Embedding['id'] | undefined
 
@@ -84,7 +86,7 @@ const checkBlank = (
  */
 export const embeddingExtractor = (
   rawMessage: string,
-  linkify: LinkifyIt,
+  linkify: Readonly<LinkifyIt>,
   typeExtractor: EmbeddingTypeExtractor,
   idExtractor: EmbeddingIdExtractor
 ): EmbeddingsExtractedMessage => {
@@ -161,7 +163,7 @@ export const embeddingExtractor = (
  */
 export const embeddingReplacer = (
   rawMessage: string,
-  linkify: LinkifyIt,
+  linkify: Readonly<LinkifyIt>,
   typeExtractor: EmbeddingTypeExtractor,
   idExtractor: EmbeddingIdExtractor
 ): EmbeddingsExtractedMessage => {
