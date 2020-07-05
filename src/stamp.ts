@@ -62,6 +62,11 @@ const wrapWithEffect = (
   return filterOpenTag + stampHtml + filterCloseTag
 }
 
+const isSizeEffect = (e: string): e is SizeEffect =>
+  sizeEffectSet.has(e as SizeEffect)
+const isAnimeEffect = (e: string): e is AnimeEffect =>
+  animeEffectSet.has(e as AnimeEffect)
+
 const renderStampDomWithStyle = (
   rawMatch: string,
   stampName: string,
@@ -73,12 +78,8 @@ const renderStampDomWithStyle = (
   const escapedStyle = escapeHtml(style)
   const escapedName = escapeHtml(stampName)
 
-  const sizeEffects = effects.filter((e): e is SizeEffect =>
-    sizeEffectSet.has(e as SizeEffect)
-  )
-  const animeEffects = effects.filter((e): e is AnimeEffect =>
-    animeEffectSet.has(e as AnimeEffect)
-  )
+  const sizeEffects = effects.filter(isSizeEffect)
+  const animeEffects = effects.filter(isAnimeEffect)
 
   // 知らないエフェクトはダメ
   if (sizeEffects.length + animeEffects.length < effects.length) {
@@ -91,9 +92,8 @@ const renderStampDomWithStyle = (
   }
 
   // aliasの置き換え
-  const replacedAnimeEffects = animeEffects.map(e =>
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    animeEffectAliasMap.has(e) ? animeEffectAliasMap.get(e)! : e
+  const replacedAnimeEffects = animeEffects.map(
+    e => animeEffectAliasMap.get(e) ?? e
   )
 
   // 複数サイズ指定が合った場合は最後のものを適用
