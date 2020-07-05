@@ -47,7 +47,7 @@ const maxEffectCount = 5
 
 const wrapWithEffect = (
   stampHtml: string,
-  animeEffects: AnimeEffect[],
+  animeEffects: readonly AnimeEffect[],
   sizeEffect: SizeEffect
 ): string => {
   const filterOpenTag = animeEffects
@@ -62,23 +62,24 @@ const wrapWithEffect = (
   return filterOpenTag + stampHtml + filterCloseTag
 }
 
+const isSizeEffect = (e: string): e is SizeEffect =>
+  sizeEffectSet.has(e as SizeEffect)
+const isAnimeEffect = (e: string): e is AnimeEffect =>
+  animeEffectSet.has(e as AnimeEffect)
+
 const renderStampDomWithStyle = (
   rawMatch: string,
   stampName: string,
   imgTitle: string,
   style: string,
-  effects: string[]
+  effects: readonly string[]
 ): string => {
   const escapedTitle = escapeHtml(imgTitle)
   const escapedStyle = escapeHtml(style)
   const escapedName = escapeHtml(stampName)
 
-  const sizeEffects = effects.filter((e): e is SizeEffect =>
-    sizeEffectSet.has(e as SizeEffect)
-  )
-  const animeEffects = effects.filter((e): e is AnimeEffect =>
-    animeEffectSet.has(e as AnimeEffect)
-  )
+  const sizeEffects = effects.filter(isSizeEffect)
+  const animeEffects = effects.filter(isAnimeEffect)
 
   // 知らないエフェクトはダメ
   if (sizeEffects.length + animeEffects.length < effects.length) {
@@ -91,9 +92,8 @@ const renderStampDomWithStyle = (
   }
 
   // aliasの置き換え
-  const replacedAnimeEffects = animeEffects.map(e =>
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    animeEffectAliasMap.has(e) ? animeEffectAliasMap.get(e)! : e
+  const replacedAnimeEffects = animeEffects.map(
+    e => animeEffectAliasMap.get(e) ?? e
   )
 
   // 複数サイズ指定が合った場合は最後のものを適用
@@ -109,7 +109,7 @@ const renderStampDom = (
   stampName: string,
   imgTitle: string,
   imgUrl: string,
-  effects: string[]
+  effects: readonly string[]
 ): string =>
   renderStampDomWithStyle(
     rawMatch,
@@ -128,9 +128,11 @@ interface ColorRegExpGroup {
   effects: string
 }
 
-export const renderHslStamp = (match: RegExpExecArray): string => {
+export const renderHslStamp = (match: Readonly<RegExpExecArray>): string => {
   // HSL: hsl(..., ...%, ...%)
-  const { color, effects } = (match.groups as unknown) as ColorRegExpGroup
+  const { color, effects } = (match.groups as unknown) as Readonly<
+    ColorRegExpGroup
+  >
 
   return renderStampDomWithStyle(
     `:${match[0]}:`,
@@ -141,9 +143,11 @@ export const renderHslStamp = (match: RegExpExecArray): string => {
   )
 }
 
-export const renderHexStamp = (match: RegExpExecArray): string => {
+export const renderHexStamp = (match: Readonly<RegExpExecArray>): string => {
   // Hex: 0x......
-  const { color, effects } = (match.groups as unknown) as ColorRegExpGroup
+  const { color, effects } = (match.groups as unknown) as Readonly<
+    ColorRegExpGroup
+  >
 
   return renderStampDomWithStyle(
     `:${match[0]}:`,
@@ -157,7 +161,7 @@ export const renderHexStamp = (match: RegExpExecArray): string => {
 export const renderUserStamp = (
   stampName: string,
   raw: string,
-  effects: string[]
+  effects: readonly string[]
 ): string => {
   // 先頭の@を除いたものがユーザー名
   const userName = stampName.slice(1)
@@ -178,7 +182,7 @@ export const renderUserStamp = (
 export const renderNormalStamp = (
   stampName: string,
   raw: string,
-  effects: string[]
+  effects: readonly string[]
 ): string => {
   const stamp = store.getStampByName(stampName)
   if (!stamp) {
@@ -194,7 +198,7 @@ export const renderNormalStamp = (
   )
 }
 
-export const renderStamp = (match: RegExpMatchArray): string => {
+export const renderStamp = (match: Readonly<RegExpMatchArray>): string => {
   // ここはbabelの変換が効かない
   const { inner }: StampRegExpGroups = { inner: match[1] }
 

@@ -4,7 +4,7 @@ declare module 'markdown-it-json' {
   import StateInline from 'markdown-it/lib/rules_inline/state_inline'
 
   function json<T>(
-    validate: (object: unknown) => object is T,
+    validate: (object: Readonly<unknown>) => object is T,
     transform: (state: StateBlock | StateInline, obj: T) => void
   ): (md: Md) => void
 

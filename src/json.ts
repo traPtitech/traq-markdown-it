@@ -16,7 +16,7 @@ interface ValidStructData extends StructData {
   type: 'user' | 'channel' | 'group' | 'file' | 'message'
 }
 
-export const isStructData = (data: unknown): data is StructData => {
+export const isStructData = (data: Readonly<unknown>): data is StructData => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const anyData = data as any
   return (
@@ -26,7 +26,7 @@ export const isStructData = (data: unknown): data is StructData => {
   )
 }
 
-export const validate = (data: unknown): data is ValidStructData => {
+export const validate = (data: Readonly<unknown>): data is ValidStructData => {
   if (!isStructData(data)) {
     return false
   }

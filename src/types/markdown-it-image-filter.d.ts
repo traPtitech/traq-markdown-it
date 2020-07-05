@@ -5,7 +5,10 @@ declare module 'markdown-it-image-filter' {
     httpsOnly: boolean
   }
 
-  function imgFilter(domains: string[], options: Options): (md: Md) => void
+  function imgFilter(
+    domains: readonly string[],
+    options: Options
+  ): (md: Md) => void
 
   export = imgFilter
 }
