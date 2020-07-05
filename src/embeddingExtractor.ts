@@ -1,7 +1,7 @@
 import { LinkifyIt } from 'linkify-it'
 
 const spaceRegexp = /^\s*$/
-const uuidRegexp = /[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}/
+const uuidRegexp = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}/
 
 export type Embedding = EmbeddingFile | EmbeddingMessage
 export type EmbeddingOrUrl = NormalUrl | InternalUrl | Embedding
@@ -18,8 +18,6 @@ type EmbeddingBase = MessageFragment & {
 export type NormalUrl = MessageFragment & {
   type: 'url'
   url: string
-  startIndex: number
-  endIndex: number
 }
 export type InternalUrl = {
   type: 'internal'
