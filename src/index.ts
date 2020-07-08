@@ -25,6 +25,7 @@ import {
 export { Store } from './Store'
 export {
   Embedding,
+  EmbeddingOrUrl,
   ExternalUrl,
   EmbeddingFile,
   EmbeddingMessage,

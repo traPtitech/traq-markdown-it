@@ -108,8 +108,6 @@ describe('embeddingReplacer', () => {
         {
           type: 'url',
           url: externalUrl,
-          startIndex: 0,
-          endIndex: externalUrl.length
         }
       ]
     })
