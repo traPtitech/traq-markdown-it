@@ -97,8 +97,8 @@ describe('embeddingExtractor', () => {
     })
   })
 
-  it('can extract normal url', () => {
-    const message = `${externalUrl} is normal url`
+  it('can extract normal url and do not remove that from message', () => {
+    const message = `won't be removed: ${externalUrl}`
     const result = extractor(message)
     expect(result).toEqual({
       rawText: message,
@@ -107,8 +107,6 @@ describe('embeddingExtractor', () => {
         {
           type: 'url',
           url: externalUrl,
-          startIndex: 0,
-          endIndex: externalUrl.length
         }
       ]
     })
@@ -124,8 +122,8 @@ describe('embeddingExtractor', () => {
     })
   })
 
-  it('does not remove embedding url before internal url', () => {
-    const message = `${path1} ${internalUrl}`
+  it('does not remove embedding url before url', () => {
+    const message = `${path1} ${externalUrl}`
     const result = extractor(message)
     expect(result).toEqual({
       rawText: message,
@@ -136,29 +134,10 @@ describe('embeddingExtractor', () => {
           id: id1,
           startIndex: 0,
           endIndex: path1.length
-        }
-      ]
-    })
-  })
-
-  it('removes both embedding and external url after that', () => {
-    const message = `this is ${path1} ${externalUrl}`
-    const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: "this is ",
-      embeddings: [
-        {
-          type: 'file',
-          id: id1,
-          startIndex: 8,
-          endIndex: 8 + path1.length
         },
         {
           type: 'url',
           url: externalUrl,
-          startIndex: message.length - externalUrl.length,
-          endIndex: message.length
         }
       ]
     })

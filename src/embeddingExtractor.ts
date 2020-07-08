@@ -15,7 +15,7 @@ type EmbeddingBase = MessageFragment & {
   id: string
 }
 
-export type ExternalUrl = MessageFragment & {
+export type ExternalUrl = {
   type: 'url'
   url: string
 }
@@ -119,13 +119,16 @@ export const embeddingExtractor = (
     const id = idExtractor(url, ty)
 
     if (ty === 'internal') {
-      // 埋め込みと同じオリジンだが埋め込みに該当しない場合、urlではないとみなす
-      // このためにシーケンスをここで終了する
+      // シーケンスを終了
       sequenceStartIndex = endIndex
       prevEndIndex = endIndex
       continue
     } else if (ty === 'url') {
-      embeddings.push({ type: 'url', url: match.url, startIndex, endIndex })
+      embeddings.push({ type: 'url', url: match.url })
+      // シーケンスを終了
+      sequenceStartIndex = endIndex
+      prevEndIndex = endIndex
+      continue
     } else if (id && !knownIdSet.has(id)) {
       embeddings.push({ type: ty, id, startIndex, endIndex })
       knownIdSet.add(id)
