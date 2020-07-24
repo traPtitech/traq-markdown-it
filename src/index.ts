@@ -12,9 +12,7 @@ import { createHighlightFunc } from './highlight'
 import defaultWhitelist from './default/domain_whitelist'
 
 import { Store } from './Store'
-import EmbeddingExtractor, {
-  EmbeddingOrUrl
-} from './embeddingExtractor'
+import EmbeddingExtractor, { EmbeddingOrUrl } from './embeddingExtractor'
 export { Store } from './Store'
 export {
   Embedding,
@@ -88,9 +86,7 @@ export default class {
 
   render(text: string): MarkdownRenderResult {
     const parsed = this.md.parse(text, {})
-    const embeddings = this.embeddingExtractor.extract(
-      parsed
-    )
+    const embeddings = this.embeddingExtractor.extract(parsed)
 
     return {
       embeddings,
