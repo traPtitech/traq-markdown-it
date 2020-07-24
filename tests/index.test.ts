@@ -15,13 +15,14 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68493
 !!https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68494!!
 !!x!!
 https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68495
-`
-    )
+`)
     const expected = {
-      embeddings: [{
-        "id": "e97518db-ebb8-450f-9b4a-273234e68495",
-        "type": "message",
-      }],
+      embeddings: [
+        {
+          id: 'e97518db-ebb8-450f-9b4a-273234e68495',
+          type: 'message'
+        }
+      ],
       rawText: `
 **po**
 :xx:
@@ -55,13 +56,14 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68495
 :xx:
 !!x!!
 https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
-`
-    )
+`)
     const expected = {
-      embeddings: [{
-        "id": "e97518db-ebb8-450f-9b4a-273234e68491",
-        "type": "message",
-      }],
+      embeddings: [
+        {
+          id: 'e97518db-ebb8-450f-9b4a-273234e68491',
+          type: 'message'
+        }
+      ],
       rawText: `
 **po**
 :xx:
@@ -77,8 +79,7 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
     const actual = md.renderInline(`
 - a!!aaa
 - a!!aa
-`
-    )
+`)
     const expected = {
       embeddings: [],
       rawText: `
@@ -99,8 +100,7 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
   !!
   po
   !!
-  `
-    )
+  `)
     const expected = {
       embeddings: [],
       rawText: `
