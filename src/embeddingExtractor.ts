@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Token from 'markdown-it/lib/token'
 
 const uuidRegexp = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}/
@@ -145,6 +144,7 @@ export default class EmbeddingExtractor {
     const embeddings = this.extractUrlsFromTokens(tokens)
     const knownIdSet: Set<string> = new Set()
 
+    // かぶっているURLを取り除く(順序を保つため配列でそのまま行う)
     const filteredEmbeddings: EmbeddingOrUrl[] = []
     for (const embedding of embeddings) {
       if (embedding.type === 'internal') continue
@@ -162,14 +162,25 @@ export default class EmbeddingExtractor {
   }
 
   /**
-   * paragraphのchildのtokenの配列から取り除く
+   * paragraphのchildのtokenの配列から末尾の埋め込みを取り除く
+   *
+   * @param tokens ネストされていないtokenの配列
    * @returns 取り除かれたらtrue
    */
   removeTailEmbeddingsFromTailParagraph(
     tokens: TokenWithEmbeddingData[]
   ): boolean {
+    /**
+     * `token.type === 'link_open' && token.markup === 'linkify`と
+     * `token.type === 'link_close' && token.markup === 'linkify`の間にいるかどうか
+     */
     let isInLink = false
+    /**
+     * 取り除く埋め込みのトークンの先頭位置
+     * ここから最後までを取り除く
+     */
     let removeStartIndex = -1
+
     for (let i = tokens.length - 1; i >= 0; i--) {
       const token = tokens[i]
       if (token.type === 'softbreak') continue
@@ -180,6 +191,8 @@ export default class EmbeddingExtractor {
           removeStartIndex = i
           continue
         }
+        // 埋め込みでないリンクのときそのまま進む
+        // (breakすると埋め込みでないものが埋め込みが来る前に来たときの検知ができない)
       }
       if (isInLink) continue
 
@@ -188,6 +201,7 @@ export default class EmbeddingExtractor {
         continue
       }
 
+      // 埋め込みでないものが埋め込みが来る前に来たとき
       if (removeStartIndex === -1) {
         return false
       }
@@ -205,8 +219,15 @@ export default class EmbeddingExtractor {
    * 末尾から「改行」の連続(あってもなくてもよい)、「「埋め込み」を含むparagraph」の場合だけを確認する
    */
   removeTailEmbeddings(tokens: TokenWithEmbeddingData[]): void {
+    /**
+     * `token.type === 'paragraph_open'`と`token.type === 'paragraph_close'`の間にいるかどうか
+     */
     let isInParagraph = false
+    /**
+     * `token.type === 'paragraph_close'`が一旦除去されるので復元のために保持しておく
+     */
     let paragraphCloseToken = undefined
+
     for (let i = tokens.length - 1; i >= 0; i--) {
       const token = tokens[i]
       if (token.type === 'hardbreak') continue
@@ -219,6 +240,8 @@ export default class EmbeddingExtractor {
       if (!(isInParagraph && token.type === 'inline') || !token.children) {
         return
       }
+
+      // ここからparagraph内のchildrenをもっている`token.type === 'inline'`のとき
 
       const removed = this.removeTailEmbeddingsFromTailParagraph(token.children)
       if (removed) {
@@ -239,6 +262,9 @@ export default class EmbeddingExtractor {
    * markdownから埋め込みURLを抽出してすべて置換する
    */
   replace(tokens: TokenWithEmbeddingData[]): void {
+    /**
+     * 今居る場所が挟まれているlinkのトークン
+     */
     let linkOpenToken: Required<TokenWithEmbeddingData> | undefined = undefined
 
     for (const token of tokens) {
