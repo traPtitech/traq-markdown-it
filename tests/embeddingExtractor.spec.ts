@@ -24,6 +24,18 @@ describe('embeddingExtractor', () => {
     return md._render(tokens).trim()
   }
 
+  it('can catch mail protocol', () => {
+    const actual = embeddingExtractor.urlToEmbeddingData(
+      'mailto:user@example.com'
+    )
+    expect(actual).toBeUndefined()
+  })
+
+  it('can catch invalid url', () => {
+    const actual = embeddingExtractor.urlToEmbeddingData('https//invalid')
+    expect(actual).toBeUndefined()
+  })
+
   it('can extract a file from url', () => {
     const tokens = parse(path1)
     const extracted = extract(tokens)
