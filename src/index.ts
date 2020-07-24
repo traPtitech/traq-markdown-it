@@ -12,13 +12,7 @@ import { createHighlightFunc } from './highlight'
 import defaultWhitelist from './default/domain_whitelist'
 
 import { Store } from './Store'
-import {
-  createTypeExtractor,
-  createIdExtractor,
-  embeddingExtractor,
-  embeddingReplacer,
-  EmbeddingTypeExtractor,
-  EmbeddingIdExtractor,
+import EmbeddingExtractor, {
   EmbeddingOrUrl
 } from './embeddingExtractor'
 export { Store } from './Store'
@@ -43,16 +37,14 @@ export default class {
     highlight: createHighlightFunc('traq-code traq-lang')
   }
   readonly md = new MarkdownIt(this.mdOptions)
-  readonly typeExtractor: EmbeddingTypeExtractor
-  readonly idExtractor: EmbeddingIdExtractor
+  readonly embeddingExtractor: EmbeddingExtractor
 
   constructor(
     store: Store,
     whitelist: readonly string[] = defaultWhitelist,
     embeddingOrigin: string
   ) {
-    this.typeExtractor = createTypeExtractor(embeddingOrigin)
-    this.idExtractor = createIdExtractor(embeddingOrigin)
+    this.embeddingExtractor = new EmbeddingExtractor(embeddingOrigin)
     this.setRendererRule()
     this.setPlugin(store, whitelist)
   }
@@ -96,10 +88,8 @@ export default class {
 
   render(text: string): MarkdownRenderResult {
     const parsed = this.md.parse(text, {})
-    const embeddings = embeddingExtractor(
-      parsed,
-      this.typeExtractor,
-      this.idExtractor
+    const embeddings = this.embeddingExtractor.extract(
+      parsed
     )
 
     return {
@@ -110,7 +100,7 @@ export default class {
   }
 
   renderInline(text: string): MarkdownRenderResult {
-    const data = embeddingReplacer(text, this.typeExtractor, this.idExtractor)
+    const data = this.embeddingExtractor.replace(text)
 
     const parsed = this.md.parseInline(data.text, {})
     const tokens = parsed[0].children || []
