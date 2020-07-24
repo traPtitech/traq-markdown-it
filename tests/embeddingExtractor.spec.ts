@@ -1,6 +1,4 @@
-import EmbeddingExtractor, {
-  EmbeddingOrUrl
-} from '#/embeddingExtractor'
+import EmbeddingExtractor, { EmbeddingOrUrl } from '#/embeddingExtractor'
 import { setup } from './setupMd'
 import Token from 'markdown-it/lib/token'
 
@@ -31,12 +29,11 @@ describe('embeddingExtractor', () => {
     const extracted = extract(tokens)
     const rendered = render(tokens)
     expect(extracted).toEqual([
-        {
-          type: 'file',
-          id: id1
-        }
-      ]
-    )
+      {
+        type: 'file',
+        id: id1
+      }
+    ])
     expect(rendered).toEqual(`<p></p>`)
   })
 
@@ -45,12 +42,11 @@ describe('embeddingExtractor', () => {
     const extracted = extract(tokens)
     const rendered = render(tokens)
     expect(extracted).toEqual([
-        {
-          type: 'file',
-          id: id1
-        }
-      ]
-    )
+      {
+        type: 'file',
+        id: id1
+      }
+    ])
     expect(rendered).toEqual(`<p></p>`)
   })
 
@@ -59,7 +55,9 @@ describe('embeddingExtractor', () => {
     const extracted = extract(tokens)
     const rendered = render(tokens)
     expect(extracted).toEqual([])
-    expect(rendered).toEqual(`<p><span class="spoiler"><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></span> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code></p>`)
+    expect(rendered).toEqual(
+      `<p><span class="spoiler"><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></span> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code></p>`
+    )
   })
 
   it('can extract a file from text with url in middle of it', () => {
@@ -67,13 +65,14 @@ describe('embeddingExtractor', () => {
     const extracted = extract(tokens)
     const rendered = render(tokens)
     expect(extracted).toEqual([
-        {
-          type: 'file',
-          id: id1
-        }
-      ]
+      {
+        type: 'file',
+        id: id1
+      }
+    ])
+    expect(rendered).toEqual(
+      `<p>file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> is file</p>`
     )
-    expect(rendered).toEqual(`<p>file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> is file</p>`)
   })
 
   it('can extract files from text with url in middle of it', () => {
@@ -90,7 +89,9 @@ describe('embeddingExtractor', () => {
         id: id2
       }
     ])
-    expect(rendered).toEqual(`<p>file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> and <a href="https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e</a> are file</p>`)
+    expect(rendered).toEqual(
+      `<p>file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> and <a href="https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e</a> are file</p>`
+    )
   })
 
   it('can extract a file from text with url at the end of it', () => {
@@ -112,9 +113,10 @@ describe('embeddingExtractor', () => {
     const tokens = parse(`won't be removed: ${externalUrl}`)
     const extracted = extract(tokens)
     const rendered = render(tokens)
-    expect(extracted).toEqual([{
+    expect(extracted).toEqual([
+      {
         type: 'url',
-        url: externalUrl,
+        url: externalUrl
       }
     ])
     expect(rendered).toEqual(`<p>won't be removed: </p>`)
@@ -125,24 +127,27 @@ describe('embeddingExtractor', () => {
     const extracted = extract(tokens)
     const rendered = render(tokens)
     expect(extracted).toEqual([])
-    expect(rendered).toEqual(`<p><a href="https://example.com/somewhere" target="_blank" rel="nofollow noopener noreferrer">https://example.com/somewhere</a></p>`)
+    expect(rendered).toEqual(
+      `<p><a href="https://example.com/somewhere" target="_blank" rel="nofollow noopener noreferrer">https://example.com/somewhere</a></p>`
+    )
   })
 
   it('does not remove embedding url before url', () => {
     const tokens = parse(`${path1} ${externalUrl}`)
     const extracted = extract(tokens)
     const rendered = render(tokens)
-    expect(extracted).toEqual( [
-        {
-          type: 'file',
-          id: id1
-        },
-        {
-          type: 'url',
-          url: externalUrl,
-        }
-      ]
+    expect(extracted).toEqual([
+      {
+        type: 'file',
+        id: id1
+      },
+      {
+        type: 'url',
+        url: externalUrl
+      }
+    ])
+    expect(rendered).toEqual(
+      `<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> </p>`
     )
-    expect(rendered).toEqual(`<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> </p>`)
   })
 })
