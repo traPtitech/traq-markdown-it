@@ -1,5 +1,5 @@
 {
-  "include": ["src", "tests", "types"],
+  "include": ["src", "types"],
   "compilerOptions": {
     "module": "esnext",
     "lib": ["esnext", "dom", "dom.iterable"],
