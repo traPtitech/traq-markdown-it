@@ -49,7 +49,6 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68495
     expect(actual).toStrictEqual(expected)
   })
 
-  /*
   it('can render inline (1)', () => {
     const actual = md.renderInline(`
 **po**
@@ -60,9 +59,7 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
     )
     const expected = {
       embeddings: [{
-        "endIndex": 84,
         "id": "e97518db-ebb8-450f-9b4a-273234e68491",
-        "startIndex": 19,
         "type": "message",
       }],
       rawText: `
@@ -71,15 +68,11 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
 !!x!!
 https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
 `,
-      text: `
-**po**
-:xx:
-!!x!!
-`,
       renderedText: ` po :xx: <span class="spoiler">x</span> `
     }
     expect(actual).toStrictEqual(expected)
   })
+
   it('can render inline (2)', () => {
     const actual = md.renderInline(`
 - a!!aaa
@@ -89,10 +82,6 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
     const expected = {
       embeddings: [],
       rawText: `
-- a!!aaa
-- a!!aa
-`,
-      text: `
 - a!!aaa
 - a!!aa
 `,
@@ -122,17 +111,8 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
   po
   !!
   `,
-      text: `
-  !!p
-  o!!
-
-  !!
-  po
-  !!
-  `,
       renderedText: ` <span class="spoiler">p o</span>  !! po !! `
     }
     expect(actual).toStrictEqual(expected)
   })
-  */
 })

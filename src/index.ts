@@ -102,10 +102,13 @@ export default class {
   }
 
   renderInline(text: string): MarkdownRenderResult {
-    const data = this.embeddingExtractor.replace(text)
-
-    const parsed = this.md.parseInline(data.text, {})
+    const parsed = this.md.parseInline(text, {})
     const tokens = parsed[0].children || []
+
+    const embeddings = this.embeddingExtractor.extract(parsed)
+    this.embeddingExtractor.removeTailEmbeddingsFromTailParagraph(tokens)
+    this.embeddingExtractor.replace(parsed)
+
     const rendered = []
     for (const token of tokens) {
       if (token.type === 'regexp-0') {
@@ -124,7 +127,7 @@ export default class {
     }
 
     return {
-      embeddings: [],
+      embeddings,
       rawText: text,
       renderedText: rendered.join('')
     }

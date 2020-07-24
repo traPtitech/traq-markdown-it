@@ -165,11 +165,15 @@ export default class EmbeddingExtractor {
    * paragraphのchildのtokenの配列から取り除く
    * @returns 取り除かれたらtrue
    */
-  _removeTailEmbeddingsFromTailParagraph(tokens: TokenWithEmbeddingData[]): boolean {
+  removeTailEmbeddingsFromTailParagraph(
+    tokens: TokenWithEmbeddingData[]
+  ): boolean {
     let isInLink = false
     let removeStartIndex = -1
     for (let i = tokens.length - 1; i >= 0; i--) {
-      const token = tokens[i];
+      const token = tokens[i]
+      if (token.type === 'softbreak') continue
+
       if (token.type === 'link_open' && token.markup === 'linkify') {
         isInLink = false
         if (token.embedding) {
@@ -216,7 +220,7 @@ export default class EmbeddingExtractor {
         return
       }
 
-      const removed = this._removeTailEmbeddingsFromTailParagraph(token.children)
+      const removed = this.removeTailEmbeddingsFromTailParagraph(token.children)
       if (removed) {
         tokens.splice(i + 1, tokens.length - (i + 1))
 
@@ -234,7 +238,31 @@ export default class EmbeddingExtractor {
   /**
    * markdownから埋め込みURLを抽出してすべて置換する
    */
-  replace(rawMessage: string): { text: string } {
-    return { text: rawMessage }
+  replace(tokens: TokenWithEmbeddingData[]): void {
+    let linkOpenToken: Required<TokenWithEmbeddingData> | undefined = undefined
+
+    for (const token of tokens) {
+      if (token.children) {
+        this.replace(token.children)
+        continue
+      }
+
+      if (token.embedding) {
+        linkOpenToken = token as Required<TokenWithEmbeddingData>
+      }
+      if (!linkOpenToken) continue
+      if (token.type === 'text') {
+        if (linkOpenToken.embedding.type === 'message') {
+          token.content = '[[引用メッセージ]]'
+        } else if (linkOpenToken.embedding.type === 'file') {
+          token.content = '[[添付ファイル]]'
+        }
+        continue
+      }
+      if (token.type === 'link_close' && token.markup === 'linkify') {
+        linkOpenToken = undefined
+        continue
+      }
+    }
   }
 }
