@@ -1,18 +1,11 @@
-import {
-  embeddingExtractor,
-  EmbeddingsExtractedMessage,
-  createTypeExtractor,
-  createIdExtractor
+import EmbeddingExtractor, {
+  EmbeddingOrUrl
 } from '#/embeddingExtractor'
-import LinkifyIt from "linkify-it"
+import { setup } from './setupMd'
+import Token from 'markdown-it/lib/token'
 
 const basePath = `https://example.com`
 const nonBasePath = `https://yet.another.example.com`
-
-const linkify = new LinkifyIt()
-
-const extractor = (message: string): EmbeddingsExtractedMessage =>
-  embeddingExtractor(message, linkify, createTypeExtractor(basePath), createIdExtractor(basePath))
 
 const id1 = 'e97518db-ebb8-450f-9b4a-273234e68491'
 const id2 = 'd7461966-e5d3-4c6d-9538-7c8605f45a1e'
@@ -22,124 +15,134 @@ const externalUrl = `${nonBasePath}/files/${id1}`
 const internalUrl = `${basePath}/somewhere`
 
 describe('embeddingExtractor', () => {
+  const md = setup()
+  const embeddingExtractor = new EmbeddingExtractor(basePath)
+
+  const parse = (message: string) => md.md.parse(message, {})
+  const extract = (tokens: Token[]): EmbeddingOrUrl[] =>
+    embeddingExtractor.extract(tokens)
+  const render = (tokens: Token[]): string => {
+    embeddingExtractor.removeTailEmbeddings(tokens)
+    return md._render(tokens).trim()
+  }
+
   it('can extract a file from url', () => {
-    const message = `${path1}`
-    const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: '',
-      embeddings: [
+    const tokens = parse(path1)
+    const extracted = extract(tokens)
+    const rendered = render(tokens)
+    expect(extracted).toEqual([
         {
           type: 'file',
-          id: id1,
-          startIndex: 0,
-          endIndex: path1.length
+          id: id1
         }
       ]
-    })
+    )
+    expect(rendered).toEqual(`<p></p>`)
+  })
+
+  it('can extract a file from url and remove tail spaces', () => {
+    const tokens = parse(`${path1}\n\n    \n`)
+    const extracted = extract(tokens)
+    const rendered = render(tokens)
+    expect(extracted).toEqual([
+        {
+          type: 'file',
+          id: id1
+        }
+      ]
+    )
+    expect(rendered).toEqual(`<p></p>`)
+  })
+
+  it('can ignore a file inside spoiler or code block from url', () => {
+    const tokens = parse(`!!${path1}!! \`${path1}\` \`\`\`${path1}\`\`\``)
+    const extracted = extract(tokens)
+    const rendered = render(tokens)
+    expect(extracted).toEqual([])
+    expect(rendered).toEqual(`<p><span class="spoiler"><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></span> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code></p>`)
   })
 
   it('can extract a file from text with url in middle of it', () => {
-    const message = `file ${path1} is file`
-    const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: message,
-      embeddings: [
+    const tokens = parse(`file ${path1} is file`)
+    const extracted = extract(tokens)
+    const rendered = render(tokens)
+    expect(extracted).toEqual([
         {
           type: 'file',
-          id: id1,
-          startIndex: 5,
-          endIndex: 5 + path1.length
+          id: id1
         }
       ]
-    })
+    )
+    expect(rendered).toEqual(`<p>file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> is file</p>`)
   })
 
   it('can extract files from text with url in middle of it', () => {
-    const message = `file ${path1} and ${path2} are file`
-    const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: message,
-      embeddings: [
-        {
-          type: 'file',
-          id: id1,
-          startIndex: 5,
-          endIndex: 5 + path1.length
-        },
-        {
-          type: 'file',
-          id: id2,
-          startIndex: 5 + path1.length + 5,
-          endIndex: 5 + path1.length + 5 + path2.length
-        }
-      ]
-    })
+    const tokens = parse(`file ${path1} and ${path2} are file`)
+    const extracted = extract(tokens)
+    const rendered = render(tokens)
+    expect(extracted).toEqual([
+      {
+        type: 'file',
+        id: id1
+      },
+      {
+        type: 'file',
+        id: id2
+      }
+    ])
+    expect(rendered).toEqual(`<p>file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> and <a href="https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e</a> are file</p>`)
   })
 
   it('can extract a file from text with url at the end of it', () => {
     const noAttachMessage = 'attach!\n'
-    const message = `${noAttachMessage}${path1}`
-    const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: noAttachMessage,
-      embeddings: [
-        {
-          type: 'file',
-          id: id1,
-          startIndex: noAttachMessage.length,
-          endIndex: noAttachMessage.length + path1.length
-        }
-      ]
-    })
+    const tokens = parse(`${noAttachMessage}${path1}`)
+    const extracted = extract(tokens)
+    const rendered = render(tokens)
+    expect(extracted).toEqual([
+      {
+        type: 'file',
+        id: id1
+      }
+    ])
+    expect(rendered).toEqual(`<p>attach!<br>
+</p>`)
   })
 
   it('can extract normal url and do not remove that from message', () => {
-    const message = `won't be removed: ${externalUrl}`
-    const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: message,
-      embeddings: [
-        {
-          type: 'url',
-          url: externalUrl,
-        }
-      ]
-    })
+    const tokens = parse(`won't be removed: ${externalUrl}`)
+    const extracted = extract(tokens)
+    const rendered = render(tokens)
+    expect(extracted).toEqual([{
+        type: 'url',
+        url: externalUrl,
+      }
+    ])
+    expect(rendered).toEqual(`<p>won't be removed: </p>`)
   })
 
   it('does not extract internal url', () => {
-    const message = `${internalUrl}`
-    const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: message,
-      embeddings: []
-    })
+    const tokens = parse(`${internalUrl}`)
+    const extracted = extract(tokens)
+    const rendered = render(tokens)
+    expect(extracted).toEqual([])
+    expect(rendered).toEqual(`<p><a href="https://example.com/somewhere" target="_blank" rel="nofollow noopener noreferrer">https://example.com/somewhere</a></p>`)
   })
 
   it('does not remove embedding url before url', () => {
-    const message = `${path1} ${externalUrl}`
-    const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: message,
-      embeddings: [
+    const tokens = parse(`${path1} ${externalUrl}`)
+    const extracted = extract(tokens)
+    const rendered = render(tokens)
+    expect(extracted).toEqual( [
         {
           type: 'file',
-          id: id1,
-          startIndex: 0,
-          endIndex: path1.length
+          id: id1
         },
         {
           type: 'url',
           url: externalUrl,
         }
       ]
-    })
+    )
+    expect(rendered).toEqual(`<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> </p>`)
   })
 })

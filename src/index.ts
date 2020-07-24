@@ -2,7 +2,6 @@
 import MarkdownIt from 'markdown-it'
 import MarkdownItMark from 'markdown-it-mark'
 import spoiler from '@traptitech/markdown-it-spoiler'
-import LinkifyIt from 'linkify-it'
 import stamp, { renderStamp } from './stamp'
 import json from './json'
 import katex from '@traptitech/markdown-it-katex'
@@ -11,56 +10,40 @@ import mila from 'markdown-it-link-attributes'
 import filter from 'markdown-it-image-filter'
 import { createHighlightFunc } from './highlight'
 import defaultWhitelist from './default/domain_whitelist'
+import Token from 'markdown-it/lib/token'
 
 import { Store } from './Store'
-import {
-  createTypeExtractor,
-  createIdExtractor,
-  embeddingExtractor,
-  embeddingReplacer,
-  EmbeddingsExtractedMessage,
-  EmbeddingTypeExtractor,
-  EmbeddingIdExtractor
-} from './embeddingExtractor'
+import EmbeddingExtractor, { EmbeddingOrUrl } from './embeddingExtractor'
 export { Store } from './Store'
 export {
   Embedding,
   EmbeddingOrUrl,
   ExternalUrl,
   EmbeddingFile,
-  EmbeddingMessage,
-  EmbeddingsExtractedMessage
+  EmbeddingMessage
 } from './embeddingExtractor'
 
-export type MarkdownRenderResult = EmbeddingsExtractedMessage & {
+export type MarkdownRenderResult = {
+  embeddings: EmbeddingOrUrl[]
+  rawText: string
   renderedText: string
 }
 
 export default class {
-  readonly md = new MarkdownIt({
+  readonly mdOptions = {
     breaks: true,
     linkify: true,
     highlight: createHighlightFunc('traq-code traq-lang')
-  })
-  readonly linkify = new LinkifyIt(
-    {
-      'mailto:': '',
-      'ftp:': ''
-    },
-    {
-      fuzzyEmail: false
-    }
-  )
-  readonly typeExtractor: EmbeddingTypeExtractor
-  readonly idExtractor: EmbeddingIdExtractor
+  }
+  readonly md = new MarkdownIt(this.mdOptions)
+  readonly embeddingExtractor: EmbeddingExtractor
 
   constructor(
     store: Store,
     whitelist: readonly string[] = defaultWhitelist,
     embeddingOrigin: string
   ) {
-    this.typeExtractor = createTypeExtractor(embeddingOrigin)
-    this.idExtractor = createIdExtractor(embeddingOrigin)
+    this.embeddingExtractor = new EmbeddingExtractor(embeddingOrigin)
     this.setRendererRule()
     this.setPlugin(store, whitelist)
   }
@@ -102,29 +85,30 @@ export default class {
     }
   }
 
+  _render(tokens: Token[]): string {
+    return this.md.renderer.render(tokens, this.mdOptions, {})
+  }
+
   render(text: string): MarkdownRenderResult {
-    const data = embeddingExtractor(
-      text,
-      this.linkify,
-      this.typeExtractor,
-      this.idExtractor
-    )
+    const parsed = this.md.parse(text, {})
+    const embeddings = this.embeddingExtractor.extract(parsed)
+    this.embeddingExtractor.removeTailEmbeddings(parsed)
+
     return {
-      ...data,
-      renderedText: this.md.render(data.text, {})
+      embeddings,
+      rawText: text,
+      renderedText: this._render(parsed)
     }
   }
 
   renderInline(text: string): MarkdownRenderResult {
-    const data = embeddingReplacer(
-      text,
-      this.linkify,
-      this.typeExtractor,
-      this.idExtractor
-    )
-
-    const parsed = this.md.parseInline(data.text, {})
+    const parsed = this.md.parseInline(text, {})
     const tokens = parsed[0].children || []
+
+    const embeddings = this.embeddingExtractor.extract(parsed)
+    this.embeddingExtractor.removeTailEmbeddingsFromTailParagraph(tokens)
+    this.embeddingExtractor.replace(parsed)
+
     const rendered = []
     for (const token of tokens) {
       if (token.type === 'regexp-0') {
@@ -143,7 +127,8 @@ export default class {
     }
 
     return {
-      ...data,
+      embeddings,
+      rawText: text,
       renderedText: rendered.join('')
     }
   }

@@ -1,26 +1,21 @@
-import { LinkifyIt } from 'linkify-it'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import Token from 'markdown-it/lib/token'
 
-const spaceRegexp = /^\s*$/
 const uuidRegexp = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}/
 
 export type Embedding = EmbeddingFile | EmbeddingMessage
-export type EmbeddingOrUrl = ExternalUrl | InternalUrl | Embedding
+export type EmbeddingOrUrl = InternalUrl | ExternalUrl | Embedding
 
-type MessageFragment = {
-  startIndex: number
-  endIndex: number
-}
-type EmbeddingBase = MessageFragment & {
+type EmbeddingBase = {
   type: EmbeddingType
   id: string
 }
 
-export type ExternalUrl = {
-  type: 'url'
-  url: string
-}
 export type InternalUrl = {
   type: 'internal'
+}
+export type ExternalUrl = {
+  type: 'url'
   url: string
 }
 
@@ -33,181 +28,241 @@ export type EmbeddingMessage = EmbeddingBase & {
   type: 'message'
 }
 
-export type EmbeddingsExtractedMessage = {
-  rawText: string
-  text: string
-  embeddings: EmbeddingOrUrl[]
+interface TokenWithEmbeddingData extends Token {
+  children: TokenWithEmbeddingData[] | null
+  embedding?: EmbeddingOrUrl
 }
 
-export type EmbeddingTypeExtractor = (
-  url: Readonly<URL>
-) => EmbeddingOrUrl['type']
-export type EmbeddingIdExtractor = (
-  url: Readonly<URL>,
-  ty: EmbeddingOrUrl['type']
-) => Embedding['id'] | undefined
+export default class EmbeddingExtractor {
+  readonly pathNameEmbeddingTypeMap = new Map<string, Embedding['type']>([
+    ['files', 'file'],
+    ['messages', 'message']
+  ])
+  readonly embeddingOrigin: string
 
-const pathNameEmbeddingTypeMap: Map<string, Embedding['type']> = new Map([
-  ['files', 'file'],
-  ['messages', 'message']
-])
-
-export const createTypeExtractor = (
-  embeddingOrigin: string
-): EmbeddingTypeExtractor => url => {
-  if (url.origin !== embeddingOrigin) return 'url'
-  const name = url.pathname.split('/')[1] ?? ''
-  return pathNameEmbeddingTypeMap.get(name) ?? 'internal'
-}
-
-export const createIdExtractor = (
-  embeddingOrigin: string
-): EmbeddingIdExtractor => (url, ty) => {
-  if (url.origin !== embeddingOrigin || ty === 'url' || ty === 'internal')
-    return undefined
-  const id = url.pathname.split('/')[2] ?? ''
-  return uuidRegexp.test(id) ? id : undefined
-}
-
-const checkBlank = (
-  rawMessage: string,
-  prevEndIndex: number,
-  startIndex: number
-) => {
-  const substrFromPrev = rawMessage.substring(prevEndIndex, startIndex)
-  return spaceRegexp.test(substrFromPrev)
-}
-
-/**
- * markdownからURL・埋め込みURLを抽出する
- *
- * @param typeIdExtractor マッチ結果から埋め込み/通常URLの種別を返す関数
- * @param idExtractor マッチ結果から埋め込みidを返す関数（通常URL時は`undefined`）
- */
-export const embeddingExtractor = (
-  rawMessage: string,
-  linkify: Readonly<LinkifyIt>,
-  typeExtractor: EmbeddingTypeExtractor,
-  idExtractor: EmbeddingIdExtractor
-): EmbeddingsExtractedMessage => {
-  const embeddings: EmbeddingOrUrl[] = []
-  const knownIdSet: Set<string> = new Set()
-
-  const matches = linkify.match(rawMessage) ?? []
-
-  /** 連続したマッチの開始インデックス */
-  let sequenceStartIndex = 0
-
-  /** スペースを含んだ、連続したマッチ全体の終了インデックス */
-  let sequenceEndIndex = 0
-
-  /** 1つ前のマッチの`endIndex` */
-  let prevEndIndex = 0
-
-  for (const match of matches) {
-    const startIndex = match.index
-    const endIndex = match.lastIndex
-
-    let url: URL
-    try {
-      url = new URL(match.url)
-    } catch {
-      continue // 不正なURLがlinkify-itから渡されたので無視
-    }
-
-    const ty = typeExtractor(url)
-    const id = idExtractor(url, ty)
-
-    if (ty === 'internal') {
-      // シーケンスを終了
-      sequenceStartIndex = endIndex
-      prevEndIndex = endIndex
-      continue
-    } else if (ty === 'url') {
-      embeddings.push({ type: 'url', url: match.url })
-      // シーケンスを終了
-      sequenceStartIndex = endIndex
-      prevEndIndex = endIndex
-      continue
-    } else if (id && !knownIdSet.has(id)) {
-      embeddings.push({ type: ty, id, startIndex, endIndex })
-      knownIdSet.add(id)
-    }
-
-    // 前のマッチから連続しているかどうかの判定
-    if (!checkBlank(rawMessage, prevEndIndex, startIndex)) {
-      // 連続したマッチではなかった
-      sequenceStartIndex = startIndex
-    }
-    sequenceEndIndex = endIndex
-    prevEndIndex = endIndex
+  constructor(embeddingOrigin: string) {
+    this.embeddingOrigin = embeddingOrigin
   }
 
-  const hasSequenceReachedEos = checkBlank(
-    rawMessage,
-    sequenceEndIndex,
-    rawMessage.length
-  )
-
-  return {
-    rawText: rawMessage,
-    text: hasSequenceReachedEos
-      ? rawMessage.substring(0, sequenceStartIndex)
-      : rawMessage,
-    embeddings
+  extractType(url: URL): EmbeddingOrUrl['type'] {
+    if (url.origin !== this.embeddingOrigin) return 'url'
+    const name = url.pathname.split('/')[1] ?? ''
+    return this.pathNameEmbeddingTypeMap.get(name) ?? 'internal'
   }
-}
 
-/**
- * markdownから埋め込みURLを抽出してすべて置換する
- *
- * @param typeIdExtractor マッチ結果から埋め込み/通常URLの種別を返す関数
- * @param idExtractor マッチ結果から埋め込みidを返す関数（通常URL時は`undefined`）
- */
-export const embeddingReplacer = (
-  rawMessage: string,
-  linkify: Readonly<LinkifyIt>,
-  typeExtractor: EmbeddingTypeExtractor,
-  idExtractor: EmbeddingIdExtractor
-): EmbeddingsExtractedMessage => {
-  const { text, embeddings } = embeddingExtractor(
-    rawMessage,
-    linkify,
-    typeExtractor,
-    idExtractor
-  )
-
-  let newText = text
-  // 置換で文字数がずれるのでずれた数を保持する
-  let placeDiff = 0
-
-  for (const embedding of embeddings) {
-    // 末尾のものは抽出で消えているので置換しない
-    // 通常のURL・内部URLも必要がないので置換しない
+  extractId(
+    url: URL,
+    type: EmbeddingOrUrl['type']
+  ): Embedding['id'] | undefined {
     if (
-      embedding.type === 'url' ||
-      embedding.type === 'internal' ||
-      text.length <= embedding.startIndex
-    ) {
+      url.origin !== this.embeddingOrigin ||
+      type === 'url' ||
+      type === 'internal'
+    )
+      return undefined
+    const id = url.pathname.split('/')[2] ?? ''
+    return uuidRegexp.test(id) ? id : undefined
+  }
+
+  urlToEmbeddingData(url: string): EmbeddingOrUrl | undefined {
+    let urlObj: URL
+    try {
+      urlObj = new URL(url)
+    } catch {
+      return // 不正なURLだったので無視
+    }
+
+    if (urlObj.protocol !== 'http:' && urlObj.protocol !== 'https:') {
+      return
+    }
+
+    const type = this.extractType(urlObj)
+    const id = this.extractId(urlObj, type)
+
+    if (type === 'internal') {
+      return
+    } else if (type === 'url') {
+      return { type, url }
+    } else if (id) {
+      return { type, id }
+    }
+    return
+  }
+
+  /**
+   * パースされたトークンの木構造から再帰的にURLを抽出する
+   * 同時にトークンにURLの情報を付与する
+   */
+  extractUrlsFromTokens(
+    tokens: TokenWithEmbeddingData[],
+    embeddings: EmbeddingOrUrl[] = []
+  ): EmbeddingOrUrl[] {
+    let inSpoilerCount = 0
+
+    for (const token of tokens) {
+      if (token.children) {
+        this.extractUrlsFromTokens(token.children, embeddings)
+        continue
+      }
+
+      if (token.type === 'spoiler_open') {
+        inSpoilerCount++
+        continue
+      }
+      if (token.type === 'spoiler_close' && inSpoilerCount > 0) {
+        inSpoilerCount--
+        continue
+      }
+
+      // spoiler内部は無視
+      if (inSpoilerCount > 0) continue
+
+      // token.markupを利用して[]()の形式のリンクは無視
+      if (token.type === 'link_open' && token.markup === 'linkify') {
+        const url = token.attrGet('href')
+        if (url) {
+          const embedding = this.urlToEmbeddingData(url)
+          if (embedding) {
+            token.embedding = embedding
+            embeddings.push(embedding)
+          }
+        }
+      }
+
+      // ``の内部はtoken.type === 'code_inline'
+      // ```の内部はtoken.type === 'fence'
+    }
+    return embeddings
+  }
+
+  /**
+   * markdownからURL・埋め込みURLを抽出する
+   *
+   * @param typeIdExtractor マッチ結果から埋め込み/通常URLの種別を返す関数
+   * @param idExtractor マッチ結果から埋め込みidを返す関数（通常URL時は`undefined`）
+   */
+  extract(tokens: Token[]): EmbeddingOrUrl[] {
+    const embeddings = this.extractUrlsFromTokens(tokens)
+    const knownIdSet: Set<string> = new Set()
+
+    const filteredEmbeddings: EmbeddingOrUrl[] = []
+    for (const embedding of embeddings) {
+      if (embedding.type === 'internal') continue
+      if (embedding.type === 'url') {
+        filteredEmbeddings.push(embedding)
+        continue
+      }
+
+      if (!knownIdSet.has(embedding.id)) {
+        knownIdSet.add(embedding.id)
+        filteredEmbeddings.push(embedding)
+      }
+    }
+    return filteredEmbeddings
+  }
+
+  /**
+   * paragraphのchildのtokenの配列から取り除く
+   * @returns 取り除かれたらtrue
+   */
+  removeTailEmbeddingsFromTailParagraph(
+    tokens: TokenWithEmbeddingData[]
+  ): boolean {
+    let isInLink = false
+    let removeStartIndex = -1
+    for (let i = tokens.length - 1; i >= 0; i--) {
+      const token = tokens[i]
+      if (token.type === 'softbreak') continue
+
+      if (token.type === 'link_open' && token.markup === 'linkify') {
+        isInLink = false
+        if (token.embedding) {
+          removeStartIndex = i
+          continue
+        }
+      }
+      if (isInLink) continue
+
+      if (token.type === 'link_close' && token.markup === 'linkify') {
+        isInLink = true
+        continue
+      }
+
+      if (removeStartIndex === -1) {
+        return false
+      }
+
       break
     }
-
-    let replaced
-    if (embedding.type === 'file') {
-      replaced = '[[添付ファイル]]'
-    } else if (embedding.type === 'message') {
-      replaced = '[[添付メッセージ]]'
-    } else {
-      const invalid: never = embedding
-      throw new Error(`embeddingReplacer unknown embedding type: ${invalid}`)
-    }
-
-    newText =
-      newText.slice(0, placeDiff + embedding.startIndex) +
-      replaced +
-      newText.slice(placeDiff + embedding.endIndex)
-
-    placeDiff += replaced.length - (embedding.endIndex - embedding.startIndex)
+    // 終了時
+    tokens.splice(removeStartIndex, tokens.length - removeStartIndex)
+    return true
   }
-  return { rawText: rawMessage, text: newText, embeddings }
+
+  /**
+   * 末尾の埋め込みURLを除去する
+   *
+   * 末尾から「改行」の連続(あってもなくてもよい)、「「埋め込み」を含むparagraph」の場合だけを確認する
+   */
+  removeTailEmbeddings(tokens: TokenWithEmbeddingData[]): void {
+    let isInParagraph = false
+    let paragraphCloseToken = undefined
+    for (let i = tokens.length - 1; i >= 0; i--) {
+      const token = tokens[i]
+      if (token.type === 'hardbreak') continue
+      if (token.type === 'paragraph_close') {
+        isInParagraph = true
+        paragraphCloseToken = token
+        continue
+      }
+
+      if (!(isInParagraph && token.type === 'inline') || !token.children) {
+        return
+      }
+
+      const removed = this.removeTailEmbeddingsFromTailParagraph(token.children)
+      if (removed) {
+        tokens.splice(i + 1, tokens.length - (i + 1))
+
+        const lastToken = tokens[tokens.length - 1]
+        if (lastToken.type === 'inline' && lastToken.children?.length === 0) {
+          tokens.pop()
+        }
+        if (paragraphCloseToken) {
+          tokens.push(paragraphCloseToken)
+        }
+      }
+    }
+  }
+
+  /**
+   * markdownから埋め込みURLを抽出してすべて置換する
+   */
+  replace(tokens: TokenWithEmbeddingData[]): void {
+    let linkOpenToken: Required<TokenWithEmbeddingData> | undefined = undefined
+
+    for (const token of tokens) {
+      if (token.children) {
+        this.replace(token.children)
+        continue
+      }
+
+      if (token.embedding) {
+        linkOpenToken = token as Required<TokenWithEmbeddingData>
+      }
+      if (!linkOpenToken) continue
+      if (token.type === 'text') {
+        if (linkOpenToken.embedding.type === 'message') {
+          token.content = '[[引用メッセージ]]'
+        } else if (linkOpenToken.embedding.type === 'file') {
+          token.content = '[[添付ファイル]]'
+        }
+        continue
+      }
+      if (token.type === 'link_close' && token.markup === 'linkify') {
+        linkOpenToken = undefined
+        continue
+      }
+    }
+  }
 }
