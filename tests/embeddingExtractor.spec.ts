@@ -54,6 +54,14 @@ describe('embeddingExtractor', () => {
     expect(rendered).toEqual(`<p></p>`)
   })
 
+  it('can ignore a file inside spoiler or code block from url', () => {
+    const tokens = parse(`!!${path1}!! \`${path1}\` \`\`\`${path1}\`\`\``)
+    const extracted = extract(tokens)
+    const rendered = render(tokens)
+    expect(extracted).toEqual([])
+    expect(rendered).toEqual(`<p><span class="spoiler"><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></span> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code></p>`)
+  })
+
   it('can extract a file from text with url in middle of it', () => {
     const tokens = parse(`file ${path1} is file`)
     const extracted = extract(tokens)
