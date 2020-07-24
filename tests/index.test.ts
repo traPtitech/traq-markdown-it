@@ -43,7 +43,7 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68495
 </code></pre>
 <p><span class="spoiler"><a href="https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68494" target="_blank" rel="nofollow noopener noreferrer">https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68494</a></span><br>
 <span class="spoiler">x</span><br>
-<a href="https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68495" target="_blank" rel="nofollow noopener noreferrer">https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68495</a></p>
+</p>
 `
     }
     expect(actual).toStrictEqual(expected)

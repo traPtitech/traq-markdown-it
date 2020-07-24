@@ -29,6 +29,7 @@ export type EmbeddingMessage = EmbeddingBase & {
 }
 
 interface TokenWithEmbeddingData extends Token {
+  children: TokenWithEmbeddingData[] | null
   embedding?: EmbeddingOrUrl
 }
 
@@ -158,6 +159,76 @@ export default class EmbeddingExtractor {
       }
     }
     return filteredEmbeddings
+  }
+
+  /**
+   * paragraphのchildのtokenの配列から取り除く
+   * @returns 取り除かれたらtrue
+   */
+  _removeTailEmbeddingsFromTailParagraph(tokens: TokenWithEmbeddingData[]): boolean {
+    let isInLink = false
+    let removeStartIndex = -1
+    for (let i = tokens.length - 1; i >= 0; i--) {
+      const token = tokens[i];
+      if (token.type === 'link_open' && token.markup === 'linkify') {
+        isInLink = false
+        if (token.embedding) {
+          removeStartIndex = i
+          continue
+        }
+      }
+      if (isInLink) continue
+
+      if (token.type === 'link_close' && token.markup === 'linkify') {
+        isInLink = true
+        continue
+      }
+
+      if (removeStartIndex === -1) {
+        return false
+      }
+
+      break
+    }
+    // 終了時
+    tokens.splice(removeStartIndex, tokens.length - removeStartIndex)
+    return true
+  }
+
+  /**
+   * 末尾の埋め込みURLを除去する
+   *
+   * 末尾から「改行」の連続(あってもなくてもよい)、「「埋め込み」を含むparagraph」の場合だけを確認する
+   */
+  removeTailEmbeddings(tokens: TokenWithEmbeddingData[]): void {
+    let isInParagraph = false
+    let paragraphCloseToken = undefined
+    for (let i = tokens.length - 1; i >= 0; i--) {
+      const token = tokens[i]
+      if (token.type === 'hardbreak') continue
+      if (token.type === 'paragraph_close') {
+        isInParagraph = true
+        paragraphCloseToken = token
+        continue
+      }
+
+      if (!(isInParagraph && token.type === 'inline') || !token.children) {
+        return
+      }
+
+      const removed = this._removeTailEmbeddingsFromTailParagraph(token.children)
+      if (removed) {
+        tokens.splice(i + 1, tokens.length - (i + 1))
+
+        const lastToken = tokens[tokens.length - 1]
+        if (lastToken.type === 'inline' && lastToken.children?.length === 0) {
+          tokens.pop()
+        }
+        if (paragraphCloseToken) {
+          tokens.push(paragraphCloseToken)
+        }
+      }
+    }
   }
 
   /**

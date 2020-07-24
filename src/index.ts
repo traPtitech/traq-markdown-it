@@ -10,6 +10,7 @@ import mila from 'markdown-it-link-attributes'
 import filter from 'markdown-it-image-filter'
 import { createHighlightFunc } from './highlight'
 import defaultWhitelist from './default/domain_whitelist'
+import Token from 'markdown-it/lib/token'
 
 import { Store } from './Store'
 import EmbeddingExtractor, { EmbeddingOrUrl } from './embeddingExtractor'
@@ -84,14 +85,19 @@ export default class {
     }
   }
 
+  _render(tokens: Token[]): string {
+    return this.md.renderer.render(tokens, this.mdOptions, {})
+  }
+
   render(text: string): MarkdownRenderResult {
     const parsed = this.md.parse(text, {})
     const embeddings = this.embeddingExtractor.extract(parsed)
+    this.embeddingExtractor.removeTailEmbeddings(parsed)
 
     return {
       embeddings,
       rawText: text,
-      renderedText: this.md.renderer.render(parsed, this.mdOptions, {})
+      renderedText: this._render(parsed)
     }
   }
 
