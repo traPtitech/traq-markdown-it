@@ -2,7 +2,6 @@
 import MarkdownIt from 'markdown-it'
 import MarkdownItMark from 'markdown-it-mark'
 import spoiler from '@traptitech/markdown-it-spoiler'
-import LinkifyIt from 'linkify-it'
 import stamp, { renderStamp } from './stamp'
 import json from './json'
 import katex from '@traptitech/markdown-it-katex'
@@ -18,9 +17,9 @@ import {
   createIdExtractor,
   embeddingExtractor,
   embeddingReplacer,
-  EmbeddingsExtractedMessage,
   EmbeddingTypeExtractor,
-  EmbeddingIdExtractor
+  EmbeddingIdExtractor,
+  EmbeddingOrUrl
 } from './embeddingExtractor'
 export { Store } from './Store'
 export {
@@ -28,29 +27,22 @@ export {
   EmbeddingOrUrl,
   ExternalUrl,
   EmbeddingFile,
-  EmbeddingMessage,
-  EmbeddingsExtractedMessage
+  EmbeddingMessage
 } from './embeddingExtractor'
 
-export type MarkdownRenderResult = EmbeddingsExtractedMessage & {
+export type MarkdownRenderResult = {
+  embeddings: EmbeddingOrUrl[]
+  rawText: string
   renderedText: string
 }
 
 export default class {
-  readonly md = new MarkdownIt({
+  readonly mdOptions = {
     breaks: true,
     linkify: true,
     highlight: createHighlightFunc('traq-code traq-lang')
-  })
-  readonly linkify = new LinkifyIt(
-    {
-      'mailto:': '',
-      'ftp:': ''
-    },
-    {
-      fuzzyEmail: false
-    }
-  )
+  }
+  readonly md = new MarkdownIt(this.mdOptions)
   readonly typeExtractor: EmbeddingTypeExtractor
   readonly idExtractor: EmbeddingIdExtractor
 
@@ -103,25 +95,22 @@ export default class {
   }
 
   render(text: string): MarkdownRenderResult {
-    const data = embeddingExtractor(
-      text,
-      this.linkify,
+    const parsed = this.md.parse(text, {})
+    const embeddings = embeddingExtractor(
+      parsed,
       this.typeExtractor,
       this.idExtractor
     )
+
     return {
-      ...data,
-      renderedText: this.md.render(data.text, {})
+      embeddings,
+      rawText: text,
+      renderedText: this.md.renderer.render(parsed, this.mdOptions, {})
     }
   }
 
   renderInline(text: string): MarkdownRenderResult {
-    const data = embeddingReplacer(
-      text,
-      this.linkify,
-      this.typeExtractor,
-      this.idExtractor
-    )
+    const data = embeddingReplacer(text, this.typeExtractor, this.idExtractor)
 
     const parsed = this.md.parseInline(data.text, {})
     const tokens = parsed[0].children || []
@@ -143,7 +132,8 @@ export default class {
     }
 
     return {
-      ...data,
+      embeddings: [],
+      rawText: text,
       renderedText: rendered.join('')
     }
   }

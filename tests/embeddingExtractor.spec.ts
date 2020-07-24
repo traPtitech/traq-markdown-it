@@ -1,18 +1,17 @@
 import {
   embeddingExtractor,
-  EmbeddingsExtractedMessage,
   createTypeExtractor,
-  createIdExtractor
+  createIdExtractor,
+  EmbeddingOrUrl
 } from '#/embeddingExtractor'
-import LinkifyIt from "linkify-it"
+import { setup } from './setupMd'
+import Token from 'markdown-it/lib/token'
 
 const basePath = `https://example.com`
 const nonBasePath = `https://yet.another.example.com`
 
-const linkify = new LinkifyIt()
-
-const extractor = (message: string): EmbeddingsExtractedMessage =>
-  embeddingExtractor(message, linkify, createTypeExtractor(basePath), createIdExtractor(basePath))
+const extractor = (message: Token[]): EmbeddingOrUrl[] =>
+  embeddingExtractor(message, createTypeExtractor(basePath), createIdExtractor(basePath))
 
 const id1 = 'e97518db-ebb8-450f-9b4a-273234e68491'
 const id2 = 'd7461966-e5d3-4c6d-9538-7c8605f45a1e'
@@ -22,124 +21,91 @@ const externalUrl = `${nonBasePath}/files/${id1}`
 const internalUrl = `${basePath}/somewhere`
 
 describe('embeddingExtractor', () => {
+  const md = setup().md
+
+  const parse = (message: string) => md.parse(message, {})
+
   it('can extract a file from url', () => {
-    const message = `${path1}`
+    const message = parse(path1)
+    console.log(message)
     const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: '',
-      embeddings: [
+    expect(result).toEqual([
         {
           type: 'file',
-          id: id1,
-          startIndex: 0,
-          endIndex: path1.length
+          id: id1
         }
       ]
-    })
+    )
   })
 
   it('can extract a file from text with url in middle of it', () => {
-    const message = `file ${path1} is file`
+    const message = parse(`file ${path1} is file`)
     const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: message,
-      embeddings: [
+    expect(result).toEqual([
         {
           type: 'file',
-          id: id1,
-          startIndex: 5,
-          endIndex: 5 + path1.length
+          id: id1
         }
       ]
-    })
+    )
   })
 
   it('can extract files from text with url in middle of it', () => {
-    const message = `file ${path1} and ${path2} are file`
+    const message = parse(`file ${path1} and ${path2} are file`)
     const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: message,
-      embeddings: [
+    expect(result).toEqual([
         {
           type: 'file',
-          id: id1,
-          startIndex: 5,
-          endIndex: 5 + path1.length
+          id: id1
         },
         {
           type: 'file',
-          id: id2,
-          startIndex: 5 + path1.length + 5,
-          endIndex: 5 + path1.length + 5 + path2.length
+          id: id2
         }
-      ]
-    })
+      ])
   })
 
   it('can extract a file from text with url at the end of it', () => {
     const noAttachMessage = 'attach!\n'
-    const message = `${noAttachMessage}${path1}`
+    const message = parse(`${noAttachMessage}${path1}`)
     const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: noAttachMessage,
-      embeddings: [
+    expect(result).toEqual([
         {
           type: 'file',
-          id: id1,
-          startIndex: noAttachMessage.length,
-          endIndex: noAttachMessage.length + path1.length
+          id: id1
         }
-      ]
-    })
+      ])
   })
 
   it('can extract normal url and do not remove that from message', () => {
-    const message = `won't be removed: ${externalUrl}`
+    const message = parse(`won't be removed: ${externalUrl}`)
     const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: message,
-      embeddings: [
-        {
+    expect(result).toEqual([{
           type: 'url',
           url: externalUrl,
         }
-      ]
-    })
+      ])
   })
 
   it('does not extract internal url', () => {
-    const message = `${internalUrl}`
+    const message = parse(`${internalUrl}`)
     const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: message,
-      embeddings: []
-    })
+    expect(result).toEqual([])
   })
 
   it('does not remove embedding url before url', () => {
-    const message = `${path1} ${externalUrl}`
+    const message = parse(`${path1} ${externalUrl}`)
     const result = extractor(message)
-    expect(result).toEqual({
-      rawText: message,
-      text: message,
-      embeddings: [
+    expect(result).toEqual( [
         {
           type: 'file',
-          id: id1,
-          startIndex: 0,
-          endIndex: path1.length
+          id: id1
         },
         {
           type: 'url',
           url: externalUrl,
         }
       ]
-    })
+    )
   })
 })

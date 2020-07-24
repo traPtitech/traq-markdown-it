@@ -1,26 +1,21 @@
-import { LinkifyIt } from 'linkify-it'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import Token from 'markdown-it/lib/token'
 
-const spaceRegexp = /^\s*$/
 const uuidRegexp = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}/
 
 export type Embedding = EmbeddingFile | EmbeddingMessage
-export type EmbeddingOrUrl = ExternalUrl | InternalUrl | Embedding
+export type EmbeddingOrUrl = InternalUrl | ExternalUrl | Embedding
 
-type MessageFragment = {
-  startIndex: number
-  endIndex: number
-}
-type EmbeddingBase = MessageFragment & {
+type EmbeddingBase = {
   type: EmbeddingType
   id: string
 }
 
-export type ExternalUrl = {
-  type: 'url'
-  url: string
-}
 export type InternalUrl = {
   type: 'internal'
+}
+export type ExternalUrl = {
+  type: 'url'
   url: string
 }
 
@@ -31,12 +26,6 @@ export type EmbeddingFile = EmbeddingBase & {
 }
 export type EmbeddingMessage = EmbeddingBase & {
   type: 'message'
-}
-
-export type EmbeddingsExtractedMessage = {
-  rawText: string
-  text: string
-  embeddings: EmbeddingOrUrl[]
 }
 
 export type EmbeddingTypeExtractor = (
@@ -69,13 +58,42 @@ export const createIdExtractor = (
   return uuidRegexp.test(id) ? id : undefined
 }
 
-const checkBlank = (
-  rawMessage: string,
-  prevEndIndex: number,
-  startIndex: number
-) => {
-  const substrFromPrev = rawMessage.substring(prevEndIndex, startIndex)
-  return spaceRegexp.test(substrFromPrev)
+/**
+ * パースされたトークンの木構造から再帰的にURLを抽出する
+ */
+const extractUrlsFromTokens = (tokens: Token[], urls: string[] = []) => {
+  let inSpoilerCount = 0
+
+  for (const token of tokens) {
+    if (token.children) {
+      extractUrlsFromTokens(token.children, urls)
+      continue
+    }
+
+    if (token.type === 'spoiler_open') {
+      inSpoilerCount++
+      continue
+    }
+    if (token.type === 'spoiler_close' && inSpoilerCount > 0) {
+      inSpoilerCount--
+      continue
+    }
+
+    // spoiler内部は無視
+    if (inSpoilerCount > 0) continue
+
+    // token.markupを利用して[]()の形式のリンクは無視
+    if (token.type === 'link_open' && token.markup === 'linkify') {
+      const url = token.attrGet('href')
+      if (url) {
+        urls.push(url)
+      }
+    }
+
+    // ``の内部はtoken.type === 'code_inline'
+    // ```の内部はtoken.type === 'fence'
+  }
+  return urls
 }
 
 /**
@@ -85,77 +103,41 @@ const checkBlank = (
  * @param idExtractor マッチ結果から埋め込みidを返す関数（通常URL時は`undefined`）
  */
 export const embeddingExtractor = (
-  rawMessage: string,
-  linkify: Readonly<LinkifyIt>,
+  tokens: Token[],
   typeExtractor: EmbeddingTypeExtractor,
   idExtractor: EmbeddingIdExtractor
-): EmbeddingsExtractedMessage => {
+): EmbeddingOrUrl[] => {
+  const urls = extractUrlsFromTokens(tokens)
+
   const embeddings: EmbeddingOrUrl[] = []
   const knownIdSet: Set<string> = new Set()
 
-  const matches = linkify.match(rawMessage) ?? []
-
-  /** 連続したマッチの開始インデックス */
-  let sequenceStartIndex = 0
-
-  /** スペースを含んだ、連続したマッチ全体の終了インデックス */
-  let sequenceEndIndex = 0
-
-  /** 1つ前のマッチの`endIndex` */
-  let prevEndIndex = 0
-
-  for (const match of matches) {
-    const startIndex = match.index
-    const endIndex = match.lastIndex
-
-    let url: URL
+  for (const url of urls) {
+    let urlObj: URL
     try {
-      url = new URL(match.url)
+      urlObj = new URL(url)
     } catch {
-      continue // 不正なURLがlinkify-itから渡されたので無視
+      continue // 不正なURLだったので無視
     }
 
-    const ty = typeExtractor(url)
-    const id = idExtractor(url, ty)
+    if (urlObj.protocol !== 'http:' && urlObj.protocol !== 'https:') {
+      continue
+    }
 
-    if (ty === 'internal') {
-      // シーケンスを終了
-      sequenceStartIndex = endIndex
-      prevEndIndex = endIndex
+    const type = typeExtractor(urlObj)
+    const id = idExtractor(urlObj, type)
+
+    if (type === 'internal') {
       continue
-    } else if (ty === 'url') {
-      embeddings.push({ type: 'url', url: match.url })
-      // シーケンスを終了
-      sequenceStartIndex = endIndex
-      prevEndIndex = endIndex
-      continue
+    } else if (type === 'url') {
+      embeddings.push({ type: 'url', url: url })
     } else if (id && !knownIdSet.has(id)) {
-      embeddings.push({ type: ty, id, startIndex, endIndex })
+      embeddings.push({ type, id })
       knownIdSet.add(id)
     }
-
-    // 前のマッチから連続しているかどうかの判定
-    if (!checkBlank(rawMessage, prevEndIndex, startIndex)) {
-      // 連続したマッチではなかった
-      sequenceStartIndex = startIndex
-    }
-    sequenceEndIndex = endIndex
-    prevEndIndex = endIndex
   }
 
-  const hasSequenceReachedEos = checkBlank(
-    rawMessage,
-    sequenceEndIndex,
-    rawMessage.length
-  )
-
-  return {
-    rawText: rawMessage,
-    text: hasSequenceReachedEos
-      ? rawMessage.substring(0, sequenceStartIndex)
-      : rawMessage,
-    embeddings
-  }
+  return embeddings
 }
 
 /**
@@ -166,48 +148,8 @@ export const embeddingExtractor = (
  */
 export const embeddingReplacer = (
   rawMessage: string,
-  linkify: Readonly<LinkifyIt>,
   typeExtractor: EmbeddingTypeExtractor,
   idExtractor: EmbeddingIdExtractor
-): EmbeddingsExtractedMessage => {
-  const { text, embeddings } = embeddingExtractor(
-    rawMessage,
-    linkify,
-    typeExtractor,
-    idExtractor
-  )
-
-  let newText = text
-  // 置換で文字数がずれるのでずれた数を保持する
-  let placeDiff = 0
-
-  for (const embedding of embeddings) {
-    // 末尾のものは抽出で消えているので置換しない
-    // 通常のURL・内部URLも必要がないので置換しない
-    if (
-      embedding.type === 'url' ||
-      embedding.type === 'internal' ||
-      text.length <= embedding.startIndex
-    ) {
-      break
-    }
-
-    let replaced
-    if (embedding.type === 'file') {
-      replaced = '[[添付ファイル]]'
-    } else if (embedding.type === 'message') {
-      replaced = '[[添付メッセージ]]'
-    } else {
-      const invalid: never = embedding
-      throw new Error(`embeddingReplacer unknown embedding type: ${invalid}`)
-    }
-
-    newText =
-      newText.slice(0, placeDiff + embedding.startIndex) +
-      replaced +
-      newText.slice(placeDiff + embedding.endIndex)
-
-    placeDiff += replaced.length - (embedding.endIndex - embedding.startIndex)
-  }
-  return { rawText: rawMessage, text: newText, embeddings }
+): { text: string; unused: boolean } => {
+  return { text: rawMessage, unused: !!(typeExtractor && idExtractor) }
 }

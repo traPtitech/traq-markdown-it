@@ -1,27 +1,4 @@
-import Md, { Store } from '#/index'
-
-const setup = () => {
-  const nameIdTable: Record<string, string> = {
-    me: 'd7461966-e5d3-4c6d-9538-7c8605f45a1e',
-    one:'e97518db-ebb8-450f-9b4a-273234e68491',
-    longlonglonglonglonglonglonglonglonglonglonglong:'e97518db-ebb8-450f-9b4a-273234e68491',
-    'Webhook#random-Va1ue':'e97518db-ebb8-450f-9b4a-273234e68491'
-  }
-
-  const store: Store = {
-    getChannel: id => id !== '00000000-0000-0000-0000-000000000000' ? ({ id }) : undefined,
-    getChannelPath: id => Object.entries(nameIdTable).find(([, v]) => v === id)?.[0] ?? '',
-    getMe: () => ({ id: nameIdTable.me }),
-    getUser: id => ({id}),
-    getUserGroup: id => ({ id, members: id === nameIdTable.one ? [{ id: nameIdTable.me, role: '' }] : [] }),
-    getUserByName: name => nameIdTable[name] ? ({ iconFileId: nameIdTable[name] }) : undefined,
-    getStampByName: name => nameIdTable[name] ? ({ name, fileId: nameIdTable[name] }) : undefined
-  }
-
-  const md = new Md(store, [], 'https://example.com')
-
-  return md
-}
+import { setup } from './setupMd'
 
 describe('index', () => {
   const md = setup()
@@ -30,37 +7,49 @@ describe('index', () => {
     const actual = md.render(`
 **po**
 :xx:
+[message link](https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491)
+\`https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68492\`
+\`\`\`
+https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68493
+\`\`\`
+!!https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68494!!
 !!x!!
-https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
+https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68495
 `
     )
     const expected = {
       embeddings: [{
-        "endIndex": 84,
-        "id": "e97518db-ebb8-450f-9b4a-273234e68491",
-        "startIndex": 19,
+        "id": "e97518db-ebb8-450f-9b4a-273234e68495",
         "type": "message",
       }],
       rawText: `
 **po**
 :xx:
+[message link](https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491)
+\`https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68492\`
+\`\`\`
+https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68493
+\`\`\`
+!!https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68494!!
 !!x!!
-https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
-`,
-      text: `
-**po**
-:xx:
-!!x!!
+https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68495
 `,
       renderedText: `<br>
 <p><strong>po</strong><br>
 :xx:<br>
-<span class="spoiler">x</span></p>
+<a href="https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">message link</a><br>
+<code>https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68492</code></p>
+<pre class="traq-code traq-lang"><code class="lang-awk">https:<span class="hljs-regexp">//</span>example.com<span class="hljs-regexp">/messages/</span>e97518db-ebb8-<span class="hljs-number">450</span>f-<span class="hljs-number">9</span>b4a-<span class="hljs-number">273234</span>e68493
+</code></pre>
+<p><span class="spoiler"><a href="https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68494" target="_blank" rel="nofollow noopener noreferrer">https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68494</a></span><br>
+<span class="spoiler">x</span><br>
+<a href="https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68495" target="_blank" rel="nofollow noopener noreferrer">https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68495</a></p>
 `
     }
     expect(actual).toStrictEqual(expected)
   })
 
+  /*
   it('can render inline (1)', () => {
     const actual = md.renderInline(`
 **po**
@@ -145,4 +134,5 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
     }
     expect(actual).toStrictEqual(expected)
   })
+  */
 })
