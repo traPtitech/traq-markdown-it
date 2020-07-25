@@ -4,7 +4,7 @@ import type MarkdownIt from 'markdown-it'
 import type StateInline from 'markdown-it/lib/rules_inline/state_inline'
 import type StateBlock from 'markdown-it/lib/rules_block/state_block'
 
-let store: Store
+let store: Readonly<Store>
 
 interface StructData {
   type: string
@@ -43,7 +43,7 @@ export const validate = (data: Readonly<unknown>): data is ValidStructData => {
 
 type TransformFunc = (
   state: StateBlock | StateInline,
-  data: ValidStructData
+  data: Readonly<ValidStructData>
 ) => void
 
 const transformUser: TransformFunc = (state, { type, id, raw }) => {
@@ -147,7 +147,7 @@ const transform: TransformFunc = (state, data) => {
 
 export default function messageExtendsPlugin(
   md: MarkdownIt,
-  _store: Store
+  _store: Readonly<Store>
 ): void {
   store = _store
   json(validate, transform)(md)

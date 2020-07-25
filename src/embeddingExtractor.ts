@@ -43,14 +43,14 @@ export default class EmbeddingExtractor {
     this.embeddingOrigin = embeddingOrigin
   }
 
-  extractType(url: URL): EmbeddingOrUrl['type'] {
+  extractType(url: Readonly<URL>): EmbeddingOrUrl['type'] {
     if (url.origin !== this.embeddingOrigin) return 'url'
     const name = url.pathname.split('/')[1] ?? ''
     return this.pathNameEmbeddingTypeMap.get(name) ?? 'internal'
   }
 
   extractId(
-    url: URL,
+    url: Readonly<URL>,
     type: EmbeddingOrUrl['type']
   ): Embedding['id'] | undefined {
     if (
@@ -93,7 +93,7 @@ export default class EmbeddingExtractor {
    * 同時にトークンにURLの情報を付与する
    */
   extractUrlsFromTokens(
-    tokens: TokenWithEmbeddingData[],
+    tokens: readonly TokenWithEmbeddingData[],
     embeddings: EmbeddingOrUrl[] = []
   ): EmbeddingOrUrl[] {
     let inSpoilerCount = 0
@@ -140,9 +140,9 @@ export default class EmbeddingExtractor {
    * @param typeIdExtractor マッチ結果から埋め込み/通常URLの種別を返す関数
    * @param idExtractor マッチ結果から埋め込みidを返す関数（通常URL時は`undefined`）
    */
-  extract(tokens: Token[]): EmbeddingOrUrl[] {
+  extract(tokens: readonly Token[]): EmbeddingOrUrl[] {
     const embeddings = this.extractUrlsFromTokens(tokens)
-    const knownIdSet: Set<string> = new Set()
+    const knownIdSet = new Set<string>()
 
     // かぶっているURLを取り除く(順序を保つため配列でそのまま行う)
     const filteredEmbeddings: EmbeddingOrUrl[] = []
@@ -168,7 +168,7 @@ export default class EmbeddingExtractor {
    * @returns 取り除かれたらtrue
    */
   removeTailEmbeddingsFromTailParagraph(
-    tokens: TokenWithEmbeddingData[]
+    tokens: Array<Readonly<TokenWithEmbeddingData>>
   ): boolean {
     /**
      * `token.type === 'link_open' && token.markup === 'linkify`と
@@ -218,7 +218,7 @@ export default class EmbeddingExtractor {
    *
    * 末尾から「改行」の連続(あってもなくてもよい)、「「埋め込み」を含むparagraph」の場合だけを確認する
    */
-  removeTailEmbeddings(tokens: TokenWithEmbeddingData[]): void {
+  removeTailEmbeddings(tokens: Array<Readonly<TokenWithEmbeddingData>>): void {
     /**
      * `token.type === 'paragraph_open'`と`token.type === 'paragraph_close'`の間にいるかどうか
      */
@@ -261,7 +261,7 @@ export default class EmbeddingExtractor {
   /**
    * markdownから埋め込みURLを抽出してすべて置換する
    */
-  replace(tokens: TokenWithEmbeddingData[]): void {
+  replace(tokens: readonly TokenWithEmbeddingData[]): void {
     /**
      * 今居る場所が挟まれているlinkのトークン
      */

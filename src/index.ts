@@ -34,12 +34,12 @@ export default class {
     breaks: true,
     linkify: true,
     highlight: createHighlightFunc('traq-code traq-lang')
-  }
+  } as const
   readonly md = new MarkdownIt(this.mdOptions)
   readonly embeddingExtractor: EmbeddingExtractor
 
   constructor(
-    store: Store,
+    store: Readonly<Store>,
     whitelist: readonly string[] = defaultWhitelist,
     embeddingOrigin: string
   ) {
@@ -48,7 +48,7 @@ export default class {
     this.setPlugin(store, whitelist)
   }
 
-  setPlugin(store: Store, whitelist: readonly string[]): void {
+  setPlugin(store: Readonly<Store>, whitelist: readonly string[]): void {
     this.md
       .use(MarkdownItMark)
       .use(spoiler, true)
