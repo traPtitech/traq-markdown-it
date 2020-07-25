@@ -1,4 +1,4 @@
-import Md from 'markdown-it'
+import type Md from 'markdown-it'
 import container from 'markdown-it-container'
 
 const defaultLabels = ['success', 'info', 'warning', 'danger']

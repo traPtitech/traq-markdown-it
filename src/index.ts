@@ -10,12 +10,12 @@ import mila from 'markdown-it-link-attributes'
 import filter from 'markdown-it-image-filter'
 import { createHighlightFunc } from './highlight'
 import defaultWhitelist from './default/domain_whitelist'
-import Token from 'markdown-it/lib/token'
+import type Token from 'markdown-it/lib/token'
 
-import { Store } from './Store'
+import type { Store } from './Store'
 import EmbeddingExtractor, { EmbeddingOrUrl } from './embeddingExtractor'
-export { Store } from './Store'
-export {
+export type { Store } from './Store'
+export type {
   Embedding,
   EmbeddingOrUrl,
   ExternalUrl,
@@ -34,12 +34,12 @@ export default class {
     breaks: true,
     linkify: true,
     highlight: createHighlightFunc('traq-code traq-lang')
-  }
+  } as const
   readonly md = new MarkdownIt(this.mdOptions)
   readonly embeddingExtractor: EmbeddingExtractor
 
   constructor(
-    store: Store,
+    store: Readonly<Store>,
     whitelist: readonly string[] = defaultWhitelist,
     embeddingOrigin: string
   ) {
@@ -48,7 +48,7 @@ export default class {
     this.setPlugin(store, whitelist)
   }
 
-  setPlugin(store: Store, whitelist: readonly string[]): void {
+  setPlugin(store: Readonly<Store>, whitelist: readonly string[]): void {
     this.md
       .use(MarkdownItMark)
       .use(spoiler, true)

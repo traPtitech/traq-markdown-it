@@ -1,9 +1,9 @@
-import MarkdownIt from 'markdown-it'
+import type MarkdownIt from 'markdown-it'
 import regexp from 'markdown-it-regexp'
 import { escapeHtml } from './util'
-import { Store } from './Store'
+import type { Store } from './Store'
 
-let store: Pick<Store, 'getUserByName' | 'getStampByName'>
+let store: Readonly<Pick<Store, 'getUserByName' | 'getStampByName'>>
 let baseUrl = ''
 
 const animeEffectSet = new Set([
@@ -38,7 +38,7 @@ type SetOf<T> = T extends Set<infer S> ? S : never
 type AnimeEffect = SetOf<typeof animeEffectSet>
 type SizeEffect = SetOf<typeof sizeEffectSet>
 
-const animeEffectAliasMap = new Map<AnimeEffect, AnimeEffect>([
+const animeEffectAliasMap: ReadonlyMap<AnimeEffect, AnimeEffect> = new Map([
   ['marquee', 'conga'],
   ['marquee-inv', 'conga-inv']
 ])
@@ -248,7 +248,7 @@ interface StampRegExpGroups {
  */
 export default function stampPlugin(
   md: MarkdownIt,
-  _store: Pick<Store, 'getUserByName' | 'getStampByName'>,
+  _store: Readonly<Pick<Store, 'getUserByName' | 'getStampByName'>>,
   _baseUrl?: string
 ): void {
   store = _store
