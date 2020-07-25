@@ -10,12 +10,12 @@ import mila from 'markdown-it-link-attributes'
 import filter from 'markdown-it-image-filter'
 import { createHighlightFunc } from './highlight'
 import defaultWhitelist from './default/domain_whitelist'
-import Token from 'markdown-it/lib/token'
+import type Token from 'markdown-it/lib/token'
 
-import { Store } from './Store'
+import type { Store } from './Store'
 import EmbeddingExtractor, { EmbeddingOrUrl } from './embeddingExtractor'
-export { Store } from './Store'
-export {
+export type { Store } from './Store'
+export type {
   Embedding,
   EmbeddingOrUrl,
   ExternalUrl,

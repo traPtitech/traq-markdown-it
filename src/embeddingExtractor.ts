@@ -1,4 +1,4 @@
-import Token from 'markdown-it/lib/token'
+import type Token from 'markdown-it/lib/token'
 
 const uuidRegexp = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}/
 

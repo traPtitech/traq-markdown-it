@@ -1,4 +1,4 @@
-import { User, Channel, UserGroup, Stamp } from '@traptitech/traq'
+import type { User, Channel, UserGroup, Stamp } from '@traptitech/traq'
 
 export interface Store {
   getUser(id: string): Readonly<Pick<User, 'id'>> | undefined

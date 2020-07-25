@@ -1,7 +1,7 @@
-import MarkdownIt from 'markdown-it'
+import type MarkdownIt from 'markdown-it'
 import regexp from 'markdown-it-regexp'
 import { escapeHtml } from './util'
-import { Store } from './Store'
+import type { Store } from './Store'
 
 let store: Pick<Store, 'getUserByName' | 'getStampByName'>
 let baseUrl = ''
