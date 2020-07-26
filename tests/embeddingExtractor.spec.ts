@@ -117,8 +117,7 @@ describe('embeddingExtractor', () => {
         id: id1
       }
     ])
-    expect(rendered).toEqual(`<p>attach!<br>
-</p>`)
+    expect(rendered).toEqual(`<p>attach!</p>`)
   })
 
   it('can extract normal url and do not remove that from message', () => {

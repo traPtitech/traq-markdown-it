@@ -108,7 +108,7 @@ describe('embeddingReplacer', () => {
         id: id1
       }
     ])
-    expect(rendered).toEqual(`attach!<br>`)
+    expect(rendered).toEqual(`attach!`)
   })
 
   it('does not replace internal url in the middle', () => {

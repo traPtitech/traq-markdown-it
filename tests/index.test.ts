@@ -43,8 +43,7 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68495
 <pre class="traq-code traq-lang"><code class="lang-awk">https:<span class="hljs-regexp">//</span>example.com<span class="hljs-regexp">/messages/</span>e97518db-ebb8-<span class="hljs-number">450</span>f-<span class="hljs-number">9</span>b4a-<span class="hljs-number">273234</span>e68493
 </code></pre>
 <p><span class="spoiler"><a href="https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68494" target="_blank" rel="nofollow noopener noreferrer">https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68494</a></span><br>
-<span class="spoiler">x</span><br>
-</p>
+<span class="spoiler">x</span></p>
 `
     }
     expect(actual).toStrictEqual(expected)
@@ -70,7 +69,7 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
 !!x!!
 https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
 `,
-      renderedText: ` po :xx: <span class="spoiler">x</span> `
+      renderedText: ` po :xx: <span class="spoiler">x</span>`
     }
     expect(actual).toStrictEqual(expected)
   })

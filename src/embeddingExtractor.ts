@@ -183,7 +183,13 @@ export default class EmbeddingExtractor {
 
     for (let i = tokens.length - 1; i >= 0; i--) {
       const token = tokens[i]
-      if (token.type === 'softbreak') continue
+      if (token.type === 'softbreak') {
+        // 取り除かれた埋め込みの直前の改行を取り除く
+        if (removeStartIndex > 0 && !isInLink) {
+          removeStartIndex = i
+        }
+        continue
+      }
 
       if (token.type === 'link_open' && token.markup === 'linkify') {
         isInLink = false
