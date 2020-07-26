@@ -187,7 +187,8 @@ export default class EmbeddingExtractor {
 
       if (token.type === 'link_open' && token.markup === 'linkify') {
         isInLink = false
-        if (token.embedding) {
+        const type = token.embedding?.type
+        if (type === 'file' || type === 'message') {
           removeStartIndex = i
           continue
         }

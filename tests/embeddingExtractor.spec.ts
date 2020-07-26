@@ -131,7 +131,9 @@ describe('embeddingExtractor', () => {
         url: externalUrl
       }
     ])
-    expect(rendered).toEqual(`<p>won't be removed: </p>`)
+    expect(rendered).toEqual(
+      `<p>won't be removed: <a href="https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></p>`
+    )
   })
 
   it('does not extract internal url', () => {
@@ -159,7 +161,7 @@ describe('embeddingExtractor', () => {
       }
     ])
     expect(rendered).toEqual(
-      `<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> </p>`
+      `<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> <a href="https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></p>`
     )
   })
 })
