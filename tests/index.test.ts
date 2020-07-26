@@ -19,6 +19,10 @@ https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68495
     const expected = {
       embeddings: [
         {
+          id: 'e97518db-ebb8-450f-9b4a-273234e68491',
+          type: 'message'
+        },
+        {
           id: 'e97518db-ebb8-450f-9b4a-273234e68495',
           type: 'message'
         }

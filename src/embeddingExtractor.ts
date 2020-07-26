@@ -116,8 +116,7 @@ export default class EmbeddingExtractor {
       // spoiler内部は無視
       if (inSpoilerCount > 0) continue
 
-      // token.markupを利用して[]()の形式のリンクは無視
-      if (token.type === 'link_open' && token.markup === 'linkify') {
+      if (token.type === 'link_open') {
         const url = token.attrGet('href')
         if (url) {
           const embedding = this.urlToEmbeddingData(url)
@@ -173,6 +172,7 @@ export default class EmbeddingExtractor {
     /**
      * `token.type === 'link_open' && token.markup === 'linkify`と
      * `token.type === 'link_close' && token.markup === 'linkify`の間にいるかどうか
+     * `token.markup === 'linkify'`で[]()の形式のリンクは無視
      */
     let isInLink = false
     /**
