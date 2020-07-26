@@ -116,8 +116,7 @@ export default class EmbeddingExtractor {
       // spoiler内部は無視
       if (inSpoilerCount > 0) continue
 
-      // token.markupを利用して[]()の形式のリンクは無視
-      if (token.type === 'link_open' && token.markup === 'linkify') {
+      if (token.type === 'link_open') {
         const url = token.attrGet('href')
         if (url) {
           const embedding = this.urlToEmbeddingData(url)
@@ -173,6 +172,7 @@ export default class EmbeddingExtractor {
     /**
      * `token.type === 'link_open' && token.markup === 'linkify`と
      * `token.type === 'link_close' && token.markup === 'linkify`の間にいるかどうか
+     * `token.markup === 'linkify'`で[]()の形式のリンクは無視
      */
     let isInLink = false
     /**
@@ -183,11 +183,18 @@ export default class EmbeddingExtractor {
 
     for (let i = tokens.length - 1; i >= 0; i--) {
       const token = tokens[i]
-      if (token.type === 'softbreak') continue
+      if (token.type === 'softbreak') {
+        // 取り除かれた埋め込みの直前の改行を取り除く
+        if (removeStartIndex > 0 && !isInLink) {
+          removeStartIndex = i
+        }
+        continue
+      }
 
       if (token.type === 'link_open' && token.markup === 'linkify') {
         isInLink = false
-        if (token.embedding) {
+        const type = token.embedding?.type
+        if (type === 'file' || type === 'message') {
           removeStartIndex = i
           continue
         }

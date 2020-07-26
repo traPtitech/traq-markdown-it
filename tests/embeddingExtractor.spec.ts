@@ -49,6 +49,21 @@ describe('embeddingExtractor', () => {
     expect(rendered).toEqual(`<p></p>`)
   })
 
+  it('can extract a file from link url []()', () => {
+    const tokens = parse(`[link](${path1}) [${path2}](invalid)`)
+    const extracted = extract(tokens)
+    const rendered = render(tokens)
+    expect(extracted).toEqual([
+      {
+        type: 'file',
+        id: id1
+      }
+    ])
+    expect(rendered).toEqual(
+      `<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">link</a> <a href="invalid" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e</a></p>`
+    )
+  })
+
   it('can extract a file from url and remove tail spaces', () => {
     const tokens = parse(`${path1}\n\n    \n`)
     const extracted = extract(tokens)
@@ -117,8 +132,7 @@ describe('embeddingExtractor', () => {
         id: id1
       }
     ])
-    expect(rendered).toEqual(`<p>attach!<br>
-</p>`)
+    expect(rendered).toEqual(`<p>attach!</p>`)
   })
 
   it('can extract normal url and do not remove that from message', () => {
@@ -131,7 +145,9 @@ describe('embeddingExtractor', () => {
         url: externalUrl
       }
     ])
-    expect(rendered).toEqual(`<p>won't be removed: </p>`)
+    expect(rendered).toEqual(
+      `<p>won't be removed: <a href="https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></p>`
+    )
   })
 
   it('does not extract internal url', () => {
@@ -159,7 +175,7 @@ describe('embeddingExtractor', () => {
       }
     ])
     expect(rendered).toEqual(
-      `<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> </p>`
+      `<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> <a href="https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></p>`
     )
   })
 })
