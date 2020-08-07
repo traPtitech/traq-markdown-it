@@ -44,4 +44,28 @@ describe('container', () => {
     const expected = '<p>:invalid:</p>'
     expect(actual).toBe(expected)
   })
+
+  it('can render user stamp (1)', () => {
+    const actual = md
+      .render(
+        `
+:@user:
+    `
+      )
+      .trim()
+    const expected =
+      '<p><i class="emoji s32" title=":@user:" style="background-image: url(https://q.trap.jp/api/v3/public/icon/user)">:@user:</i></p>'
+    expect(actual).toBe(expected)
+  })
+  it('can render user stamp (2)', () => {
+    const actual = md
+      .render(
+        `
+:@Webhook#user:
+    `
+      )
+      .trim()
+    const expected = '<p>:@Webhook#user:</p>'
+    expect(actual).toBe(expected)
+  })
 })
