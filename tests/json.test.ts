@@ -161,34 +161,14 @@ describe('json', () => {
     expect(actual).toBe(expected)
   })
 
-  it('can render file json', () => {
-    const actual = md
-      .render(
-        '!{"type": "file", "raw": "po", "id": "e97518db-ebb8-450f-9b4a-273234e68491"}'
-      )
-      .trim()
-    const expected =
-      '<p><a href="/api/v3/files/e97518db-ebb8-450f-9b4a-273234e68491" download="e97518db-ebb8-450f-9b4a-273234e68491">po</a></p>'
-    expect(actual).toBe(expected)
-  })
-  it('can render invalid file json', () => {
-    const actual = md
-      .render(
-        '!{"type": "file", "raw": "invalid", "id": "00000000-0000-0000-0000-000000000000"}'
-      )
-      .trim()
-    const expected =
-      '<p><a href="/api/v3/files/00000000-0000-0000-0000-000000000000" download="00000000-0000-0000-0000-000000000000">invalid</a></p>'
-    expect(actual).toBe(expected)
-  })
-
   it('can render invalid json (1)', () => {
     const actual = md
       .render(
         '!{"type": "message", "raw": "po", "id": "00000000-0000-0000-0000-000000000000"}'
       )
       .trim()
-    const expected = '<p><a>po</a></p>'
+    const expected =
+      '<p>!{&quot;type&quot;: &quot;message&quot;, &quot;raw&quot;: &quot;po&quot;, &quot;id&quot;: &quot;00000000-0000-0000-0000-000000000000&quot;}</p>'
     expect(actual).toBe(expected)
   })
   it('can render invalid json (2)', () => {
