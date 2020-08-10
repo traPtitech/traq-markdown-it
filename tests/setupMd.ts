@@ -1,6 +1,7 @@
-import Md, { Store } from '#/index'
+import { traQMarkdownIt } from '#/traQMarkdownIt'
+import { Store } from '#/Store'
 
-export const setup = (): Md => {
+export const setup = (): traQMarkdownIt => {
   const nameIdTable: Record<string, string> = {
     me: 'd7461966-e5d3-4c6d-9538-7c8605f45a1e',
     one: 'e97518db-ebb8-450f-9b4a-273234e68491',
@@ -26,7 +27,7 @@ export const setup = (): Md => {
       nameIdTable[name] ? { name, fileId: nameIdTable[name] } : undefined
   }
 
-  const md = new Md(store, [], 'https://example.com')
+  const md = new traQMarkdownIt(store, [], 'https://example.com')
 
   return md
 }
