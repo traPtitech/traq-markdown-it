@@ -1,5 +1,5 @@
 /// <reference types="../src/types/markdown-it-mark" />
-import MarkdownIt from 'markdown-it'
+import /* tree-shaking no-side-effects-when-called */ MarkdownIt from 'markdown-it'
 import MarkdownItMark from 'markdown-it-mark'
 import spoiler from '@traptitech/markdown-it-spoiler'
 import stamp, { renderStamp } from './stamp'

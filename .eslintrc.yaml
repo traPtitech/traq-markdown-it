@@ -7,8 +7,10 @@ extends:
   - prettier/@typescript-eslint
 plugins:
   - "@typescript-eslint"
+  - tree-shaking
 parser: "@typescript-eslint/parser"
 parserOptions:
   sourceType: module
 rules:
   "@typescript-eslint/member-delimiter-style": off
+  "tree-shaking/no-side-effects-in-initialization": error
