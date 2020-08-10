@@ -35,7 +35,6 @@
     "core-js": "^3.6.5",
     "highlight.js": "^10.1.1",
     "katex": "^0.12.0",
-    "linkify-it": "^3.0.2",
     "markdown-it": "^11.0.0",
     "markdown-it-container": "^3.0.0",
     "markdown-it-image-filter": "^1.1.0",
