@@ -13,7 +13,7 @@ interface StructData {
 }
 
 interface ValidStructData extends StructData {
-  type: 'user' | 'channel' | 'group' | 'file' | 'message'
+  type: 'user' | 'channel' | 'group'
 }
 
 export const isStructData = (data: Readonly<unknown>): data is StructData => {
@@ -35,9 +35,7 @@ export const validate = (data: Readonly<unknown>): data is ValidStructData => {
   return (
     type === 'user' ||
     (type === 'channel' && !!store.getChannel(id)) ||
-    type === 'group' ||
-    type === 'file' ||
-    type === 'message'
+    type === 'group'
   )
 }
 
@@ -107,18 +105,6 @@ const transformChannel: TransformFunc = (state, { type, id, raw }) => {
   state.push('traq_extends_link_close', 'a', -1)
 }
 
-const transformFile: TransformFunc = (state, { type, id, raw }) => {
-  let t = state.push('traq_extends_link_open', 'a', 1)
-  t.attrs = [
-    ['href', `/api/v3/files/${id}`],
-    ['download', id]
-  ]
-  t.meta = { type, data: id }
-  t = state.push('text', '', 0)
-  t.content = raw
-  state.push('traq_extends_link_close', 'a', -1)
-}
-
 const transform: TransformFunc = (state, data) => {
   if (data.type === 'user') {
     transformUser(state, data)
@@ -132,17 +118,6 @@ const transform: TransformFunc = (state, data) => {
     transformUserGroup(state, data)
     return
   }
-  // @deprecated
-  if (data.type === 'file') {
-    transformFile(state, data)
-    return
-  }
-
-  // @deprecated
-  state.push('traq_extends_plain_open', 'a', 1)
-  const t = state.push('text', '', 0)
-  t.content = data.raw
-  state.push('traq_extends_plain_close', 'a', -1)
 }
 
 export default function messageExtendsPlugin(
