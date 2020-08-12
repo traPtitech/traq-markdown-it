@@ -1,3 +1,4 @@
+/// <reference types="../src/types/markdown-it-mark" />
 export type { Store } from './Store'
 export type {
   Embedding,
