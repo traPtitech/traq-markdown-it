@@ -41,7 +41,7 @@ type SizeEffect = SetOf<typeof sizeEffectSet>
 const animeEffectAliasMap: ReadonlyMap<AnimeEffect, AnimeEffect> = new Map([
   ['marquee', 'conga'],
   ['marquee-inv', 'conga-inv']
-])
+] as const)
 
 const maxEffectCount = 5
 
