@@ -24,7 +24,7 @@ export const stampCssPlugin = (
 ): void => {
   regexp(
     enableSize ? stampRegExpWithSize : stampRegExp,
-    ([wrappedName, name]): string => {
+    ([wrappedName = '', name = '']): string => {
       const size = enableSize ? (wrappedName.endsWith(':') ? 32 : 16) : 24
 
       if (name.startsWith('@')) {

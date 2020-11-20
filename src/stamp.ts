@@ -48,7 +48,7 @@ const maxEffectCount = 5
 const wrapWithEffect = (
   stampHtml: string,
   animeEffects: readonly AnimeEffect[],
-  sizeEffect: SizeEffect
+  sizeEffect: SizeEffect | ''
 ): string => {
   const filterOpenTag = animeEffects
     .map(
@@ -202,7 +202,10 @@ export const renderNormalStamp = (
 
 export const renderStamp = (match: Readonly<RegExpMatchArray>): string => {
   // ここはbabelの変換が効かない
-  const { inner }: StampRegExpGroups = { inner: match[1] }
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const raw = match[0]!
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const { inner }: StampRegExpGroups = { inner: match[1]! }
 
   const hexMatch = hexReg.exec(inner)
   if (hexMatch) {
@@ -214,19 +217,19 @@ export const renderStamp = (match: Readonly<RegExpMatchArray>): string => {
     return renderHslStamp(hslMatch)
   }
 
-  const [stampName, ...effects] = inner.split('.')
+  const [stampName = '', ...effects] = inner.split('.')
 
   // ユーザーアイコン
   if (stampName.startsWith('@')) {
-    return renderUserStamp(stampName, match[0], effects)
+    return renderUserStamp(stampName, raw, effects)
   }
 
   if (!stampReg.exec(stampName)) {
-    return match[0]
+    return raw
   }
 
   // 通常スタンプ
-  return renderNormalStamp(stampName, match[0], effects)
+  return renderNormalStamp(stampName, raw, effects)
 }
 
 /**

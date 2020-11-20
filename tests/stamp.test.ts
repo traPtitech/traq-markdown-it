@@ -21,10 +21,14 @@ const setup = () => {
   }
 
   const store: Pick<Store, 'getUserByName' | 'getStampByName'> = {
-    getUserByName: name =>
-      nameIdTable[name] ? { iconFileId: nameIdTable[name] } : undefined,
-    getStampByName: name =>
-      nameIdTable[name] ? { name, fileId: nameIdTable[name] } : undefined
+    getUserByName: name => {
+      const id = nameIdTable[name]
+      return id ? { iconFileId: id } : undefined
+    },
+    getStampByName: name => {
+      const id = nameIdTable[name]
+      return id ? { name, fileId: id } : undefined
+    }
   }
 
   stampPlugin(md, store)
