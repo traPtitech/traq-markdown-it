@@ -1,0 +1,2 @@
+rules:
+  tree-shaking/no-side-effects-in-initialization: 'off'
