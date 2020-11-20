@@ -66,7 +66,8 @@ export class traQMarkdownIt {
       from: number
     ): number {
       for (let max = this.lineMax; from < max; from++) {
-        if (this.bMarks[from] + this.tShift[from] < this.eMarks[from]) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        if (this.bMarks[from]! + this.tShift[from]! < this.eMarks[from]!) {
           break
         }
         this.push('hardbreak', 'br', 0)
@@ -93,7 +94,7 @@ export class traQMarkdownIt {
 
   renderInline(text: string): MarkdownRenderResult {
     const parsed = this.md.parseInline(text, {})
-    const tokens = parsed[0].children || []
+    const tokens = parsed[0]?.children ?? []
 
     const embeddings = this.embeddingExtractor.extract(parsed)
     this.embeddingExtractor.removeTailEmbeddingsFromTailParagraph(tokens)

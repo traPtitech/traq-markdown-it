@@ -9,10 +9,12 @@ export const createHighlightFunc = (
   withCaption = true,
   useSubsetForAuto = true
 ) => (code: string, lang: string): string => {
-  let langName: string, langCaption: string
+  let langName: string
   let citeTag = ''
+
   if (withCaption) {
-    ;[langName, langCaption] = lang.split(':')
+    const [_langName, langCaption] = lang.split(':')
+    langName = _langName ?? ''
     if (langCaption) {
       citeTag = `<cite>${escapeHtml(langCaption)}</cite>`
     }

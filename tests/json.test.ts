@@ -5,7 +5,7 @@ import { Store } from '#/Store'
 const setup = () => {
   const md = new MarkdownIt()
 
-  const nameIdTable: Record<string, string> = {
+  const nameIdTable: Record<string, string> & { me: string } = {
     me: 'd7461966-e5d3-4c6d-9538-7c8605f45a1e',
     one: 'e97518db-ebb8-450f-9b4a-273234e68491',
     longlonglonglonglonglonglonglonglonglonglonglong:
@@ -24,10 +24,14 @@ const setup = () => {
       id,
       members: id === nameIdTable.one ? [{ id: nameIdTable.me, role: '' }] : []
     }),
-    getUserByName: name =>
-      nameIdTable[name] ? { iconFileId: nameIdTable[name] } : undefined,
-    getStampByName: name =>
-      nameIdTable[name] ? { name, fileId: nameIdTable[name] } : undefined
+    getUserByName: name => {
+      const id = nameIdTable[name]
+      return id ? { iconFileId: id } : undefined
+    },
+    getStampByName: name => {
+      const id = nameIdTable[name]
+      return id ? { name, fileId: id } : undefined
+    }
   }
 
   jsonPlugin(md, store)

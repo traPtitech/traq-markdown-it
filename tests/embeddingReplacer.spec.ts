@@ -21,7 +21,7 @@ describe('embeddingReplacer', () => {
     embeddingExtractor.extract(tokens)
   const render = (tokens: Token[]): string => {
     embeddingExtractor.removeTailEmbeddingsFromTailParagraph(
-      tokens[0].children || []
+      tokens[0]?.children ?? []
     )
     embeddingExtractor.replace(tokens)
     return md._render(tokens).trim()

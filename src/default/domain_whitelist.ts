@@ -8,4 +8,4 @@ export default [
   'md.trap.jp',
   'trap.jp',
   'traq-dev.tokyotech.org'
-]
+] as const

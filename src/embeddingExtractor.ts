@@ -36,7 +36,7 @@ export default class EmbeddingExtractor {
   readonly pathNameEmbeddingTypeMap = new Map<string, Embedding['type']>([
     ['files', 'file'],
     ['messages', 'message']
-  ])
+  ] as const)
   readonly embeddingOrigin: string
 
   constructor(embeddingOrigin: string) {
@@ -182,7 +182,8 @@ export default class EmbeddingExtractor {
     let removeStartIndex = -1
 
     for (let i = tokens.length - 1; i >= 0; i--) {
-      const token = tokens[i]
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const token = tokens[i]!
       if (token.type === 'softbreak') {
         // 取り除かれた埋め込みの直前の改行を取り除く
         if (removeStartIndex > 0 && !isInLink) {
@@ -236,7 +237,8 @@ export default class EmbeddingExtractor {
     let paragraphCloseToken = undefined
 
     for (let i = tokens.length - 1; i >= 0; i--) {
-      const token = tokens[i]
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const token = tokens[i]!
       if (token.type === 'hardbreak') continue
       if (token.type === 'paragraph_close') {
         isInParagraph = true
@@ -255,7 +257,11 @@ export default class EmbeddingExtractor {
         tokens.splice(i + 1, tokens.length - (i + 1))
 
         const lastToken = tokens[tokens.length - 1]
-        if (lastToken.type === 'inline' && lastToken.children?.length === 0) {
+        if (
+          lastToken &&
+          lastToken.type === 'inline' &&
+          lastToken.children?.length === 0
+        ) {
           tokens.pop()
         }
         if (paragraphCloseToken) {
