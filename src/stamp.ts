@@ -130,9 +130,10 @@ interface ColorRegExpGroup {
 
 export const renderHslStamp = (match: Readonly<RegExpExecArray>): string => {
   // HSL: hsl(..., ...%, ...%)
-  const { color, effects } = (match.groups as unknown) as Readonly<
-    ColorRegExpGroup
-  >
+  const {
+    color,
+    effects
+  } = (match.groups as unknown) as Readonly<ColorRegExpGroup>
 
   return renderStampDomWithStyle(
     `:${match[0]}:`,
@@ -145,9 +146,10 @@ export const renderHslStamp = (match: Readonly<RegExpExecArray>): string => {
 
 export const renderHexStamp = (match: Readonly<RegExpExecArray>): string => {
   // Hex: 0x......
-  const { color, effects } = (match.groups as unknown) as Readonly<
-    ColorRegExpGroup
-  >
+  const {
+    color,
+    effects
+  } = (match.groups as unknown) as Readonly<ColorRegExpGroup>
 
   return renderStampDomWithStyle(
     `:${match[0]}:`,
