@@ -31,6 +31,7 @@
   "homepage": "https://github.com/traPtitech/traq-markdown-it#readme",
   "dependencies": {
     "@traptitech/markdown-it-katex": "^3.3.0",
+    "@traptitech/markdown-it-regexp": "^0.5.0",
     "@traptitech/markdown-it-spoiler": "^1.1.4",
     "core-js": "^3.6.5",
     "highlight.js": "^10.2.0",
@@ -40,8 +41,7 @@
     "markdown-it-image-filter": "^1.1.0",
     "markdown-it-json": "^1.0.2",
     "markdown-it-link-attributes": "^3.0.0",
-    "markdown-it-mark": "^3.0.0",
-    "markdown-it-regexp": "^0.4.0"
+    "markdown-it-mark": "^3.0.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.11.5",
