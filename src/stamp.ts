@@ -1,5 +1,5 @@
 import type MarkdownIt from 'markdown-it'
-import regexp from 'markdown-it-regexp'
+import regexp from '@traptitech/markdown-it-regexp'
 import { escapeHtml } from './util'
 import type { Store } from './Store'
 

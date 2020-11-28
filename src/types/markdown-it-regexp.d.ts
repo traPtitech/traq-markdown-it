@@ -1,4 +1,4 @@
-declare module 'markdown-it-regexp' {
+declare module '@traptitech/markdown-it-regexp' {
   import Md from 'markdown-it'
 
   function regexp(
