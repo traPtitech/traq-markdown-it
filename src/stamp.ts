@@ -130,10 +130,7 @@ interface ColorRegExpGroup {
 
 export const renderHslStamp = (match: Readonly<RegExpExecArray>): string => {
   // HSL: hsl(..., ...%, ...%)
-  const {
-    color,
-    effects
-  } = (match.groups as unknown) as Readonly<ColorRegExpGroup>
+  const { color, effects } = match.groups as Readonly<ColorRegExpGroup>
 
   return renderStampDomWithStyle(
     `:${match[0]}:`,
@@ -146,10 +143,7 @@ export const renderHslStamp = (match: Readonly<RegExpExecArray>): string => {
 
 export const renderHexStamp = (match: Readonly<RegExpExecArray>): string => {
   // Hex: 0x......
-  const {
-    color,
-    effects
-  } = (match.groups as unknown) as Readonly<ColorRegExpGroup>
+  const { color, effects } = match.groups as Readonly<ColorRegExpGroup>
 
   return renderStampDomWithStyle(
     `:${match[0]}:`,
@@ -201,11 +195,9 @@ export const renderNormalStamp = (
 }
 
 export const renderStamp = (match: Readonly<RegExpMatchArray>): string => {
-  // ここはbabelの変換が効かない
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const raw = match[0]!
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const { inner }: StampRegExpGroups = { inner: match[1]! }
+  const { inner } = match.groups as Readonly<StampRegExpGroups>
 
   const hexMatch = hexReg.exec(inner)
   if (hexMatch) {
@@ -237,10 +229,8 @@ export const renderStamp = (match: Readonly<RegExpMatchArray>): string => {
  * `@(?:Webhook#)?[a-zA-Z0-9_-]+`の部分がユーザーアイコンスタンプ
  * `\w+\([^:<>"'=+!?]+\)`の部分が色のスタンプ
  * [\w+-.]*の部分がスタンプエフェクト
- *
- * babelの変換が効かないので今はnamed capture groupsを使わない
  */
-const stampRegExp = /:((?:[a-zA-Z0-9+_-]{1,32}|@(?:Webhook#)?[a-zA-Z0-9_-]+|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
+const stampRegExp = /:((?<inner>:[a-zA-Z0-9+_-]{1,32}|@(?:Webhook#)?[a-zA-Z0-9_-]+|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
 interface StampRegExpGroups {
   /**
    * :を除いた部分

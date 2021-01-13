@@ -33,7 +33,10 @@ interface TokenWithEmbeddingData extends Token {
 }
 
 export default class EmbeddingExtractor {
-  readonly pathNameEmbeddingTypeMap = new Map<string, Embedding['type']>([
+  readonly pathNameEmbeddingTypeMap: ReadonlyMap<
+    string,
+    Embedding['type']
+  > = new Map([
     ['files', 'file'],
     ['messages', 'message']
   ] as const)

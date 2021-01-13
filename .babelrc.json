@@ -8,5 +8,6 @@
         "bugfixes": true
       }
     ]
-  ]
+  ],
+  "plugins": ["@babel/plugin-proposal-optional-chaining"]
 }
