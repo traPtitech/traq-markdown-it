@@ -1,0 +1,27 @@
+export const animeEffects = [
+  'rotate',
+  'rotate-inv',
+  'wiggle',
+  'parrot',
+  'zoom',
+  'inversion',
+  'turn',
+  'turn-v',
+  'happa',
+  'pyon',
+  'flashy',
+  'pull',
+  'atsumori',
+  'stretch',
+  'stretch-v',
+  'conga',
+  'conga-inv',
+  'marquee',
+  'marquee-inv',
+  'rainbow',
+  'ascension',
+  'shake',
+  'party',
+  'attract'
+] as const
+export const sizeEffects = ['ex-large', 'large', 'small'] as const

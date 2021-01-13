@@ -2,41 +2,15 @@ import type MarkdownIt from 'markdown-it'
 import regexp from '@traptitech/markdown-it-regexp'
 import { escapeHtml } from './util'
 import type { Store } from './Store'
+import { animeEffects, sizeEffects } from './data/stampEffects'
 
 let store: Readonly<Pick<Store, 'getUserByName' | 'getStampByName'>>
 let baseUrl = ''
 
-const animeEffectSet = new Set([
-  'rotate',
-  'rotate-inv',
-  'wiggle',
-  'parrot',
-  'zoom',
-  'inversion',
-  'turn',
-  'turn-v',
-  'happa',
-  'pyon',
-  'flashy',
-  'pull',
-  'atsumori',
-  'stretch',
-  'stretch-v',
-  'conga',
-  'conga-inv',
-  'marquee',
-  'marquee-inv',
-  'rainbow',
-  'ascension',
-  'shake',
-  'party',
-  'attract'
-] as const)
-const sizeEffectSet = new Set(['ex-large', 'large', 'small'] as const)
-
-type SetOf<T> = T extends Set<infer S> ? S : never
-type AnimeEffect = SetOf<typeof animeEffectSet>
-type SizeEffect = SetOf<typeof sizeEffectSet>
+export const animeEffectSet: ReadonlySet<string> = new Set(animeEffects)
+export const sizeEffectSet: ReadonlySet<string> = new Set(sizeEffects)
+export type AnimeEffect = typeof animeEffects[number]
+export type SizeEffect = typeof sizeEffects[number]
 
 const animeEffectAliasMap: ReadonlyMap<AnimeEffect, AnimeEffect> = new Map([
   ['marquee', 'conga'],
@@ -62,10 +36,8 @@ const wrapWithEffect = (
   return filterOpenTag + stampHtml + filterCloseTag
 }
 
-const isSizeEffect = (e: string): e is SizeEffect =>
-  sizeEffectSet.has(e as SizeEffect)
-const isAnimeEffect = (e: string): e is AnimeEffect =>
-  animeEffectSet.has(e as AnimeEffect)
+const isSizeEffect = (e: string): e is SizeEffect => sizeEffectSet.has(e)
+const isAnimeEffect = (e: string): e is AnimeEffect => animeEffectSet.has(e)
 
 const renderStampDomWithStyle = (
   rawMatch: string,
