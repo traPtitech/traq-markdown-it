@@ -1,6 +1,6 @@
 import EmbeddingExtractor, { EmbeddingOrUrl } from '#/embeddingExtractor'
 import { setup } from './setupMd'
-import Token from 'markdown-it/lib/token'
+import type Token from 'markdown-it/lib/token'
 
 const basePath = `https://example.com`
 const nonBasePath = `https://yet.another.example.com`

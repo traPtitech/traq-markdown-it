@@ -19,6 +19,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
+    "importsNotUsedAsValues": "error",
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {

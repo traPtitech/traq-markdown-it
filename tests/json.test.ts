@@ -1,6 +1,6 @@
 import MarkdownIt from 'markdown-it'
 import jsonPlugin, { isStructData, validate } from '#/json'
-import { Store } from '#/Store'
+import type { Store } from '#/Store'
 
 const setup = () => {
   const md = new MarkdownIt()

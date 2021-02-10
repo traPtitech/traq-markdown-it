@@ -7,7 +7,7 @@ import stampPlugin, {
   hslReg
 } from '#/stamp'
 import MarkdownIt from 'markdown-it'
-import { Store } from '#/Store'
+import type { Store } from '#/Store'
 
 const setup = () => {
   const md = new MarkdownIt()

@@ -1,5 +1,5 @@
 import { traQMarkdownIt } from '#/traQMarkdownIt'
-import { Store } from '#/Store'
+import type { Store } from '#/Store'
 
 export const setup = (): traQMarkdownIt => {
   const nameIdTable: Record<string, string> & { me: string } = {
