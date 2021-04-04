@@ -23,7 +23,7 @@ export const createHighlightFunc = (
   }
 
   if (hljs.getLanguage(langName)) {
-    const result = hljs.highlight(langName, code)
+    const result = hljs.highlight(code, { language: langName })
     return `<pre class="${preClass}">${citeTag}<code class="lang-${result.language}">${result.value}</code></pre>`
   } else if (noHighlightRe.test(langName)) {
     return `<pre class="${preClass}">${citeTag}<code>${escapeHtml(
