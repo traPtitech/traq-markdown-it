@@ -135,4 +135,14 @@ describe('InlineRenderer', () => {
     const expected = '<a href="url" title="title" data-is-image>image</a>'
     expect(actual).toStrictEqual(expected)
   })
+  it('can render table', () => {
+    const actual = render(dedent`
+      | 1 | 2 |
+      | - | - |
+      | a | b |
+      | c | d |
+    `)
+    const expected = '| 1 | 2 | | a | b | | c | d |'
+    expect(actual).toStrictEqual(expected)
+  })
 })
