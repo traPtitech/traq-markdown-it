@@ -61,6 +61,8 @@ describe('index', () => {
     const actual = md.renderInline(dedent`
       **po**
       :xx:
+      :me:
+      ==x==
       !!x!!
       https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
     `)
@@ -74,10 +76,17 @@ describe('index', () => {
       rawText: dedent`
         **po**
         :xx:
+        :me:
+        ==x==
         !!x!!
         https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
       `,
-      renderedText: `po :xx: <span class="spoiler">x</span>`
+      renderedText:
+        '<strong>po</strong> ' +
+        ':xx: ' +
+        '<i class="emoji message-emoji " title=":me:" style="background-image: url(/api/v3/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e);">:me:</i> ' +
+        '<mark>x</mark> ' +
+        '<span class="spoiler">x</span>'
     }
     expect(actual).toStrictEqual(expected)
   })
@@ -93,9 +102,7 @@ describe('index', () => {
         - a!!aaa
         - a!!aa
       `,
-      // FIXME: https://github.com/traPtitech/traq-markdown-it/issues/59
-      renderedText: `- a<span class="spoiler">aaa - a</span>aa`
-      //renderedText: `- a!!aaa - a!!aa`
+      renderedText: `- a!!aaa - a!!aa`
     }
     expect(actual).toStrictEqual(expected)
   })
@@ -118,7 +125,7 @@ describe('index', () => {
         po
         !!
       `,
-      renderedText: `<span class="spoiler">p o</span>  !! po !!`
+      renderedText: `<span class="spoiler">p o</span> !! po !!`
     }
     expect(actual).toStrictEqual(expected)
   })

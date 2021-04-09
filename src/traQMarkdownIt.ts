@@ -1,7 +1,7 @@
 import /* tree-shaking no-side-effects-when-called */ MarkdownIt from 'markdown-it'
 import MarkdownItMark from 'markdown-it-mark'
 import spoiler from '@traptitech/markdown-it-spoiler'
-import stamp, { renderStamp } from './stamp'
+import stamp from './stamp'
 import json from './json'
 import katex from '@traptitech/markdown-it-katex'
 import katexE from 'katex'
@@ -12,6 +12,9 @@ import defaultWhitelist from './default/domain_whitelist'
 import type Token from 'markdown-it/lib/token'
 import type { Store } from './Store'
 import EmbeddingExtractor, { EmbeddingOrUrl } from './embeddingExtractor'
+import {
+  /* tree-shaking no-side-effects-when-called */ InlineRenderer
+} from './InlineRenderer'
 
 export type MarkdownRenderResult = {
   embeddings: EmbeddingOrUrl[]
@@ -27,6 +30,7 @@ export class traQMarkdownIt {
   } as const
   readonly md = new MarkdownIt(this.mdOptions)
   readonly embeddingExtractor: EmbeddingExtractor
+  readonly inlineRenderer = new InlineRenderer()
 
   constructor(
     store: Readonly<Store>,
@@ -59,6 +63,8 @@ export class traQMarkdownIt {
         }
       })
       .use(filter(whitelist, { httpsOnly: true }))
+
+    this.inlineRenderer.setRules(this.md.renderer.rules)
   }
 
   setRendererRule(): void {
@@ -82,6 +88,7 @@ export class traQMarkdownIt {
 
   render(text: string): MarkdownRenderResult {
     const parsed = this.md.parse(text, {})
+
     const embeddings = this.embeddingExtractor.extract(parsed)
     this.embeddingExtractor.removeTailEmbeddings(parsed)
 
@@ -92,35 +99,21 @@ export class traQMarkdownIt {
     }
   }
 
+  _renderInline(tokens: Token[]): string {
+    return this.inlineRenderer.render(tokens, this.mdOptions, {})
+  }
+
   renderInline(text: string): MarkdownRenderResult {
-    const parsed = this.md.parseInline(text, {})
-    const tokens = parsed[0]?.children ?? []
+    const parsed = this.md.parse(text, {})
 
     const embeddings = this.embeddingExtractor.extract(parsed)
-    this.embeddingExtractor.removeTailEmbeddingsFromTailParagraph(tokens)
+    this.embeddingExtractor.removeTailEmbeddings(parsed)
     this.embeddingExtractor.replace(parsed)
-
-    const rendered = []
-    for (const token of tokens) {
-      if (token.type === 'regexp-0') {
-        // stamp
-        rendered.push(renderStamp(token.meta.match))
-      } else if (token.type === 'spoiler_open') {
-        rendered.push('<span class="spoiler">')
-      } else if (token.type === 'spoiler_close') {
-        rendered.push('</span>')
-      } else if (token.type === 'softbreak') {
-        // newline
-        rendered.push(' ')
-      } else {
-        rendered.push(this.md.utils.escapeHtml(token.content))
-      }
-    }
 
     return {
       embeddings,
       rawText: text,
-      renderedText: rendered.join('')
+      renderedText: this._renderInline(parsed)
     }
   }
 }
