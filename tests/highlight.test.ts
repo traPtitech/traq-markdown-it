@@ -16,14 +16,14 @@ describe('highlight', () => {
   it('can output without caption', () => {
     const actual = highlightFunc(code, 'js')
     const expected = `<pre class="class1"><code class="lang-js">${
-      hljs.highlight('js', code).value
+      hljs.highlight(code, { language: 'js' }).value
     }</code></pre>`
     expect(actual).toBe(expected)
   })
   it('can output with caption', () => {
     const actual = highlightFuncCaption(code, 'js:main.js')
     const expected = `<pre class="class1"><cite>main.js</cite><code class="lang-js">${
-      hljs.highlight('js', code).value
+      hljs.highlight(code, { language: 'js' }).value
     }</code></pre>`
     expect(actual).toBe(expected)
   })
@@ -35,7 +35,9 @@ describe('highlight', () => {
     const expected =
       '<pre class="class1">' +
       '<cite>&lt;script&gt;console.log(&quot;po&quot;)&lt;/script&gt;</cite>' +
-      `<code class="lang-js">${hljs.highlight('js', code).value}</code></pre>`
+      `<code class="lang-js">${
+        hljs.highlight(code, { language: 'js' }).value
+      }</code></pre>`
     expect(actual).toBe(expected)
   })
   it('can output plaintext', () => {
