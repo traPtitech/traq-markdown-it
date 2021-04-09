@@ -108,7 +108,7 @@ describe('InlineRenderer', () => {
       1) b
       5. c
     `)
-    // FIXME: https://developer.mozilla.org/ja/docs/Web/CSS/CSS_Lists_and_Counters/Using_CSS_counters#example_of_a_nested_counter
+    // FIXME: https://github.com/traPtitech/traq-markdown-it/issues/294
     const expected = '. a1 . a2 a2 ) b . c'
     expect(actual).toStrictEqual(expected)
   })
