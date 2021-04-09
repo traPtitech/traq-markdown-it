@@ -116,12 +116,14 @@ describe('InlineRenderer', () => {
     const actual = render(dedent`
       *i* _i_
       **b** __b__
+      ~~s~~
       [link](url 'title')
       <http://example.com>
     `)
     const expected =
       '<em>i</em> <em>i</em> ' +
       '<strong>b</strong> <strong>b</strong> ' +
+      '<s>s</s> ' +
       '<a href="url" title="title">link</a> ' +
       '<a href="http://example.com">http://example.com</a>'
     expect(actual).toStrictEqual(expected)
