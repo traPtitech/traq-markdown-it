@@ -15,6 +15,7 @@ import EmbeddingExtractor, { EmbeddingOrUrl } from './embeddingExtractor'
 import {
   /* tree-shaking no-side-effects-when-called */ InlineRenderer
 } from './InlineRenderer'
+import { escapeHtml } from './util'
 
 export type MarkdownRenderResult = {
   embeddings: EmbeddingOrUrl[]
@@ -64,7 +65,15 @@ export class traQMarkdownIt {
       })
       .use(filter(whitelist, { httpsOnly: true }))
 
-    this.inlineRenderer.setRules(this.md.renderer.rules)
+    this.inlineRenderer.setRules(this.md.renderer.rules, {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      math_inline: (tokens, idx) => `$${escapeHtml(tokens[idx]!.content)}$`,
+      math_block: (tokens, idx) =>
+        `$$${escapeHtml(
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          tokens[idx]!.content.replace(/\n$/, '').replace(/\n/g, ' ')
+        )}$$`
+    })
   }
 
   setRendererRule(): void {

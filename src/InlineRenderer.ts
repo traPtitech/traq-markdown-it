@@ -15,7 +15,10 @@ export class InlineRenderer extends Renderer {
    */
   private blockRules: RenderRuleRecord = {}
 
-  setRules(defaultRules: RenderRuleRecord | null = null): void {
+  setRules(
+    defaultRules: RenderRuleRecord | null = null,
+    overrideRules: RenderRuleRecord = {}
+  ): void {
     if (defaultRules !== null) {
       this.rules = { ...defaultRules }
     }
@@ -48,6 +51,11 @@ export class InlineRenderer extends Renderer {
     this.blockRules.list_item_open = (tokens, idx) => `${tokens[idx]!.markup} `
 
     /* eslint-enable @typescript-eslint/no-non-null-assertion */
+
+    for (const [key, val] of Object.entries(overrideRules)) {
+      this.rules[key] = val
+      this.blockRules[key] = val
+    }
   }
 
   renderContent(token: Token): string {

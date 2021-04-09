@@ -64,6 +64,10 @@ describe('index', () => {
       :me:
       ==x==
       !!x!!
+      $\\KaTeX$
+      $$
+      \\KaTeX
+      $$
       https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
     `)
     const expected = {
@@ -79,6 +83,10 @@ describe('index', () => {
         :me:
         ==x==
         !!x!!
+        $\\KaTeX$
+        $$
+        \\KaTeX
+        $$
         https://example.com/messages/e97518db-ebb8-450f-9b4a-273234e68491
       `,
       renderedText:
@@ -86,7 +94,9 @@ describe('index', () => {
         ':xx: ' +
         '<i class="emoji message-emoji " title=":me:" style="background-image: url(/api/v3/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e);">:me:</i> ' +
         '<mark>x</mark> ' +
-        '<span class="spoiler">x</span>'
+        '<span class="spoiler">x</span> ' +
+        '$\\KaTeX$' +
+        '$$\\KaTeX$$'
     }
     expect(actual).toStrictEqual(expected)
   })
