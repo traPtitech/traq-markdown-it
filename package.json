@@ -16,8 +16,7 @@
     "start": "tsdx watch",
     "build": "tsdx build && dart-sass ./src/css/index.scss ./dist/index.css",
     "test": "tsdx test",
-    "lint": "tsdx lint",
-    "prepare": "tsdx build && dart-sass ./src/css/index.scss ./dist/index.css"
+    "lint": "tsdx lint"
   },
   "repository": {
     "type": "git",
