@@ -26,7 +26,10 @@ export class InlineRenderer extends Renderer {
     /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
     this.rules.softbreak = () => ' '
+    this.blockRules.softbreak = () => ' '
     this.rules.hardbreak = () => ' '
+    this.blockRules.hardbreak = () => ' '
+
     this.rules.image = (tokens, idx) => {
       const token = tokens[idx]!
       const attrsStr = (token.attrs ?? [])

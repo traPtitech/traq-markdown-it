@@ -139,4 +139,31 @@ describe('index', () => {
     }
     expect(actual).toStrictEqual(expected)
   })
+  it('can render inline (4)', () => {
+    const actual = md.renderInline(dedent`
+      aaa
+      aa
+
+      aaa
+
+
+
+      aa
+    `)
+    const expected = {
+      embeddings: [],
+      rawText: dedent`
+        aaa
+        aa
+
+        aaa
+
+
+
+        aa
+      `,
+      renderedText: `aaa aa aaa  aa`
+    }
+    expect(actual).toStrictEqual(expected)
+  })
 })

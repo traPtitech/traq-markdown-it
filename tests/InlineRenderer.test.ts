@@ -12,6 +12,20 @@ describe('InlineRenderer', () => {
     return ir.render(tokens, md.options, {})
   }
 
+  it('can render linebreak', () => {
+    const actual = render(dedent`
+      aaa
+      aa
+
+      aaa
+
+
+
+      aa
+    `)
+    const expected = 'aaa aa aaa aa'
+    expect(actual).toStrictEqual(expected)
+  })
   it('can render codeblock', () => {
     const actual = render(
       `
