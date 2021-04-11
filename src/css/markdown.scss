@@ -312,6 +312,11 @@ $link-highlight-background-color: #FAFFAD !default;
     text-decoration: line-through;
   }
 
+  mark {
+    color: $mark-color;
+    background-color: $mark-background-color;
+  }
+
   .spoiler {
     color: transparent;
     background-color: $spoiler-background-color;
@@ -323,6 +328,20 @@ $link-highlight-background-color: #FAFFAD !default;
         visibility: hidden;
       }
     }
+  }
+
+  .message-user-link,
+  .message-channel-link,
+  .message-group-link {
+    cursor: pointer;
+    color: $link-text-color;
+    background-color: $link-background-color;
+    font-weight: bold;
+  }
+  .message-user-link-highlight,
+  .message-group-link-highlight {
+    color: $link-highlight-text-color;
+    background-color: $link-highlight-background-color;
   }
 
   .message-emoji {
