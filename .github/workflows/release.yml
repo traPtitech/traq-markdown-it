@@ -17,6 +17,8 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: npm ci
         run: npm ci
+      - name: run build
+        run: npm run build
       - name: release
         run: npm publish --access public
         env:
