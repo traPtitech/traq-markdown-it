@@ -3,7 +3,8 @@ import regexp from '@traptitech/markdown-it-regexp'
 
 // See stamp.ts stampRegExp
 const stampRegExp = /:((?:[a-zA-Z0-9+_-]{1,32}|@[a-zA-Z0-9_-]+)[\w+-.]*):/
-const stampRegExpWithSize = /:((?:[a-zA-Z0-9+_-]{1,32}|@[a-zA-Z0-9_-]+)[\w+-.]*)[:;]/
+const stampRegExpWithSize =
+  /:((?:[a-zA-Z0-9+_-]{1,32}|@[a-zA-Z0-9_-]+)[\w+-.]*)[:;]/
 
 const renderUserStamp = (wrappedName: string, name: string, size: number) => {
   // 最初の@を取り除く
