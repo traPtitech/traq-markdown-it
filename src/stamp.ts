@@ -92,7 +92,8 @@ const renderStampDom = (
   )
 
 const stampReg = /^[a-zA-Z0-9+_-]{1,32}$/
-export const hslReg = /(?<color>hsl\(\d+,\s*[\d]+(?:\.[\d]+)?%,\s*[\d]+(?:\.[\d]+)?%\))(?<effects>.*)/
+export const hslReg =
+  /(?<color>hsl\(\d+,\s*[\d]+(?:\.[\d]+)?%,\s*[\d]+(?:\.[\d]+)?%\))(?<effects>.*)/
 export const hexReg = /0x(?<color>[0-9a-fA-F]{6})(?<effects>.*)/
 
 interface ColorRegExpGroup {
@@ -202,7 +203,8 @@ export const renderStamp = (match: Readonly<RegExpMatchArray>): string => {
  * `\w+\([^:<>"'=+!?]+\)`の部分が色のスタンプ
  * [\w+-.]*の部分がスタンプエフェクト
  */
-const stampRegExp = /:(?<inner>(?:[a-zA-Z0-9+_-]{1,32}|@(?:Webhook#)?[a-zA-Z0-9_-]+|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
+const stampRegExp =
+  /:(?<inner>(?:[a-zA-Z0-9+_-]{1,32}|@(?:Webhook#)?[a-zA-Z0-9_-]+|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
 interface StampRegExpGroups {
   /**
    * :を除いた部分
