@@ -66,8 +66,6 @@ export class traQMarkdownIt {
       .use(filter(whitelist, { httpsOnly: true }))
 
     this.inlineRenderer.setRules(this.md.renderer.rules, {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      math_inline: (tokens, idx) => `$${escapeHtml(tokens[idx]!.content)}$`,
       math_block: (tokens, idx) =>
         `$$${escapeHtml(
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
