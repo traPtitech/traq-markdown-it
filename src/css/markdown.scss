@@ -328,6 +328,11 @@ $link-highlight-background-color: #FAFFAD !default;
         visibility: hidden;
       }
     }
+
+    &[shown] {
+      color: inherit;
+      background-color: $spoiler-shown-background-color;
+    }
   }
 
   .message-user-link,
