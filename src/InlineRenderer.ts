@@ -5,9 +5,6 @@ import /* tree-shaking no-side-effects-when-called */ Renderer, {
 import type Token from 'markdown-it/lib/token'
 import { escapeHtml } from './util'
 
-const formatCodeBlockContent = (code: string) =>
-  escapeHtml(code.replace(/\n$/, '').replace(/\n/g, ' '))
-
 export class InlineRenderer extends Renderer {
   /**
    * Rulesのblockルールは使われない
@@ -41,12 +38,8 @@ export class InlineRenderer extends Renderer {
       }" ${attrsStr} data-is-image>${token.content}</a>`
     }
 
-    this.blockRules.code_block = (tokens, idx) =>
-      '```' + formatCodeBlockContent(tokens[idx]!.content) + '```'
-    this.blockRules.fence = (tokens, idx) => {
-      const { markup, content } = tokens[idx]!
-      return `${markup}${formatCodeBlockContent(content)}${markup}`
-    }
+    this.blockRules.code_block = this.rules.code_inline
+    this.blockRules.fence = this.rules.code_inline
     this.blockRules.hr = (tokens, idx) => ` ${tokens[idx]!.markup} `
     this.blockRules.heading_open = (tokens, idx) =>
       `${'#'.repeat(+tokens[idx]!.tag.slice(1))} `

@@ -33,7 +33,11 @@ describe('InlineRenderer', () => {
     a
 `
     )
-    const expected = '```code a```'
+    const expected = dedent(`
+      <code>code
+      a
+      </code>
+    `)
     expect(actual).toStrictEqual(expected)
   })
   it('can render fenced codeblock', () => {
@@ -43,7 +47,11 @@ describe('InlineRenderer', () => {
       a
       \`\`\`
     `)
-    const expected = '```code a```'
+    const expected = dedent(`
+      <code>code
+      a
+      </code>
+    `)
     expect(actual).toStrictEqual(expected)
   })
   it('can render hr', () => {
