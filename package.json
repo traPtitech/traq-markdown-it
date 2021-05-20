@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/traPtitech/traq-markdown-it#readme",
   "dependencies": {
-    "@traptitech/markdown-it-katex": "^3.4.2",
+    "@traptitech/markdown-it-katex": "^3.4.3",
     "@traptitech/markdown-it-regexp": "^0.5.3",
     "@traptitech/markdown-it-spoiler": "^1.1.6",
     "core-js": "^3.12.0",
