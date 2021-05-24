@@ -14,7 +14,8 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build && sass ./src/css/index.scss ./dist/index.css",
+    "build": "tsdx build && npm run build:css",
+    "build:css": "sass ./src/css/index.scss ./dist/index.css",
     "test": "tsdx test",
     "lint": "tsdx lint"
   },
