@@ -1,3 +1,5 @@
+@use "sass:math"
+
 @keyframes happa
   $len: 8
   @for $i from 0 to $len
@@ -6,8 +8,8 @@
       $y: -0.2em
 
     $r: 0
-    @if $i >= ($len / 2)
+    @if $i >= math.div($len, 2)
       $r: 0.5turn
 
-    #{percentage($i / $len)}
+    #{math.percentage(math.div($i, $len))}
       transform: translateY($y) rotateY($r)
