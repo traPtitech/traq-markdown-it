@@ -1,3 +1,5 @@
+@use "sass:math"
+
 @keyframes stretch
   0%
     transform: scaleX(1.0)
@@ -6,7 +8,7 @@
 
   $start: 22
   $end: 50
-  @for $i from 0 through ($end - $start) / 2
+  @for $i from 0 through math.div($end - $start, 2)
     $s: 1.65
     @if $i % 2 != 0
       $s: 1.85
@@ -29,7 +31,7 @@
 
   $start: 22
   $end: 50
-  @for $i from 0 through ($end - $start) / 2
+  @for $i from 0 through math.div($end - $start, 2)
     $s: 1.65
     @if $i % 2 != 0
       $s: 1.85

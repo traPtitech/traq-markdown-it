@@ -1,3 +1,4 @@
+@use 'sass:math';
 @import './animation';
 
 .emoji-effect {
@@ -68,7 +69,7 @@
   @for $i from 1 through 5 {
     &#{$s} .emoji {
       background-repeat: repeat-x;
-      animation: conga linear #{1 / $i}s infinite;
+      animation: conga linear math.div(1, $i)s infinite;
     }
     $s: #{$s '.conga'};
   }
@@ -77,7 +78,7 @@
   @for $i from 1 through 5 {
     &#{$s} .emoji {
       background-repeat: repeat-x;
-      animation: conga-inv linear #{1 / $i}s infinite;
+      animation: conga-inv linear math.div(1, $i)s infinite;
     }
     $s: #{$s '.conga-inv'};
   }

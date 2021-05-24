@@ -1,5 +1,7 @@
+@use "sass:math"
+
 @keyframes flashy
   $len: 10
   @for $i from 0 to $len
-    #{percentage($i / $len)}
-      filter: drop-shadow(0 0 0.2em hsl($i / $len * 360, 50%, 50%))
+    #{math.percentage(math.div($i, $len))}
+      filter: drop-shadow(0 0 0.2em hsl(math.div($i, $len) * 360, 50%, 50%))
