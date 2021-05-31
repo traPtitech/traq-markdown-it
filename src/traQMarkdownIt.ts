@@ -28,6 +28,14 @@ export class traQMarkdownIt {
     linkify: true,
     highlight: createHighlightFunc('traq-code traq-lang')
   } as const
+  readonly katexOptions = {
+    katex: katexE,
+    output: 'html',
+    strict: (errCode: string): string =>
+      errCode === 'unicodeTextInMathMode' ? 'ignore' : 'warn',
+    maxSize: 100,
+    blockClass: 'is-scroll'
+  } as const
   readonly md = new MarkdownIt(this.mdOptions)
   readonly embeddingExtractor: EmbeddingExtractor
   readonly inlineRenderer = new InlineRenderer()
@@ -48,14 +56,7 @@ export class traQMarkdownIt {
       .use(spoiler, true)
       .use(json, store)
       .use(stamp, store)
-      .use(katex, {
-        katex: katexE,
-        output: 'html',
-        strict: (errCode: string) =>
-          errCode === 'unicodeTextInMathMode' ? 'ignore' : 'warn',
-        maxSize: 100,
-        blockClass: 'is-scroll'
-      })
+      .use(katex, this.katexOptions)
       .use(mila, {
         attrs: {
           target: '_blank',
@@ -64,8 +65,23 @@ export class traQMarkdownIt {
       })
       .use(filter(whitelist, { httpsOnly: true }))
 
+    const dummyMd = new MarkdownIt(this.mdOptions)
+    dummyMd.use(katex, {
+      ...this.katexOptions,
+      maxSize: 1,
+      macros: {
+        // 文字サイズを変更する関数を無効化する
+        '\\Huge': () => '',
+        '\\huge': () => '',
+        '\\LARGE': () => '',
+        '\\Large': () => '',
+        '\\large': () => ''
+      }
+    })
+
     this.inlineRenderer.setRules(this.md.renderer.rules, {
-      math_block: this.md.renderer.rules.math_inline
+      math_inline: dummyMd.renderer.rules.math_inline,
+      math_block: dummyMd.renderer.rules.math_inline
     })
   }
 
