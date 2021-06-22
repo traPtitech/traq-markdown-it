@@ -69,7 +69,7 @@
   @for $i from 1 through 5 {
     &#{$s} .emoji {
       background-repeat: repeat-x;
-      animation: conga linear math.div(1, $i)s infinite;
+      animation: conga linear math.div(1s, $i) infinite;
     }
     $s: #{$s '.conga'};
   }
@@ -78,7 +78,7 @@
   @for $i from 1 through 5 {
     &#{$s} .emoji {
       background-repeat: repeat-x;
-      animation: conga-inv linear math.div(1, $i)s infinite;
+      animation: conga-inv linear math.div(1s, $i) infinite;
     }
     $s: #{$s '.conga-inv'};
   }
