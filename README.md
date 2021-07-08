@@ -3,7 +3,6 @@
 [![npm version](https://badge.fury.io/js/%40traptitech%2Ftraq-markdown-it.svg)](https://badge.fury.io/js/%40traptitech%2Ftraq-markdown-it)
 ![CI](https://github.com/traPtitech/traq-markdown-it/workflows/CI/badge.svg)
 [![codecov](https://codecov.io/gh/traPtitech/traq-markdown-it/branch/master/graph/badge.svg)](https://codecov.io/gh/traPtitech/traq-markdown-it)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=traPtitech/traq-markdown-it)](https://dependabot.com)
 
 Markdown parser for traQ.
 
