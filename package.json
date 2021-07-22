@@ -3,7 +3,7 @@
   "version": "5.3.3",
   "description": "Markdown parser for traQ.",
   "main": "dist/index.js",
-  "module": "dist/traq-markdown-it.esm.js",
+  "module": "dist/index.mjs",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
@@ -13,8 +13,8 @@
     "node": ">=10"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build && npm run build:css",
+    "start": "tsup src/index.ts --watch src",
+    "build": "tsup src/index.ts --dts --sourcemap --format esm,cjs,iife && npm run build:css",
     "build:css": "sass ./src/css/index.scss ./dist/index.css",
     "test": "tsdx test",
     "lint": "tsdx lint"
@@ -61,6 +61,7 @@
     "ts-dedent": "^2.1.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.2.0",
+    "tsup": "^4.12.5",
     "typescript": "^4.2.4"
   },
   "husky": {
