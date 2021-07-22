@@ -5,22 +5,3 @@ updates:
   schedule:
     interval: daily
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: husky
-    versions:
-    - ">= 5.a, < 6"
-  - dependency-name: "@types/jest"
-    versions:
-    - ">= 26.a, < 27"
-  - dependency-name: eslint-config-prettier
-    versions:
-    - 8.0.0
-    - 8.1.0
-    - 8.2.0
-    - 8.3.0
-  - dependency-name: husky
-    versions:
-    - 6.0.0
-  - dependency-name: typescript
-    versions:
-    - 4.1.4
