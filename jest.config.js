@@ -2,6 +2,9 @@ module.exports = {
   moduleNameMapper: {
     '^#/(.+)': '<rootDir>/src/$1'
   },
-  coverageDirectory: "./coverage/",
+  transform: {
+    '^.+\\.ts$': 'esbuild-jest'
+  },
+  coverageDirectory: './coverage/',
   collectCoverage: true
 }
