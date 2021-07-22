@@ -3,7 +3,7 @@ module.exports = {
     '^#/(.+)': '<rootDir>/src/$1'
   },
   transform: {
-    '^.+\\.ts$': 'esbuild-jest'
+    '^.+\\.ts$': 'es-jest'
   },
   coverageDirectory: './coverage/',
   collectCoverage: true
