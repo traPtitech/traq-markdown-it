@@ -44,7 +44,10 @@ export class InlineRenderer extends Renderer {
     this.blockRules.heading_open = (tokens, idx) =>
       `${'#'.repeat(+tokens[idx]!.tag.slice(1))} `
     this.blockRules.blockquote_open = (tokens, idx) => `${tokens[idx]!.markup} `
-    this.blockRules.list_item_open = (tokens, idx) => `${tokens[idx]!.markup} `
+    this.blockRules.list_item_open = (tokens, idx) => {
+      const token = tokens[idx]!
+      return `${token.info}${token.markup} `
+    }
     this.blockRules.th_open = () => '| '
     this.blockRules.td_open = () => '| '
     this.blockRules.tr_close = () => ' |'

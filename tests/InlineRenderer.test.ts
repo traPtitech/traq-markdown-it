@@ -130,8 +130,7 @@ describe('InlineRenderer', () => {
       1) b
       5. c
     `)
-    // FIXME: https://github.com/traPtitech/traq-markdown-it/issues/294
-    const expected = '. a1 . a2 a2 ) b . c'
+    const expected = '1. a1 2. a2 a2 1) b 5. c'
     expect(actual).toStrictEqual(expected)
   })
   it('can render inline elements', () => {
