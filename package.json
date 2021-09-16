@@ -60,7 +60,7 @@
     "prettier": "^2.3.2",
     "sass": "^1.35.2",
     "ts-dedent": "^2.1.1",
-    "tsup": "^4.12.5",
+    "tsup": "^5.0.0",
     "typescript": "^4.3.5"
   },
   "sideEffects": false
