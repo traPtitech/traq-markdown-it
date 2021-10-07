@@ -6,37 +6,18 @@ import stampPlugin, {
   renderHslStamp,
   hslReg
 } from '#/stamp'
-import MarkdownIt from 'markdown-it'
-import type { Store } from '#/Store'
+import { setup } from './setupMd'
 
-const setup = () => {
-  const md = new MarkdownIt()
+const setupWithStamp = () => {
+  const { md, store } = setup()
 
-  const nameIdTable: Record<string, string> = {
-    one: 'e97518db-ebb8-450f-9b4a-273234e68491',
-    two: 'd7461966-e5d3-4c6d-9538-7c8605f45a1e',
-    longlonglonglonglonglonglonglonglonglonglonglong:
-      'e97518db-ebb8-450f-9b4a-273234e68491',
-    'Webhook#random-Va1ue': 'e97518db-ebb8-450f-9b4a-273234e68491'
-  }
-
-  const store: Pick<Store, 'getUserByName' | 'getStampByName'> = {
-    getUserByName: name => {
-      const id = nameIdTable[name]
-      return id ? { iconFileId: id } : undefined
-    },
-    getStampByName: name => {
-      const id = nameIdTable[name]
-      return id ? { name, fileId: id } : undefined
-    }
-  }
-
-  stampPlugin(md, store)
-  return md
+  stampPlugin(md.md, store)
+  return { md, store }
 }
 
 describe('stamp', () => {
-  const md = setup()
+  const { md: traQMd } = setupWithStamp()
+  const md = traQMd.md
 
   {
     const expected1 =

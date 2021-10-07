@@ -5,6 +5,7 @@ export const setup = (): { md: traQMarkdownIt; store: Store } => {
   const nameIdTable: Record<string, string> & { me: string } = {
     me: 'd7461966-e5d3-4c6d-9538-7c8605f45a1e',
     one: 'e97518db-ebb8-450f-9b4a-273234e68491',
+    two: 'd7461966-e5d3-4c6d-9538-7c8605f45a1e',
     longlonglonglonglonglonglonglonglonglonglonglong:
       'e97518db-ebb8-450f-9b4a-273234e68491',
     'Webhook#random-Va1ue': 'e97518db-ebb8-450f-9b4a-273234e68491'
