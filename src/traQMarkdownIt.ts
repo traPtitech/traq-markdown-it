@@ -50,7 +50,10 @@ export class traQMarkdownIt {
     this.setPlugin(store, whitelist)
   }
 
-  setPlugin(store: Readonly<Store>, whitelist: readonly string[]): void {
+  private setPlugin(
+    store: Readonly<Store>,
+    whitelist: readonly string[]
+  ): void {
     this.md
       .use(MarkdownItMark)
       .use(spoiler, true)
@@ -85,7 +88,7 @@ export class traQMarkdownIt {
     })
   }
 
-  setRendererRule(): void {
+  private setRendererRule(): void {
     this.md.block.State.prototype.skipEmptyLines = function skipEmptyLines(
       from: number
     ): number {

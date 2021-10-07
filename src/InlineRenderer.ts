@@ -60,7 +60,7 @@ export class InlineRenderer extends Renderer {
     }
   }
 
-  renderContent(token: Token): string {
+  private renderContent(token: Token): string {
     return escapeHtml(token.content)
   }
 

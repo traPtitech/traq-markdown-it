@@ -44,13 +44,13 @@ export default class EmbeddingExtractor {
     this.embeddingOrigin = embeddingOrigin
   }
 
-  extractType(url: Readonly<URL>): EmbeddingOrUrl['type'] {
+  private extractType(url: Readonly<URL>): EmbeddingOrUrl['type'] {
     if (url.origin !== this.embeddingOrigin) return 'url'
     const name = url.pathname.split('/')[1] ?? ''
     return this.pathNameEmbeddingTypeMap.get(name) ?? 'internal'
   }
 
-  extractId(
+  private extractId(
     url: Readonly<URL>,
     type: EmbeddingOrUrl['type']
   ): Embedding['id'] | undefined {
@@ -93,7 +93,7 @@ export default class EmbeddingExtractor {
    * パースされたトークンの木構造から再帰的にURLを抽出する
    * 同時にトークンにURLの情報を付与する
    */
-  extractUrlsFromTokens(
+  private extractUrlsFromTokens(
     tokens: readonly TokenWithEmbeddingData[],
     embeddings: EmbeddingOrUrl[] = []
   ): EmbeddingOrUrl[] {
