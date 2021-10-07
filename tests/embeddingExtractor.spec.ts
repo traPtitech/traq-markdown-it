@@ -36,6 +36,13 @@ describe('embeddingExtractor', () => {
     expect(actual).toBeUndefined()
   })
 
+  it('can catch invalid file url', () => {
+    const actual = embeddingExtractor.urlToEmbeddingData(
+      'https://example.com/files/'
+    )
+    expect(actual).toBeUndefined()
+  })
+
   it('can extract a file from url', () => {
     const tokens = parse(path1)
     const extracted = extract(tokens)
