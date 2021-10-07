@@ -13,7 +13,7 @@ const externalUrl = `${nonBasePath}/files/${id1}`
 const internalUrl = `${basePath}/somewhere`
 
 describe('embeddingExtractor', () => {
-  const md = setup()
+  const { md } = setup()
   const embeddingExtractor = new EmbeddingExtractor(basePath)
 
   const parse = (message: string) => md.md.parse(message, {})

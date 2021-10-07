@@ -2,7 +2,7 @@ import { setup } from './setupMd'
 import dedent from 'ts-dedent'
 
 describe('index', () => {
-  const md = setup()
+  const { md } = setup()
 
   it('can render', () => {
     const actual = md.render(

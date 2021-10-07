@@ -1,7 +1,7 @@
 import { traQMarkdownIt } from '#/traQMarkdownIt'
 import type { Store } from '#/Store'
 
-export const setup = (): traQMarkdownIt => {
+export const setup = (): { md: traQMarkdownIt; store: Store } => {
   const nameIdTable: Record<string, string> & { me: string } = {
     me: 'd7461966-e5d3-4c6d-9538-7c8605f45a1e',
     one: 'e97518db-ebb8-450f-9b4a-273234e68491',
@@ -33,5 +33,5 @@ export const setup = (): traQMarkdownIt => {
 
   const md = new traQMarkdownIt(store, [], 'https://example.com')
 
-  return md
+  return { md, store }
 }
