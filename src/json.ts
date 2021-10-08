@@ -48,7 +48,7 @@ const transformUser: TransformFunc = (state, { type, id, raw }) => {
   const attributes: [string, string][] = []
   const me = store.getMe()
 
-  attributes.push(['href', `javascript:openUserModal('${id}')`])
+  attributes.push(['href', store.generateUserHref(id)])
 
   if (id === me?.id) {
     attributes.push(['class', 'message-user-link-highlight message-user-link'])
@@ -69,7 +69,7 @@ const transformUserGroup: TransformFunc = (state, { type, id, raw }) => {
   const userGroup = store.getUserGroup(id)
   const me = store.getMe()
 
-  attributes.push(['href', `javascript:openGroupModal('${id}')`])
+  attributes.push(['href', store.generateUserGroupHref(id)])
 
   if (userGroup?.members?.some(user => user.id === me?.id) ?? false) {
     attributes.push([
@@ -91,10 +91,7 @@ const transformUserGroup: TransformFunc = (state, { type, id, raw }) => {
 const transformChannel: TransformFunc = (state, { type, id, raw }) => {
   const attributes: [string, string][] = []
 
-  attributes.push([
-    'href',
-    `javascript:changeChannel('${store.getChannelPath(id)}')`
-  ])
+  attributes.push(['href', store.generateChannelHref(id)])
   attributes.push(['class', 'message-channel-link'])
 
   let t = state.push('traq_extends_link_open', 'a', 1)

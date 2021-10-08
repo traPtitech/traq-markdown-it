@@ -14,8 +14,6 @@ export const setup = (): { md: traQMarkdownIt; store: Store } => {
   const store: Store = {
     getChannel: id =>
       id !== '00000000-0000-0000-0000-000000000000' ? { id } : undefined,
-    getChannelPath: id =>
-      Object.entries(nameIdTable).find(([, v]) => v === id)?.[0] ?? '',
     getMe: () => ({ id: nameIdTable.me }),
     getUser: id => ({ id }),
     getUserGroup: id => ({
@@ -29,7 +27,13 @@ export const setup = (): { md: traQMarkdownIt; store: Store } => {
     getStampByName: name => {
       const id = nameIdTable[name]
       return id ? { name, fileId: id } : undefined
-    }
+    },
+    generateChannelHref: id =>
+      `https://example.com/${
+        Object.entries(nameIdTable).find(([, v]) => v === id)?.[0] ?? ''
+      }`,
+    generateUserGroupHref: id => `javascript:openGroupModal('${id}')`,
+    generateUserHref: id => `javascript:openUserModal('${id}')`
   }
 
   const md = new traQMarkdownIt(store, [], 'https://example.com')

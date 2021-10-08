@@ -122,7 +122,7 @@ describe('json', () => {
       )
       .trim()
     const expected =
-      '<p><a href="javascript:changeChannel(\'one\')" class="message-channel-link">#one</a></p>'
+      '<p><a href="https://example.com/one" class="message-channel-link">#one</a></p>'
     expect(actual).toBe(expected)
   })
   it('can render invalid channel json', () => {
