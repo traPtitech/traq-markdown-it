@@ -44,7 +44,7 @@
     "markdown-it-mark": "^3.0.1"
   },
   "devDependencies": {
-    "@traptitech/traq": "3.8.0-2",
+    "@traptitech/traq": "3.8.0-3",
     "@types/jest": "^27.0.2",
     "@types/katex": "^0.11.1",
     "@types/markdown-it": "12.2.3",
