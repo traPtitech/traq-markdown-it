@@ -1,4 +1,8 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npm run lint
+if  [-e npm]; then
+  npm run lint
+else
+  npm.cmd run lint
+fi
