@@ -1,4 +1,4 @@
-import /* tree-shaking no-side-effects-when-called */ MarkdownIt from 'markdown-it'
+import MarkdownIt from 'markdown-it'
 import MarkdownItMark from 'markdown-it-mark'
 import spoiler from '@traptitech/markdown-it-spoiler'
 import stamp from './stamp'
@@ -12,9 +12,7 @@ import defaultWhitelist from './default/domain_whitelist'
 import type Token from 'markdown-it/lib/token'
 import type { Store } from './Store'
 import EmbeddingExtractor, { EmbeddingOrUrl } from './embeddingExtractor'
-import {
-  /* tree-shaking no-side-effects-when-called */ InlineRenderer
-} from './InlineRenderer'
+import { InlineRenderer } from './InlineRenderer'
 
 export type MarkdownRenderResult = {
   embeddings: EmbeddingOrUrl[]

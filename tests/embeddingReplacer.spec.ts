@@ -37,7 +37,7 @@ describe('embeddingReplacer', () => {
         id: id1
       }
     ])
-    expect(rendered).toEqual('')
+    expect(rendered).toBe('')
   })
 
   it('can extract a file from url and remove tail spaces', () => {
@@ -50,7 +50,7 @@ describe('embeddingReplacer', () => {
         id: id1
       }
     ])
-    expect(rendered).toEqual('')
+    expect(rendered).toBe('')
   })
 
   it('can ignore a file inside spoiler or code block from url', () => {

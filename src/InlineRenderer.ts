@@ -1,7 +1,5 @@
 import type { Options } from 'markdown-it'
-import /* tree-shaking no-side-effects-when-called */ Renderer, {
-  RenderRuleRecord
-} from 'markdown-it/lib/renderer'
+import Renderer, { RenderRuleRecord } from 'markdown-it/lib/renderer'
 import type Token from 'markdown-it/lib/token'
 import { escapeHtml } from './util'
 
@@ -64,7 +62,7 @@ export class InlineRenderer extends Renderer {
     return escapeHtml(token.content)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   render(tokens: Token[], options: Options, env: any): string {
     let result = ''
 
