@@ -1,7 +1,5 @@
 import type { Options } from 'markdown-it'
-import /* tree-shaking no-side-effects-when-called */ Renderer, {
-  RenderRuleRecord
-} from 'markdown-it/lib/renderer'
+import Renderer, { RenderRuleRecord } from 'markdown-it/lib/renderer'
 import type Token from 'markdown-it/lib/token'
 import { escapeHtml } from './util'
 
