@@ -62,7 +62,7 @@ export class InlineRenderer extends Renderer {
     return escapeHtml(token.content)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   render(tokens: Token[], options: Options, env: any): string {
     let result = ''
 

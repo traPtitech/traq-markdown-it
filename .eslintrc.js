@@ -10,5 +10,19 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/member-delimiter-style': 'off'
-  }
+  },
+  overrides: [
+    {
+      // 直下のファイル
+      files: ['*.{js,mjs}'],
+      excludedFiles: ['*/**/*.{js,mjs}'],
+      env: {
+        node: true
+      },
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off'
+      }
+    }
+  ],
+  reportUnusedDisableDirectives: true
 }
