@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "tsup src/index.ts --watch src",
-    "build": "tsup src/index.ts --dts --sourcemap --format esm,cjs,iife && npm run build:css",
+    "build": "tsup src/index.ts && npm run build:css",
     "build:css": "sass ./src/css/index.scss ./dist/index.css",
     "test": "jest",
     "lint": "eslint --cache .",
