@@ -2,8 +2,8 @@ import EmbeddingExtractor, { EmbeddingOrUrl } from '#/embeddingExtractor'
 import { setup } from './setupMd'
 import type Token from 'markdown-it/lib/token'
 
-const basePath = `https://example.com`
-const nonBasePath = `https://yet.another.example.com`
+const basePath = 'https://example.com'
+const nonBasePath = 'https://yet.another.example.com'
 
 const id1 = 'e97518db-ebb8-450f-9b4a-273234e68491'
 const id2 = 'd7461966-e5d3-4c6d-9538-7c8605f45a1e'
@@ -54,7 +54,7 @@ describe('embeddingExtractor', () => {
         id: id1
       }
     ])
-    expect(rendered).toEqual(`<p></p>`)
+    expect(rendered).toBe('<p></p>')
   })
 
   it('can extract a file from link url []()', () => {
@@ -67,8 +67,8 @@ describe('embeddingExtractor', () => {
         id: id1
       }
     ])
-    expect(rendered).toEqual(
-      `<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">link</a> <a href="invalid" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e</a></p>`
+    expect(rendered).toBe(
+      '<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">link</a> <a href="invalid" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e</a></p>'
     )
   })
 
@@ -82,7 +82,7 @@ describe('embeddingExtractor', () => {
         id: id1
       }
     ])
-    expect(rendered).toEqual(`<p></p>`)
+    expect(rendered).toBe('<p></p>')
   })
 
   it('can ignore a file inside spoiler or code block from url', () => {
@@ -90,8 +90,8 @@ describe('embeddingExtractor', () => {
     const extracted = extract(tokens)
     const rendered = render(tokens)
     expect(extracted).toEqual([])
-    expect(rendered).toEqual(
-      `<p><span class="spoiler"><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></span> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code></p>`
+    expect(rendered).toBe(
+      '<p><span class="spoiler"><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></span> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code></p>'
     )
   })
 
@@ -105,8 +105,8 @@ describe('embeddingExtractor', () => {
         id: id1
       }
     ])
-    expect(rendered).toEqual(
-      `<p>file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> is file</p>`
+    expect(rendered).toBe(
+      '<p>file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> is file</p>'
     )
   })
 
@@ -124,8 +124,8 @@ describe('embeddingExtractor', () => {
         id: id2
       }
     ])
-    expect(rendered).toEqual(
-      `<p>file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> and <a href="https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e</a> are file</p>`
+    expect(rendered).toBe(
+      '<p>file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> and <a href="https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e</a> are file</p>'
     )
   })
 
@@ -140,7 +140,7 @@ describe('embeddingExtractor', () => {
         id: id1
       }
     ])
-    expect(rendered).toEqual(`<p>attach!</p>`)
+    expect(rendered).toBe('<p>attach!</p>')
   })
 
   it('can extract normal url and do not remove that from message', () => {
@@ -153,8 +153,8 @@ describe('embeddingExtractor', () => {
         url: externalUrl
       }
     ])
-    expect(rendered).toEqual(
-      `<p>won't be removed: <a href="https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></p>`
+    expect(rendered).toBe(
+      '<p>won\'t be removed: <a href="https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></p>'
     )
   })
 
@@ -163,8 +163,8 @@ describe('embeddingExtractor', () => {
     const extracted = extract(tokens)
     const rendered = render(tokens)
     expect(extracted).toEqual([])
-    expect(rendered).toEqual(
-      `<p><a href="https://example.com/somewhere" target="_blank" rel="nofollow noopener noreferrer">https://example.com/somewhere</a></p>`
+    expect(rendered).toBe(
+      '<p><a href="https://example.com/somewhere" target="_blank" rel="nofollow noopener noreferrer">https://example.com/somewhere</a></p>'
     )
   })
 
@@ -173,8 +173,8 @@ describe('embeddingExtractor', () => {
     const extracted = extract(tokens)
     const rendered = render(tokens)
     expect(extracted).toEqual([])
-    expect(rendered).toEqual(
-      `<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491-" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491-</a></p>`
+    expect(rendered).toBe(
+      '<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491-" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491-</a></p>'
     )
   })
 
@@ -192,8 +192,8 @@ describe('embeddingExtractor', () => {
         url: externalUrl
       }
     ])
-    expect(rendered).toEqual(
-      `<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> <a href="https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></p>`
+    expect(rendered).toBe(
+      '<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> <a href="https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></p>'
     )
   })
 })

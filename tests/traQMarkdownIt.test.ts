@@ -102,7 +102,7 @@ describe('index', () => {
         - a!!aaa
         - a!!aa
       `,
-      renderedText: `- a!!aaa - a!!aa`
+      renderedText: '- a!!aaa - a!!aa'
     }
     expect(actual).toStrictEqual(expected)
   })
@@ -125,7 +125,7 @@ describe('index', () => {
         po
         !!
       `,
-      renderedText: `<span class="spoiler">p o</span> !! po !!`
+      renderedText: '<span class="spoiler">p o</span> !! po !!'
     }
     expect(actual).toStrictEqual(expected)
   })
@@ -152,7 +152,7 @@ describe('index', () => {
 
         aa
       `,
-      renderedText: `aaa aa aaa  aa`
+      renderedText: 'aaa aa aaa  aa'
     }
     expect(actual).toStrictEqual(expected)
   })

@@ -2,8 +2,8 @@ import EmbeddingExtractor, { EmbeddingOrUrl } from '#/embeddingExtractor'
 import { setup } from './setupMd'
 import type Token from 'markdown-it/lib/token'
 
-const basePath = `https://example.com`
-const nonBasePath = `https://yet.another.example.com`
+const basePath = 'https://example.com'
+const nonBasePath = 'https://yet.another.example.com'
 
 const id1 = 'e97518db-ebb8-450f-9b4a-273234e68491'
 const id2 = 'd7461966-e5d3-4c6d-9538-7c8605f45a1e'
@@ -58,8 +58,8 @@ describe('embeddingReplacer', () => {
     const extracted = extract(tokens)
     const rendered = render(tokens)
     expect(extracted).toEqual([])
-    expect(rendered).toEqual(
-      `<span class="spoiler"><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></span> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code>`
+    expect(rendered).toBe(
+      '<span class="spoiler"><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></span> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code>'
     )
   })
 
@@ -73,8 +73,8 @@ describe('embeddingReplacer', () => {
         id: id1
       }
     ])
-    expect(rendered).toEqual(
-      `file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">[[添付ファイル]]</a> is file`
+    expect(rendered).toBe(
+      'file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">[[添付ファイル]]</a> is file'
     )
   })
 
@@ -92,8 +92,8 @@ describe('embeddingReplacer', () => {
         id: id2
       }
     ])
-    expect(rendered).toEqual(
-      `file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">[[添付ファイル]]</a> and <a href="https://example.com/messages/d7461966-e5d3-4c6d-9538-7c8605f45a1e" target="_blank" rel="nofollow noopener noreferrer">[[引用メッセージ]]</a> are file and message`
+    expect(rendered).toBe(
+      'file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">[[添付ファイル]]</a> and <a href="https://example.com/messages/d7461966-e5d3-4c6d-9538-7c8605f45a1e" target="_blank" rel="nofollow noopener noreferrer">[[引用メッセージ]]</a> are file and message'
     )
   })
 
@@ -108,7 +108,7 @@ describe('embeddingReplacer', () => {
         id: id1
       }
     ])
-    expect(rendered).toEqual(`attach!`)
+    expect(rendered).toBe('attach!')
   })
 
   it('does not replace internal url in the middle', () => {
@@ -121,8 +121,8 @@ describe('embeddingReplacer', () => {
         url: externalUrl
       }
     ])
-    expect(rendered).toEqual(
-      `<a href="https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a>, hello`
+    expect(rendered).toBe(
+      '<a href="https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a>, hello'
     )
   })
 
@@ -131,8 +131,8 @@ describe('embeddingReplacer', () => {
     const result = extract(tokens)
     const rendered = render(tokens)
     expect(result).toEqual([])
-    expect(rendered).toEqual(
-      `<a href="https://example.com/somewhere" target="_blank" rel="nofollow noopener noreferrer">https://example.com/somewhere</a>`
+    expect(rendered).toBe(
+      '<a href="https://example.com/somewhere" target="_blank" rel="nofollow noopener noreferrer">https://example.com/somewhere</a>'
     )
   })
 })

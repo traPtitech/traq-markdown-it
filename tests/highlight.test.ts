@@ -42,7 +42,8 @@ describe('highlight', () => {
   })
   it('can output plaintext', () => {
     const actual = highlightFunc(code, 'plain')
-    const expected = `<pre class="class1"><code>console.log(&quot;po&quot;)</code></pre>`
+    const expected =
+      '<pre class="class1"><code>console.log(&quot;po&quot;)</code></pre>'
     expect(actual).toBe(expected)
   })
   it('can output with auto detect', () => {
