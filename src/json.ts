@@ -10,23 +10,27 @@ interface StructData {
   type: string
   raw: string
   id: string
+
+  [k: string]: unknown
 }
 
 interface ValidStructData extends StructData {
   type: 'user' | 'channel' | 'group'
 }
 
-export const isStructData = (data: Readonly<unknown>): data is StructData => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const anyData = data as any
+export const isStructData = (
+  data: Readonly<Record<string, unknown>>
+): data is StructData => {
   return (
-    typeof anyData['type'] === 'string' &&
-    typeof anyData['raw'] === 'string' &&
-    typeof anyData['id'] === 'string'
+    typeof data['type'] === 'string' &&
+    typeof data['raw'] === 'string' &&
+    typeof data['id'] === 'string'
   )
 }
 
-export const validate = (data: Readonly<unknown>): data is ValidStructData => {
+export const validate = (
+  data: Readonly<Record<string, unknown>>
+): data is ValidStructData => {
   if (!isStructData(data)) {
     return false
   }
