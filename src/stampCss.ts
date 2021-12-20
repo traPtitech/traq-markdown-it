@@ -2,9 +2,9 @@ import type MarkdownIt from 'markdown-it'
 import regexp from '@traptitech/markdown-it-regexp'
 
 // See stamp.ts stampRegExp
-const stampRegExp = /:((?:[a-zA-Z0-9+_-]{1,32}|@[a-zA-Z0-9_-]+)[\w+-.]*):/
+const stampRegExp = /:(?:[a-zA-Z0-9+_-]{1,32}|@[a-zA-Z0-9_-]+)(?:\.[\w+-.]+)?:/
 const stampRegExpWithSize =
-  /:((?:[a-zA-Z0-9+_-]{1,32}|@[a-zA-Z0-9_-]+)[\w+-.]*)[:;]/
+  /:(?:[a-zA-Z0-9+_-]{1,32}|@[a-zA-Z0-9_-]+)(?:\.[\w+-.]+)?[:;]/
 
 const renderUserStamp = (wrappedName: string, name: string, size: number) => {
   // 最初の@を取り除く
@@ -25,8 +25,9 @@ export const stampCssPlugin = (
 ): void => {
   regexp(
     enableSize ? stampRegExpWithSize : stampRegExp,
-    ([wrappedName = '', name = '']): string => {
+    ([wrappedName = '']): string => {
       const size = enableSize ? (wrappedName.endsWith(':') ? 32 : 16) : 24
+      const name = wrappedName.slice(1, -1)
 
       if (name.startsWith('@')) {
         return renderUserStamp(wrappedName, name, size)

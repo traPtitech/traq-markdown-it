@@ -170,7 +170,7 @@ export const renderNormalStamp = (
 export const renderStamp = (match: Readonly<RegExpMatchArray>): string => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const raw = match[0]!
-  const { inner } = match.groups as Readonly<StampRegExpGroups>
+  const inner = raw.slice(1, -1)
 
   const hexMatch = hexReg.exec(inner)
   if (hexMatch) {
@@ -182,7 +182,7 @@ export const renderStamp = (match: Readonly<RegExpMatchArray>): string => {
     return renderHslStamp(hslMatch)
   }
 
-  const [stampName = '', ...effects] = inner.split('.')
+  const [stampName, ...effects] = inner.split('.') as [string, ...string[]]
 
   // ユーザーアイコン
   if (stampName.startsWith('@')) {
@@ -201,16 +201,10 @@ export const renderStamp = (match: Readonly<RegExpMatchArray>): string => {
  * `[a-zA-Z0-9+_-]{1,32}`の部分が通常のスタンプ
  * `@(?:Webhook#)?[a-zA-Z0-9_-]+`の部分がユーザーアイコンスタンプ
  * `\w+\([^:<>"'=+!?]+\)`の部分が色のスタンプ
- * [\w+-.]*の部分がスタンプエフェクト
+ * (?:\.[\w+-.]+)?の部分がスタンプエフェクト
  */
 const stampRegExp =
-  /:(?<inner>(?:[a-zA-Z0-9+_-]{1,32}|@(?:Webhook#)?[a-zA-Z0-9_-]+|\w+\([^:<>"'=+!?]+\))[\w+-.]*):/
-interface StampRegExpGroups {
-  /**
-   * :を除いた部分
-   */
-  inner: string
-}
+  /:(?:[a-zA-Z0-9+_-]{1,32}|@(?:Webhook#)?[a-zA-Z0-9_-]+|\w+\([^:<>"'=+!?]+\))(?:\.[\w+-.]+)?:/
 
 /**
  * @param _baseUrl スタンプの画像の`/api/v3`の前につくURLの部分 (tailing slashなし)
