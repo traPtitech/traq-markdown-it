@@ -1,6 +1,6 @@
 import type Token from 'markdown-it/lib/token'
 
-const uuidRegexp = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}/
+const uuidRegexp = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/
 
 export type Embedding = EmbeddingFile | EmbeddingMessage
 export type EmbeddingOrUrl = InternalUrl | ExternalUrl | Embedding

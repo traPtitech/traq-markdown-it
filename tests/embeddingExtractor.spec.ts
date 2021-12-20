@@ -9,6 +9,7 @@ const id1 = 'e97518db-ebb8-450f-9b4a-273234e68491'
 const id2 = 'd7461966-e5d3-4c6d-9538-7c8605f45a1e'
 const path1 = `${basePath}/files/${id1}`
 const path2 = `${basePath}/files/${id2}`
+const nonUUidPath = `${basePath}/files/${id1}-`
 const externalUrl = `${nonBasePath}/files/${id1}`
 const internalUrl = `${basePath}/somewhere`
 
@@ -158,12 +159,22 @@ describe('embeddingExtractor', () => {
   })
 
   it('does not extract internal url', () => {
-    const tokens = parse(`${internalUrl}`)
+    const tokens = parse(internalUrl)
     const extracted = extract(tokens)
     const rendered = render(tokens)
     expect(extracted).toEqual([])
     expect(rendered).toEqual(
       `<p><a href="https://example.com/somewhere" target="_blank" rel="nofollow noopener noreferrer">https://example.com/somewhere</a></p>`
+    )
+  })
+
+  it('does not extract an invalid url', () => {
+    const tokens = parse(nonUUidPath)
+    const extracted = extract(tokens)
+    const rendered = render(tokens)
+    expect(extracted).toEqual([])
+    expect(rendered).toEqual(
+      `<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491-" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491-</a></p>`
     )
   })
 
