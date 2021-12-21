@@ -85,4 +85,27 @@ describe('container', () => {
       '<p><i class="emoji s24" title=":@user:" style="background-image: url(https://q.trap.jp/api/v3/public/icon/user)">:@user:</i></p>\n'
     expect(actual).toBe(expected)
   })
+
+  {
+    const parseAndExtractFirstMatch = (input: string) =>
+      md.parse(input, {})[1]?.children?.[0]?.meta.match[0]
+
+    it('should have meta with no effect', () => {
+      const actual = parseAndExtractFirstMatch(':one:')
+      const expected = ':one:'
+      expect(actual).toBe(expected)
+    })
+
+    it('should have meta with size effect', () => {
+      const actual = parseAndExtractFirstMatch(':one.large:')
+      const expected = ':one.large:'
+      expect(actual).toBe(expected)
+    })
+
+    it('should have meta with anime effect', () => {
+      const actual = parseAndExtractFirstMatch(':one.wiggle:')
+      const expected = ':one.wiggle:'
+      expect(actual).toBe(expected)
+    })
+  }
 })

@@ -6,6 +6,7 @@ import stampPlugin, {
   renderHslStamp,
   hslReg
 } from '#/stamp'
+import type Token from 'markdown-it/lib/token'
 import { setup } from './setupMd'
 
 const setupWithStamp = () => {
@@ -176,6 +177,29 @@ describe('stamp', () => {
         .render(':one.wiggle.wiggle.wiggle.wiggle.wiggle.wiggle:')
         .trim()
       const expected = `<p>${expected4}</p>`
+      expect(actual).toBe(expected)
+    })
+  }
+
+  {
+    const parseAndExtractFirstMatch = (input: string) =>
+      md.parse(input, {})[1]?.children?.[0]?.meta.match[0]
+
+    it('should have meta with no effect', () => {
+      const actual = parseAndExtractFirstMatch(':one:')
+      const expected = ':one:'
+      expect(actual).toBe(expected)
+    })
+
+    it('should have meta with size effect', () => {
+      const actual = parseAndExtractFirstMatch(':one.large:')
+      const expected = ':one.large:'
+      expect(actual).toBe(expected)
+    })
+
+    it('should have meta with anime effect', () => {
+      const actual = parseAndExtractFirstMatch(':one.wiggle:')
+      const expected = ':one.wiggle:'
       expect(actual).toBe(expected)
     })
   }
