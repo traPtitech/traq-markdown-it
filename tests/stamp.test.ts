@@ -6,7 +6,6 @@ import stampPlugin, {
   renderHslStamp,
   hslReg
 } from '#/stamp'
-import type Token from 'markdown-it/lib/token'
 import { setup } from './setupMd'
 
 const setupWithStamp = () => {
