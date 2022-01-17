@@ -28,6 +28,10 @@ module.exports = {
       extends: ['plugin:jest/style'],
       env: {
         node: true
+      },
+      rules: {
+        'jest/prefer-comparison-matcher': 'error',
+        'jest/prefer-equality-matcher': 'error'
       }
     }
   ],
