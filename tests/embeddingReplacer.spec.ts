@@ -27,112 +27,88 @@ describe('embeddingReplacer', () => {
     return md._render(tokens).trim()
   }
 
-  it('can extract a file from url', () => {
-    const tokens = parse(`${path1}`)
+  const testcases = [
+    {
+      name: 'can extract a file from url',
+      input: path1,
+      expectedExtracted: [
+        {
+          type: 'file',
+          id: id1
+        }
+      ]
+    },
+    {
+      name: 'can extract a file from url and remove tail spaces',
+      input: `${path1}\n\n    \n`,
+      expectedExtracted: [
+        {
+          type: 'file',
+          id: id1
+        }
+      ]
+    },
+    {
+      name: 'can ignore a file inside spoiler or code block from url',
+      input: `!!${path1}!! \`${path1}\` \`\`\`${path1}\`\`\``,
+      expectedExtracted: []
+    },
+    {
+      name: 'can extract a file from text with url in middle of it',
+      input: `file ${path1} is file`,
+      expectedExtracted: [
+        {
+          type: 'file',
+          id: id1
+        }
+      ]
+    },
+    {
+      name: 'can extract files from text with url in middle of it',
+      input: `file ${path1} and ${path2} are file and message`,
+      expectedExtracted: [
+        {
+          type: 'file',
+          id: id1
+        },
+        {
+          type: 'message',
+          id: id2
+        }
+      ]
+    },
+    {
+      name: 'can extract a file from text with url at the end of it',
+      input: `attach!\n${path1}`,
+      expectedExtracted: [
+        {
+          type: 'file',
+          id: id1
+        }
+      ]
+    },
+    {
+      name: 'does not replace internal url in the middle',
+      input: `${externalUrl}, hello`,
+      expectedExtracted: [
+        {
+          type: 'url',
+          url: externalUrl
+        }
+      ]
+    },
+    {
+      name: 'does not replace/include internal url',
+      input: internalUrl,
+      expectedExtracted: []
+    }
+  ]
+
+  it.concurrent.each(testcases)('$name', ({ input, expectedExtracted }) => {
+    const tokens = parse(input)
     const extracted = extract(tokens)
     const rendered = render(tokens)
-    expect(extracted).toEqual([
-      {
-        type: 'file',
-        id: id1
-      }
-    ])
-    expect(rendered).toBe('')
-  })
-
-  it('can extract a file from url and remove tail spaces', () => {
-    const tokens = parse(`${path1}\n\n    \n`)
-    const extracted = extract(tokens)
-    const rendered = render(tokens)
-    expect(extracted).toEqual([
-      {
-        type: 'file',
-        id: id1
-      }
-    ])
-    expect(rendered).toBe('')
-  })
-
-  it('can ignore a file inside spoiler or code block from url', () => {
-    const tokens = parse(`!!${path1}!! \`${path1}\` \`\`\`${path1}\`\`\``)
-    const extracted = extract(tokens)
-    const rendered = render(tokens)
-    expect(extracted).toEqual([])
-    expect(rendered).toBe(
-      '<span class="spoiler"><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></span> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code>'
-    )
-  })
-
-  it('can extract a file from text with url in middle of it', () => {
-    const tokens = parse(`file ${path1} is file`)
-    const extracted = extract(tokens)
-    const rendered = render(tokens)
-    expect(extracted).toEqual([
-      {
-        type: 'file',
-        id: id1
-      }
-    ])
-    expect(rendered).toBe(
-      'file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">[[添付ファイル]]</a> is file'
-    )
-  })
-
-  it('can extract files from text with url in middle of it', () => {
-    const tokens = parse(`file ${path1} and ${path2} are file and message`)
-    const result = extract(tokens)
-    const rendered = render(tokens)
-    expect(result).toEqual([
-      {
-        type: 'file',
-        id: id1
-      },
-      {
-        type: 'message',
-        id: id2
-      }
-    ])
-    expect(rendered).toBe(
-      'file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">[[添付ファイル]]</a> and <a href="https://example.com/messages/d7461966-e5d3-4c6d-9538-7c8605f45a1e" target="_blank" rel="nofollow noopener noreferrer">[[引用メッセージ]]</a> are file and message'
-    )
-  })
-
-  it('can extract a file from text with url at the end of it', () => {
-    const noAttachMessage = 'attach!\n'
-    const tokens = parse(`${noAttachMessage}${path1}`)
-    const result = extract(tokens)
-    const rendered = render(tokens)
-    expect(result).toEqual([
-      {
-        type: 'file',
-        id: id1
-      }
-    ])
-    expect(rendered).toBe('attach!')
-  })
-
-  it('does not replace internal url in the middle', () => {
-    const tokens = parse(`${externalUrl}, hello`)
-    const result = extract(tokens)
-    const rendered = render(tokens)
-    expect(result).toEqual([
-      {
-        type: 'url',
-        url: externalUrl
-      }
-    ])
-    expect(rendered).toBe(
-      '<a href="https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a>, hello'
-    )
-  })
-
-  it('does not replace/include internal url', () => {
-    const tokens = parse(`${internalUrl}`)
-    const result = extract(tokens)
-    const rendered = render(tokens)
-    expect(result).toEqual([])
-    expect(rendered).toBe(
-      '<a href="https://example.com/somewhere" target="_blank" rel="nofollow noopener noreferrer">https://example.com/somewhere</a>'
-    )
+    expect(extracted).toEqual(expectedExtracted)
+    expect(rendered).toMatchSnapshot()
   })
 })

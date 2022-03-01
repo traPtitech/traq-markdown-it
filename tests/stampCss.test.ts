@@ -15,97 +15,95 @@ const setupSizeDisabled = () => {
   return md
 }
 
-describe('container', () => {
+describe('stampCss', () => {
   const md = setup()
   const mdSizeDisabled = setupSizeDisabled()
 
-  it('can render stamp (1)', () => {
-    const actual = md.render(
-      dedent`
+  const testcases = [
+    {
+      name: 'stamp (1)',
+      md: md,
+      input: dedent`
         :xx:
-      `
-    )
-    const expected = '<p><i class="emoji s32 e_xx" title=":xx:">:xx:</i></p>\n'
-    expect(actual).toBe(expected)
-  })
-  it('can render stamp (2)', () => {
-    const actual = md.render(
-      dedent`
+      `,
+      expected: '<p><i class="emoji s32 e_xx" title=":xx:">:xx:</i></p>\n'
+    },
+    {
+      name: 'stamp (2)',
+      md: md,
+      input: dedent`
         :po;
-      `
-    )
-    const expected = '<p><i class="emoji s16 e_po" title=":po;">:po;</i></p>\n'
-    expect(actual).toBe(expected)
-  })
-  it('can render stamp (3)', () => {
-    const actual = md.render(
-      dedent`
+      `,
+      expected: '<p><i class="emoji s16 e_po" title=":po;">:po;</i></p>\n'
+    },
+    {
+      name: 'stamp (3)',
+      md: md,
+      input: dedent`
         :invalid:
-      `
-    )
-    const expected = '<p>:invalid:</p>\n'
-    expect(actual).toBe(expected)
-  })
-  it('can render stamp with size disabled', () => {
-    const actual = mdSizeDisabled.render(
-      dedent`
+      `,
+      expected: '<p>:invalid:</p>\n'
+    },
+    {
+      name: 'stamp with size disabled',
+      md: mdSizeDisabled,
+      input: dedent`
         :xx:
-      `
-    )
-    const expected = '<p><i class="emoji s24 e_xx" title=":xx:">:xx:</i></p>\n'
-    expect(actual).toBe(expected)
-  })
-
-  it('can render user stamp (1)', () => {
-    const actual = md.render(
-      dedent`
+      `,
+      expected: '<p><i class="emoji s24 e_xx" title=":xx:">:xx:</i></p>\n'
+    },
+    {
+      name: 'user stamp (1)',
+      md: md,
+      input: dedent`
         :@user:
-      `
-    )
-    const expected =
-      '<p><i class="emoji s32" title=":@user:" style="background-image: url(https://q.trap.jp/api/v3/public/icon/user)">:@user:</i></p>\n'
-    expect(actual).toBe(expected)
-  })
-  it('can render user stamp (2)', () => {
-    const actual = md.render(
-      dedent`
+      `,
+      expected:
+        '<p><i class="emoji s32" title=":@user:" style="background-image: url(https://q.trap.jp/api/v3/public/icon/user)">:@user:</i></p>\n'
+    },
+    {
+      name: 'user stamp (2)',
+      md: md,
+      input: dedent`
         :@Webhook#user:
-      `
-    )
-    const expected = '<p>:@Webhook#user:</p>\n'
-    expect(actual).toBe(expected)
-  })
-  it('can render user stamp with size disabled', () => {
-    const actual = mdSizeDisabled.render(
-      dedent`
+      `,
+      expected: '<p>:@Webhook#user:</p>\n'
+    },
+    {
+      name: 'user stamp with size disabled',
+      md: mdSizeDisabled,
+      input: dedent`
         :@user:
-      `
-    )
-    const expected =
-      '<p><i class="emoji s24" title=":@user:" style="background-image: url(https://q.trap.jp/api/v3/public/icon/user)">:@user:</i></p>\n'
-    expect(actual).toBe(expected)
-  })
+      `,
+      expected:
+        '<p><i class="emoji s24" title=":@user:" style="background-image: url(https://q.trap.jp/api/v3/public/icon/user)">:@user:</i></p>\n'
+    }
+  ]
+
+  it.concurrent.each(testcases)(
+    'can render $name',
+    ({ md, input, expected }) => {
+      const actual = md.render(input)
+      expect(actual).toBe(expected)
+    }
+  )
 
   {
     const parseAndExtractFirstMatch = (input: string) =>
       md.parse(input, {})[1]?.children?.[0]?.meta.match[0]
 
-    it('should have meta with no effect', () => {
-      const actual = parseAndExtractFirstMatch(':one:')
-      const expected = ':one:'
-      expect(actual).toBe(expected)
-    })
+    const testcases = [
+      { name: 'no effect', input: ':one:' },
+      { name: 'size effect', input: ':one.large:' },
+      { name: 'anime effect', input: ':one.wiggle:' }
+    ]
 
-    it('should have meta with size effect', () => {
-      const actual = parseAndExtractFirstMatch(':one.large:')
-      const expected = ':one.large:'
-      expect(actual).toBe(expected)
-    })
-
-    it('should have meta with anime effect', () => {
-      const actual = parseAndExtractFirstMatch(':one.wiggle:')
-      const expected = ':one.wiggle:'
-      expect(actual).toBe(expected)
-    })
+    it.concurrent.each(testcases)(
+      'should have meta with $name',
+      ({ input }) => {
+        const actual = parseAndExtractFirstMatch(input)
+        expect(actual).toBe(input)
+      }
+    )
   }
 })

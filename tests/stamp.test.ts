@@ -25,15 +25,15 @@ describe('stamp', () => {
     const expected2 =
       '<i class="emoji message-emoji " title=":two:" style="background-image: url(/api/v3/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e);">:two:</i>'
 
-    it('can render normal stamp (1)', () => {
+    it.concurrent('can render normal stamp (1)', () => {
       const actual = renderNormalStamp('one', ':one:', [])
       expect(actual).toBe(expected1)
     })
-    it('can render normal stamp (2)', () => {
+    it.concurrent('can render normal stamp (2)', () => {
       const actual = renderNormalStamp('two', ':two:', [])
       expect(actual).toBe(expected2)
     })
-    it('can render normal stamps', () => {
+    it.concurrent('can render normal stamps', () => {
       const actual = md.render(':one: :two:').trim()
       const expected = `<p>${expected1} ${expected2}</p>`
       expect(actual).toBe(expected)
@@ -49,11 +49,11 @@ describe('stamp', () => {
       '<i class="emoji message-emoji " title=":@Webhook#random-Va1ue:" style="background-image: url(/api/v3/files/e97518db-ebb8-450f-9b4a-273234e68491);">:@Webhook#random-Va1ue:</i>'
     const expected4 = ':@invalid:'
 
-    it('can render user stamp', () => {
+    it.concurrent('can render user stamp', () => {
       const actual = renderUserStamp('@one', ':@one:', [])
       expect(actual).toBe(expected1)
     })
-    it('can render long user stamp', () => {
+    it.concurrent('can render long user stamp', () => {
       const actual = renderUserStamp(
         '@longlonglonglonglonglonglonglonglonglonglonglong',
         ':@longlonglonglonglonglonglonglonglonglonglonglong:',
@@ -61,7 +61,7 @@ describe('stamp', () => {
       )
       expect(actual).toBe(expected2)
     })
-    it('can render webhook user stamp', () => {
+    it.concurrent('can render webhook user stamp', () => {
       const actual = renderUserStamp(
         '@Webhook#random-Va1ue',
         ':@Webhook#random-Va1ue:',
@@ -69,7 +69,7 @@ describe('stamp', () => {
       )
       expect(actual).toBe(expected3)
     })
-    it('can render user stamps', () => {
+    it.concurrent('can render user stamps', () => {
       const actual = md
         .render(
           ':@one: :@longlonglonglonglonglonglonglonglonglonglonglong: :@Webhook#random-Va1ue:'
@@ -78,7 +78,7 @@ describe('stamp', () => {
       const expected = `<p>${expected1} ${expected2} ${expected3}</p>`
       expect(actual).toBe(expected)
     })
-    it('wont render invalid user stamp', () => {
+    it.concurrent('wont render invalid user stamp', () => {
       const actual = md.render(':@invalid:').trim()
       const expected = `<p>${expected4}</p>`
       expect(actual).toBe(expected)
@@ -93,22 +93,22 @@ describe('stamp', () => {
     const expected3 =
       '<i class="emoji message-emoji " title=":0xFFeeFF:" style="background-color: #FFeeFF;">:0xFFeeFF:</i>'
 
-    it('can render hex color stamp (1)', () => {
+    it.concurrent('can render hex color stamp (1)', () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const actual = renderHexStamp(hexReg.exec('0xffffff')!)
       expect(actual).toBe(expected1)
     })
-    it('can render hex color stamp (2)', () => {
+    it.concurrent('can render hex color stamp (2)', () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const actual = renderHexStamp(hexReg.exec('0xFFFFFF')!)
       expect(actual).toBe(expected2)
     })
-    it('can render hex color stamp (3)', () => {
+    it.concurrent('can render hex color stamp (3)', () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const actual = renderHexStamp(hexReg.exec('0xFFeeFF')!)
       expect(actual).toBe(expected3)
     })
-    it('can render hex color stamps', () => {
+    it.concurrent('can render hex color stamps', () => {
       const actual = md.render(':0xffffff: :0xFFFFFF: :0xFFeeFF:').trim()
       const expected = `<p>${expected1} ${expected2} ${expected3}</p>`
       expect(actual).toBe(expected)
@@ -121,22 +121,22 @@ describe('stamp', () => {
     const expected2 = ':invalid(invalidinvalid):'
     const expected3 = ':invalidinvalidinvalidinvalidinvalid(invalidinvalid):'
 
-    it('can render hsl color stamp', () => {
+    it.concurrent('can render hsl color stamp', () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const actual = renderHslStamp(hslReg.exec('hsl(0, 0%, 0%)')!)
       expect(actual).toBe(expected1)
     })
-    it('can render hsl color stamps', () => {
+    it.concurrent('can render hsl color stamps', () => {
       const actual = md.render(':hsl(0, 0%, 0%):').trim()
       const expected = `<p>${expected1}</p>`
       expect(actual).toBe(expected)
     })
-    it('wont render invalid stamp (1)', () => {
+    it.concurrent('wont render invalid stamp (1)', () => {
       const actual = md.render(':invalid(invalidinvalid):').trim()
       const expected = `<p>${expected2}</p>`
       expect(actual).toBe(expected)
     })
-    it('wont render invalid stamp (2)', () => {
+    it.concurrent('wont render invalid stamp (2)', () => {
       const actual = md
         .render(':invalidinvalidinvalidinvalidinvalid(invalidinvalid):')
         .trim()
@@ -153,25 +153,25 @@ describe('stamp', () => {
     const expected3 = ':one.invalid:'
     const expected4 = ':one.wiggle.wiggle.wiggle.wiggle.wiggle.wiggle:'
 
-    it('can render stamp with size effect', () => {
+    it.concurrent('can render stamp with size effect', () => {
       const actual = renderNormalStamp('one', ':one:', ['ex-large'])
       expect(actual).toBe(expected1)
     })
-    it('can render stamp with anime effect', () => {
+    it.concurrent('can render stamp with anime effect', () => {
       const actual = renderNormalStamp('one', ':one:', ['wiggle'])
       expect(actual).toBe(expected2)
     })
-    it('can render stamps with effect', () => {
+    it.concurrent('can render stamps with effect', () => {
       const actual = md.render(':one.ex-large: :one.wiggle:').trim()
       const expected = `<p>${expected1} ${expected2}</p>`
       expect(actual).toBe(expected)
     })
-    it('wont render stamp with unknown effect', () => {
+    it.concurrent('wont render stamp with unknown effect', () => {
       const actual = md.render(':one.invalid:').trim()
       const expected = `<p>${expected3}</p>`
       expect(actual).toBe(expected)
     })
-    it('wont render stamp with many animation effect', () => {
+    it.concurrent('wont render stamp with many animation effect', () => {
       const actual = md
         .render(':one.wiggle.wiggle.wiggle.wiggle.wiggle.wiggle:')
         .trim()
@@ -184,19 +184,19 @@ describe('stamp', () => {
     const parseAndExtractFirstMatch = (input: string) =>
       md.parse(input, {})[1]?.children?.[0]?.meta.match[0]
 
-    it('should have meta with no effect', () => {
+    it.concurrent('should have meta with no effect', () => {
       const actual = parseAndExtractFirstMatch(':one:')
       const expected = ':one:'
       expect(actual).toBe(expected)
     })
 
-    it('should have meta with size effect', () => {
+    it.concurrent('should have meta with size effect', () => {
       const actual = parseAndExtractFirstMatch(':one.large:')
       const expected = ':one.large:'
       expect(actual).toBe(expected)
     })
 
-    it('should have meta with anime effect', () => {
+    it.concurrent('should have meta with anime effect', () => {
       const actual = parseAndExtractFirstMatch(':one.wiggle:')
       const expected = ':one.wiggle:'
       expect(actual).toBe(expected)

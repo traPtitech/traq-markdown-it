@@ -19,60 +19,64 @@ describe('container', () => {
   const md = setup()
   const md2 = setup2()
 
-  it('can render container (1)', () => {
-    const actual = md.render(
-      dedent`
-        :::success
-        xxpoxx
-        :::
-      `
-    )
-    const expected = '<div class="success">\n<p>xxpoxx</p>\n</div>\n'
-    expect(actual).toBe(expected)
-  })
-  it('can render container (2)', () => {
-    const actual = md.render(
-      dedent`
-        :::info
-        xxpoxx
-        :::
-      `
-    )
-    const expected = '<div class="info">\n<p>xxpoxx</p>\n</div>\n'
-    expect(actual).toBe(expected)
-  })
-  it('can render container (3)', () => {
-    const actual = md.render(
-      dedent`
-        :::invalid
-        xxpoxx
-        :::
-      `
-    )
-    const expected = '<p>:::invalid\nxxpoxx\n:::</p>\n'
-    expect(actual).toBe(expected)
-  })
+  const testcases = [
+    {
+      name: 'success',
+      md: md,
+      input: dedent`
+              :::success
+              xxpoxx
+              :::
+            `,
+      expected: '<div class="success">\n<p>xxpoxx</p>\n</div>\n'
+    },
+    {
+      name: 'info',
+      md: md,
+      input: dedent`
+              :::info
+              xxpoxx
+              :::
+            `,
+      expected: '<div class="info">\n<p>xxpoxx</p>\n</div>\n'
+    },
+    {
+      name: 'invalid',
+      md: md,
+      input: dedent`
+              :::invalid
+              xxpoxx
+              :::
+            `,
+      expected: '<p>:::invalid\nxxpoxx\n:::</p>\n'
+    },
+    {
+      name: 'custom valid',
+      md: md2,
+      input: dedent`
+              :::valid
+              xxpoxx
+              :::
+            `,
+      expected: '<div class="valid">\n<p>xxpoxx</p>\n</div>\n'
+    },
+    {
+      name: 'custom invalid',
+      md: md2,
+      input: dedent`
+              :::invalid
+              xxpoxx
+              :::
+            `,
+      expected: '<p>:::invalid\nxxpoxx\n:::</p>\n'
+    }
+  ]
 
-  it('can render custom container (1)', () => {
-    const actual = md2.render(
-      dedent`
-        :::valid
-        xxpoxx
-        :::
-      `
-    )
-    const expected = '<div class="valid">\n<p>xxpoxx</p>\n</div>\n'
-    expect(actual).toBe(expected)
-  })
-  it('can render custom container (2)', () => {
-    const actual = md2.render(
-      dedent`
-        :::invalid
-        xxpoxx
-        :::
-      `
-    )
-    const expected = '<p>:::invalid\nxxpoxx\n:::</p>\n'
-    expect(actual).toBe(expected)
-  })
+  it.concurrent.each(testcases)(
+    'can render container (%name)',
+    ({ md, input, expected }) => {
+      const actual = md.render(input)
+      expect(actual).toBe(expected)
+    }
+  )
 })

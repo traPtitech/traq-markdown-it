@@ -12,158 +12,161 @@ describe('InlineRenderer', () => {
     return ir.render(tokens, md.options, {})
   }
 
-  it('can render linebreak', () => {
-    const actual = render(dedent`
-      aaa
-      aa
+  const testcases = [
+    {
+      name: 'can render linebreak',
+      input: dedent`
+        aaa
+        aa
 
-      aaa
+        aaa
 
 
 
-      aa
-    `)
-    const expected = 'aaa aa aaa aa'
-    expect(actual).toStrictEqual(expected)
-  })
-  it('can render codeblock', () => {
-    const actual = render(
-      `
+        aa
+      `,
+      expected: 'aaa aa aaa aa'
+    },
+    {
+      name: 'can render codeblock',
+      input: `
     code
     a
-`
-    )
-    const expected = dedent(`
-      <code>code
-      a
-      </code>
-    `)
-    expect(actual).toStrictEqual(expected)
-  })
-  it('can render fenced codeblock', () => {
-    const actual = render(dedent`
-      \`\`\`js
-      code
-      a
-      \`\`\`
-    `)
-    const expected = dedent(`
-      <code>code
-      a
-      </code>
-    `)
-    expect(actual).toStrictEqual(expected)
-  })
-  it('can render hr', () => {
-    const actual = render(dedent`
-      ---
-      ***
-    `)
-    const expected = ' ---  *** '
-    expect(actual).toStrictEqual(expected)
-  })
-  it('can render header', () => {
-    const actual = render(dedent`
-      # h1
-      ## h2
-    `)
-    const expected = '# h1 ## h2'
-    expect(actual).toStrictEqual(expected)
-  })
-  it('can render ruled header', () => {
-    const actual = render(dedent`
-      h1
-      =
-      h2
-      h2
-      -
-    `)
-    const expected = '# h1 ## h2 h2'
-    expect(actual).toStrictEqual(expected)
-  })
-  it('can render defined link', () => {
-    const actual = render(dedent`
-      [link]:url 'title'
+`,
+      expected: dedent`
+        <code>code
+        a
+        </code>
+      `
+    },
+    {
+      name: 'can render fenced codeblock',
+      input: dedent`
+        \`\`\`js
+        code
+        a
+        \`\`\`
+      `,
+      expected: dedent`
+        <code>code
+        a
+        </code>
+      `
+    },
+    {
+      name: 'can render hr',
+      input: dedent`
+        ---
+        ***
+      `,
+      expected: ' ---  *** '
+    },
+    {
+      name: 'can render header',
+      input: dedent`
+        # h1
+        ## h2
+      `,
+      expected: '# h1 ## h2'
+    },
+    {
+      name: 'can render ruled header',
+      input: dedent`
+        h1
+        =
+        h2
+        h2
+        -
+      `,
+      expected: '# h1 ## h2 h2'
+    },
+    {
+      name: 'can render defined link',
+      input: dedent`
+        [link]:url 'title'
 
-      [link]
-    `)
-    const expected = '<a href="url" title="title">link</a>'
-    expect(actual).toStrictEqual(expected)
-  })
-  it('can render paragraph', () => {
-    const actual = render(dedent`
-      p1
+        [link]
+      `,
+      expected: '<a href="url" title="title">link</a>'
+    },
+    {
+      name: 'can render paragraph',
+      input: dedent`
+        p1
 
-      p2
+        p2
 
-      # h1
-    `)
-    const expected = 'p1 p2 # h1'
-    expect(actual).toStrictEqual(expected)
-  })
-  it('can render blockquote', () => {
-    const actual = render(dedent`
-      > aaa
-      > bbb
-      ccc
-    `)
-    const expected = '> aaa bbb ccc'
-    expect(actual).toStrictEqual(expected)
-  })
-  it('can render unordered list', () => {
-    const actual = render(dedent`
-      - a1
-      - a2
-      a2
-      + b1
-        + b2
-      * c
-    `)
-    const expected = '- a1 - a2 a2 + b1 + b2 * c'
-    expect(actual).toStrictEqual(expected)
-  })
-  it('can render ordered list', () => {
-    const actual = render(dedent`
-      1. a1
-      2. a2
-      a2
-      1) b
-      5. c
-    `)
-    const expected = '1. a1 2. a2 a2 1) b 5. c'
-    expect(actual).toStrictEqual(expected)
-  })
-  it('can render inline elements', () => {
-    const actual = render(dedent`
-      *i* _i_
-      **b** __b__
-      ~~s~~
-      [link](url 'title')
-      <http://example.com>
-    `)
-    const expected =
-      '<em>i</em> <em>i</em> ' +
-      '<strong>b</strong> <strong>b</strong> ' +
-      '<s>s</s> ' +
-      '<a href="url" title="title">link</a> ' +
-      '<a href="http://example.com">http://example.com</a>'
-    expect(actual).toStrictEqual(expected)
-  })
-  it('can render image', () => {
-    const actual = render(dedent`
-      ![image](url 'title')
-    `)
-    const expected = '<a href="url" title="title" data-is-image>image</a>'
-    expect(actual).toStrictEqual(expected)
-  })
-  it('can render table', () => {
-    const actual = render(dedent`
-      | 1 | 2 |
-      | - | - |
-      | a | b |
-      | c | d |
-    `)
-    const expected = '| 1 | 2 | | a | b | | c | d |'
+        # h1
+      `,
+      expected: 'p1 p2 # h1'
+    },
+    {
+      name: 'can render blockquote',
+      input: dedent`
+        > aaa
+        > bbb
+        ccc
+      `,
+      expected: '> aaa bbb ccc'
+    },
+    {
+      name: 'can render unordered list',
+      input: dedent`
+        - a1
+        - a2
+        a2
+        + b1
+          + b2
+        * c
+      `,
+      expected: '- a1 - a2 a2 + b1 + b2 * c'
+    },
+    {
+      name: 'can render ordered list',
+      input: dedent`
+        1. a1
+        2. a2
+        a2
+        1) b
+        5. c
+      `,
+      expected: '1. a1 2. a2 a2 1) b 5. c'
+    },
+    {
+      name: 'can render inline elements',
+      input: dedent`
+        *i* _i_
+        **b** __b__
+        ~~s~~
+        [link](url 'title')
+        <http://example.com>
+      `,
+      expected:
+        '<em>i</em> <em>i</em> ' +
+        '<strong>b</strong> <strong>b</strong> ' +
+        '<s>s</s> ' +
+        '<a href="url" title="title">link</a> ' +
+        '<a href="http://example.com">http://example.com</a>'
+    },
+    {
+      name: 'can render image',
+      input: "![image](url 'title')",
+      expected: '<a href="url" title="title" data-is-image>image</a>'
+    },
+    {
+      name: 'can render table',
+      input: dedent`
+        | 1 | 2 |
+        | - | - |
+        | a | b |
+        | c | d |
+      `,
+      expected: '| 1 | 2 | | a | b | | c | d |'
+    }
+  ]
+
+  it.concurrent.each(testcases)('$name', ({ input, expected }) => {
+    const actual = render(input)
     expect(actual).toStrictEqual(expected)
   })
 })

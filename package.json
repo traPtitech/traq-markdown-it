@@ -17,6 +17,7 @@
     "build": "tsup src/index.ts && npm run build:css",
     "build:css": "sass ./src/css/index.scss ./dist/index.css",
     "test": "jest",
+    "test:update": "jest --updateSnapshot",
     "lint": "eslint --cache .",
     "prepare": "husky install"
   },

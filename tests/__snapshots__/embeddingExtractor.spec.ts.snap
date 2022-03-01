@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`embeddingExtractor can extract a file from link url []() 1`] = `"<p><a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">link</a> <a href=\\"invalid\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e</a></p>"`;
+
+exports[`embeddingExtractor can extract a file from text with url at the end of it 1`] = `"<p>attach!</p>"`;
+
+exports[`embeddingExtractor can extract a file from text with url in middle of it 1`] = `"<p>file <a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> is file</p>"`;
+
+exports[`embeddingExtractor can extract a file from url 1`] = `"<p></p>"`;
+
+exports[`embeddingExtractor can extract a file from url and remove tail spaces 1`] = `"<p></p>"`;
+
+exports[`embeddingExtractor can extract files from text with url in middle of it 1`] = `"<p>file <a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> and <a href=\\"https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e</a> are file</p>"`;
+
+exports[`embeddingExtractor can extract normal url and do not remove that from message 1`] = `"<p>won't be removed: <a href=\\"https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></p>"`;
+
+exports[`embeddingExtractor can ignore a file inside spoiler or code block from url 1`] = `"<p><span class=\\"spoiler\\"><a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></span> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code></p>"`;
+
+exports[`embeddingExtractor does not extract an invalid url 1`] = `"<p><a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491-\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491-</a></p>"`;
+
+exports[`embeddingExtractor does not extract internal url 1`] = `"<p><a href=\\"https://example.com/somewhere\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/somewhere</a></p>"`;
+
+exports[`embeddingExtractor does not remove embedding url before url 1`] = `"<p><a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> <a href=\\"https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></p>"`;
