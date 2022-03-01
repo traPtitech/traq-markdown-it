@@ -6,5 +6,6 @@ module.exports = {
     '^.+\\.ts$': 'es-jest'
   },
   coverageDirectory: './coverage/',
-  collectCoverage: true
+  collectCoverage: true,
+  collectCoverageFrom: ['src/**/*.ts']
 }
