@@ -2,9 +2,18 @@
   "name": "@traptitech/traq-markdown-it",
   "version": "6.1.4",
   "description": "Markdown parser for traQ.",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "typings": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./index.css": "./dist/index.css",
+    "./src/*": "./src/*"
+  },
   "files": [
     "dist",
     "src"
