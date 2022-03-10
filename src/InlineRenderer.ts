@@ -1,6 +1,6 @@
 import type { Options } from 'markdown-it'
-import Renderer, { RenderRuleRecord } from 'markdown-it/lib/renderer'
-import type Token from 'markdown-it/lib/token'
+import Renderer, { RenderRuleRecord } from 'markdown-it/lib/renderer.js'
+import type Token from 'markdown-it/lib/token.js'
 import { escapeHtml } from './util'
 
 export class InlineRenderer extends Renderer {
