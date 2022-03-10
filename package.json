@@ -28,6 +28,7 @@
     "test": "jest",
     "test:update": "jest --updateSnapshot",
     "lint": "eslint --cache .",
+    "type-check": "tsc --noEmit",
     "prepare": "husky install"
   },
   "repository": {
