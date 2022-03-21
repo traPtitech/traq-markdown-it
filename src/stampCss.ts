@@ -14,7 +14,7 @@ const renderUserStamp = (wrappedName: string, name: string, size: number) => {
 }
 
 const renderStamp = (wrappedName: string, name: string, size: number) => {
-  const className = `e_${name.replace(/\+/g, '_-plus-_')}`
+  const className = `e_${name.replaceAll('+', '_-plus-_')}`
   return `<i class="emoji s${size} ${className}" title="${wrappedName}">${wrappedName}</i>`
 }
 
