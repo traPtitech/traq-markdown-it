@@ -124,7 +124,7 @@ $link-highlight-background-color: #FAFFAD !default;
   :not(blockquote) > blockquote {
     $bottom-padding: 4px;
     padding-bottom: $bottom-padding;
-    overflow: auto;
+    overflow-x: auto;
     &::before {
       height: calc(100% - #{$bottom-padding});
     }
