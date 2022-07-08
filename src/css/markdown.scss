@@ -14,10 +14,10 @@ $mark-color: black !default;
 $mark-background-color: yellow !default;
 $spoiler-background-color: black !default;
 $spoiler-shown-background-color: rgba(0, 0, 0, 0.1) !default;
-$link-text-color: #005BAC !default;
+$link-text-color: #005bac !default;
 $link-background-color: transparent !default;
-$link-highlight-text-color: #005BAC !default;
-$link-highlight-background-color: #FAFFAD !default;
+$link-highlight-text-color: #005bac !default;
+$link-highlight-background-color: #faffad !default;
 
 .markdown-body {
   -ms-text-size-adjust: 100%;
@@ -60,13 +60,19 @@ $link-highlight-background-color: #FAFFAD !default;
     overflow: hidden;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     margin-top: 12px;
     margin-bottom: 8px;
     font-weight: bold;
     line-height: 1.25;
   }
-  h1, h2 {
+  h1,
+  h2 {
     padding-bottom: 0.3em;
   }
   h1 {
@@ -110,7 +116,7 @@ $link-highlight-background-color: #FAFFAD !default;
     }
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       display: block;
       top: 0;
@@ -136,7 +142,8 @@ $link-highlight-background-color: #FAFFAD !default;
   ul {
     list-style: disc;
   }
-  ol, ul {
+  ol,
+  ul {
     padding-left: 2em;
     margin-top: 0;
     margin-bottom: 8px;
@@ -144,7 +151,8 @@ $link-highlight-background-color: #FAFFAD !default;
     ol {
       list-style-type: lower-roman;
     }
-    ol, ul {
+    ol,
+    ul {
       margin-top: 0;
       margin-bottom: 0;
       ol {
@@ -168,7 +176,8 @@ $link-highlight-background-color: #FAFFAD !default;
     overflow: auto;
   }
 
-  code, pre {
+  code,
+  pre {
     font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
     font-size: 0.85em;
     border-radius: 4px;
@@ -350,7 +359,8 @@ $link-highlight-background-color: #FAFFAD !default;
   }
 
   .message-emoji {
-    &.large, &.ex-large {
+    &.large,
+    &.ex-large {
       font-size: 24px;
     }
   }

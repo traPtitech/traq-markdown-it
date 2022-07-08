@@ -2,7 +2,7 @@ name: automatic publish
 on:
   push:
     tags:
-      - "*"
+      - '*'
 jobs:
   release:
     name: release

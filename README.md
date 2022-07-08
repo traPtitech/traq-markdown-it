@@ -7,14 +7,19 @@
 Markdown parser for traQ.
 
 ## Local Development
+
 ### `npm start`
+
 Rebuild when ts files changed.
 
 ### `npm run build`
+
 Build ts & sass.
 
 ### `npm test`
+
 Runs tests.
 
 ### `npm run lint`
+
 Runs lint.
