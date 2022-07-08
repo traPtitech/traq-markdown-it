@@ -7,5 +7,6 @@ module.exports = {
   },
   coverageDirectory: './coverage/',
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.ts']
+  collectCoverageFrom: ['src/**/*.ts'],
+  reporters: ['default', 'github-actions']
 }

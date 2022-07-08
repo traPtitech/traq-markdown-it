@@ -69,7 +69,6 @@
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^8.0.0",
     "jest": "^28.1.2",
-    "jest-github-actions-reporter": "^1.0.3",
     "prettier": "^2.4.1",
     "sass": "^1.43.4",
     "ts-dedent": "^2.2.0",
