@@ -1,0 +1,4 @@
+dist
+/.husky
+/coverage
+node_modules

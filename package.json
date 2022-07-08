@@ -28,6 +28,7 @@
     "test": "jest",
     "test:update": "jest --updateSnapshot",
     "lint": "eslint --cache .",
+    "format": "prettier --cache --write .",
     "type-check": "tsc --noEmit",
     "prepare": "husky install"
   },
@@ -66,7 +67,6 @@
     "eslint": "^8.2.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jest": "^26.0.0",
-    "eslint-plugin-prettier": "^4.0.0",
     "husky": "^8.0.0",
     "jest": "^28.1.2",
     "prettier": "^2.4.1",
