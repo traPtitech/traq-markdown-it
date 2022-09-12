@@ -2,22 +2,22 @@
 
 exports[` 1`] = `"<p></p>"`;
 
-exports[` 2`] = `"<p><a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">link</a> <a href=\\"invalid\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e</a></p>"`;
+exports[` 2`] = `"<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">link</a> <a href="invalid" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e</a></p>"`;
 
 exports[` 3`] = `"<p></p>"`;
 
-exports[` 4`] = `"<p><span class=\\"spoiler\\"><a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></span> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code></p>"`;
+exports[` 4`] = `"<p><span class="spoiler"><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></span> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code></p>"`;
 
-exports[` 5`] = `"<p>file <a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> is file</p>"`;
+exports[` 5`] = `"<p>file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> is file</p>"`;
 
-exports[` 6`] = `"<p>file <a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> and <a href=\\"https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e</a> are file</p>"`;
+exports[` 6`] = `"<p>file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> and <a href="https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/d7461966-e5d3-4c6d-9538-7c8605f45a1e</a> are file</p>"`;
 
 exports[` 7`] = `"<p>attach!</p>"`;
 
-exports[` 8`] = `"<p>won't be removed: <a href=\\"https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></p>"`;
+exports[` 8`] = `"<p>won't be removed: <a href="https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></p>"`;
 
-exports[` 9`] = `"<p><a href=\\"https://example.com/somewhere\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/somewhere</a></p>"`;
+exports[` 9`] = `"<p><a href="https://example.com/somewhere" target="_blank" rel="nofollow noopener noreferrer">https://example.com/somewhere</a></p>"`;
 
-exports[` 10`] = `"<p><a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491-\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491-</a></p>"`;
+exports[` 10`] = `"<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491-" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491-</a></p>"`;
 
-exports[` 11`] = `"<p><a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> <a href=\\"https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></p>"`;
+exports[` 11`] = `"<p><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a> <a href="https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></p>"`;
