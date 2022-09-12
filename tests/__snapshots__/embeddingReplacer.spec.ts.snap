@@ -4,14 +4,14 @@ exports[` 1`] = `""`;
 
 exports[` 2`] = `""`;
 
-exports[` 3`] = `"<span class=\\"spoiler\\"><a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></span> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code>"`;
+exports[` 3`] = `"<span class="spoiler"><a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a></span> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code> <code>https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</code>"`;
 
-exports[` 4`] = `"file <a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">[[添付ファイル]]</a> is file"`;
+exports[` 4`] = `"file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">[[添付ファイル]]</a> is file"`;
 
-exports[` 5`] = `"file <a href=\\"https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">[[添付ファイル]]</a> and <a href=\\"https://example.com/messages/d7461966-e5d3-4c6d-9538-7c8605f45a1e\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">[[引用メッセージ]]</a> are file and message"`;
+exports[` 5`] = `"file <a href="https://example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">[[添付ファイル]]</a> and <a href="https://example.com/messages/d7461966-e5d3-4c6d-9538-7c8605f45a1e" target="_blank" rel="nofollow noopener noreferrer">[[引用メッセージ]]</a> are file and message"`;
 
 exports[` 6`] = `"attach!"`;
 
-exports[` 7`] = `"<a href=\\"https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a>, hello"`;
+exports[` 7`] = `"<a href="https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491" target="_blank" rel="nofollow noopener noreferrer">https://yet.another.example.com/files/e97518db-ebb8-450f-9b4a-273234e68491</a>, hello"`;
 
-exports[` 8`] = `"<a href=\\"https://example.com/somewhere\\" target=\\"_blank\\" rel=\\"nofollow noopener noreferrer\\">https://example.com/somewhere</a>"`;
+exports[` 8`] = `"<a href="https://example.com/somewhere" target="_blank" rel="nofollow noopener noreferrer">https://example.com/somewhere</a>"`;
