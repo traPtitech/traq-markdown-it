@@ -9,7 +9,16 @@ export interface Store {
     name: string
   ): Readonly<Pick<Stamp, 'name' | 'fileId'>> | undefined
   getUserByName(name: string): Readonly<Pick<User, 'iconFileId'>> | undefined
+  /**
+   * href属性にセットされるので`javascript:`などのXSSに注意すること
+   */
   generateUserHref(id: string): string
+  /**
+   * href属性にセットされるので`javascript:`などのXSSに注意すること
+   */
   generateUserGroupHref(id: string): string
+  /**
+   * href属性にセットされるので`javascript:`などのXSSに注意すること
+   */
   generateChannelHref(id: string): string
 }
