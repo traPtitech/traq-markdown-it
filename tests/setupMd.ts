@@ -33,8 +33,8 @@ export const setup = (): { md: traQMarkdownIt; store: Store } => {
         Object.entries(nameIdTable).find(([, v]) => v === id)?.[0] ?? ''
       }`,
     generateUserGroupHref: id =>
-      `javascript:openGroupModal(${JSON.stringify(id)})`,
-    generateUserHref: id => `javascript:openUserModal(${JSON.stringify(id)})`
+      `javascript:openGroupModal(${JSON.stringify(encodeURI(id))})`,
+    generateUserHref: id => `javascript:openUserModal(${JSON.stringify(encodeURI(id))})`
   }
 
   const md = new traQMarkdownIt(store, [], 'https://example.com')
