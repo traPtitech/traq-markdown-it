@@ -79,35 +79,35 @@ describe('json', () => {
       input:
         '!{"type": "user", "raw": "@one", "id": "e97518db-ebb8-450f-9b4a-273234e68491"}',
       expected:
-        '<p><a href="javascript:openUserModal(&quot;e97518db-ebb8-450f-9b4a-273234e68491&quot;)" class="message-user-link">@one</a></p>'
+        '<p><a href="javascript:openUserModal(%22e97518db-ebb8-450f-9b4a-273234e68491%22)" class="message-user-link">@one</a></p>'
     },
     {
       name: 'invalid user json',
       input:
         '!{"type": "user", "raw": "@invalid", "id": "00000000-0000-0000-0000-000000000000"}',
       expected:
-        '<p><a href="javascript:openUserModal(&quot;00000000-0000-0000-0000-000000000000&quot;)" class="message-user-link">@invalid</a></p>'
+        '<p><a href="javascript:openUserModal(%2200000000-0000-0000-0000-000000000000%22)" class="message-user-link">@invalid</a></p>'
     },
     {
       name: 'usergroup json',
       input:
         '!{"type": "group", "raw": "@me", "id": "d7461966-e5d3-4c6d-9538-7c8605f45a1e"}',
       expected:
-        '<p><a href="javascript:openGroupModal(&quot;d7461966-e5d3-4c6d-9538-7c8605f45a1e&quot;)" class="message-group-link">@me</a></p>'
+        '<p><a href="javascript:openGroupModal(%22d7461966-e5d3-4c6d-9538-7c8605f45a1e%22)" class="message-group-link">@me</a></p>'
     },
     {
       name: 'usergroup includes me json',
       input:
         '!{"type": "group", "raw": "@one", "id": "e97518db-ebb8-450f-9b4a-273234e68491"}',
       expected:
-        '<p><a href="javascript:openGroupModal(&quot;e97518db-ebb8-450f-9b4a-273234e68491&quot;)" class="message-group-link-highlight message-group-link">@one</a></p>'
+        '<p><a href="javascript:openGroupModal(%22e97518db-ebb8-450f-9b4a-273234e68491%22)" class="message-group-link-highlight message-group-link">@one</a></p>'
     },
     {
       name: 'invalid usergroup json',
       input:
         '!{"type": "group", "raw": "@invalid", "id": "00000000-0000-0000-0000-000000000000"}',
       expected:
-        '<p><a href="javascript:openGroupModal(&quot;00000000-0000-0000-0000-000000000000&quot;)" class="message-group-link">@invalid</a></p>'
+        '<p><a href="javascript:openGroupModal(%2200000000-0000-0000-0000-000000000000%22)" class="message-group-link">@invalid</a></p>'
     },
     {
       name: 'channel json',
