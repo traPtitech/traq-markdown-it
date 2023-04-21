@@ -139,6 +139,24 @@ describe('index', () => {
       expected: {
         embeddings: []
       }
+    },
+    {
+      input: dedent`
+        example.dev
+        example.show
+      `,
+      expected: {
+        embeddings: [
+          {
+            type: 'url',
+            url: 'http://example.dev'
+          },
+          {
+            type: 'url',
+            url: 'http://example.show'
+          }
+        ]
+      }
     }
   ]
 
