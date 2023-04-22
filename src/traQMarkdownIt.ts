@@ -87,6 +87,7 @@ export class traQMarkdownIt {
   }
 
   private setRendererRule(): void {
+    this.md.linkify.tlds(['app', 'dev', 'games', 'tech', 'show'], true)
     this.md.block.State.prototype.skipEmptyLines = function skipEmptyLines(
       from: number
     ): number {
