@@ -1,5 +1,5 @@
 @use 'sass:math';
-@import './animation';
+@use './animation' as *;
 
 .emoji-effect {
   line-height: 0;
