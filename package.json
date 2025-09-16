@@ -42,6 +42,9 @@
     "url": "https://github.com/traPtitech/traq-markdown-it/issues"
   },
   "homepage": "https://github.com/traPtitech/traq-markdown-it#readme",
+  "peerDependencies": {
+    "@traptitech/traq": ">=3.0.0 <4.0.0"
+  },
   "dependencies": {
     "@traptitech/markdown-it-katex": "^3.5.0",
     "@traptitech/markdown-it-regexp": "^0.5.3",
