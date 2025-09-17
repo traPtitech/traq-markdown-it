@@ -56,7 +56,7 @@
     "markdown-it-image-filter": "^1.1.0",
     "markdown-it-json": "^1.0.2",
     "markdown-it-link-attributes": "^4.0.0",
-    "markdown-it-mark": "^3.0.1"
+    "markdown-it-mark": "^4.0.0"
   },
   "devDependencies": {
     "@traptitech/traq": "^3.25.0-0",
