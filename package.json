@@ -30,7 +30,7 @@
     "lint": "eslint --cache .",
     "format": "prettier --cache --write .",
     "type-check": "tsc --noEmit",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
