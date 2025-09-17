@@ -5,3 +5,26 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    groups:
+      markdown-it:
+        patterns:
+          - '*markdown-it*'
+      jest:
+        patterns:
+          - '*jest*'
+      linters:
+        patterns:
+          - '*eslint*'
+      non-major:
+        update-types:
+          - patch
+          - minor
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 10
+    groups:
+      actions:
+        patterns:
+          - 'actions/*'
