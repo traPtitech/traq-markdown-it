@@ -42,6 +42,9 @@
     "url": "https://github.com/traPtitech/traq-markdown-it/issues"
   },
   "homepage": "https://github.com/traPtitech/traq-markdown-it#readme",
+  "peerDependencies": {
+    "@traptitech/traq": ">=3.0.0 <4.0.0"
+  },
   "dependencies": {
     "@traptitech/markdown-it-katex": "^3.5.0",
     "@traptitech/markdown-it-regexp": "^0.5.3",
@@ -56,7 +59,7 @@
     "markdown-it-mark": "^3.0.1"
   },
   "devDependencies": {
-    "@traptitech/traq": "3.8.2-3",
+    "@traptitech/traq": "^3.25.0-0",
     "@types/jest": "^29.0.1",
     "@types/katex": "^0.14.0",
     "@types/markdown-it": "12.2.3",
@@ -72,7 +75,7 @@
     "prettier": "^2.4.1",
     "sass": "^1.43.4",
     "ts-dedent": "^2.2.0",
-    "tsup": "^6.1.3",
+    "tsup": "^8.5.0",
     "typescript": "^4.4.4"
   },
   "sideEffects": false
