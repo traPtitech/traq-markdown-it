@@ -1,6 +1,6 @@
 {
   "name": "@traptitech/traq-markdown-it",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "Markdown parser for traQ.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -43,7 +43,7 @@
   },
   "homepage": "https://github.com/traPtitech/traq-markdown-it#readme",
   "peerDependencies": {
-    "@traptitech/traq": ">=3.0.0 <4.0.0"
+    "@traptitech/traq": ">=3.0.0-0 <4.0.0"
   },
   "dependencies": {
     "@traptitech/markdown-it-katex": "^3.5.0",
