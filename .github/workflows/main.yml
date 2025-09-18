@@ -115,3 +115,5 @@ jobs:
           name: coverage
           path: ./coverage
       - uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
