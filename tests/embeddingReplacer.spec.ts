@@ -1,4 +1,4 @@
-import EmbeddingExtractor, { EmbeddingOrUrl } from '#/embeddingExtractor'
+import EmbeddingExtractor, { type EmbeddingOrUrl } from '#/embeddingExtractor'
 import { setup } from './setupMd'
 import type Token from 'markdown-it/lib/token'
 

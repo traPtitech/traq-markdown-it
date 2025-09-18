@@ -11,7 +11,7 @@ import { createHighlightFunc } from './highlight'
 import defaultWhitelist from './default/domain_whitelist'
 import type Token from 'markdown-it/lib/token'
 import type { Store } from './Store'
-import EmbeddingExtractor, { EmbeddingOrUrl } from './embeddingExtractor'
+import EmbeddingExtractor, { type EmbeddingOrUrl } from './embeddingExtractor'
 import { InlineRenderer } from './InlineRenderer'
 
 export type MarkdownRenderResult = {

@@ -7,9 +7,9 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     },
     "./index.css": "./dist/index.css",
     "./src/*": "./src/*"
@@ -76,7 +76,7 @@
     "sass": "^1.43.4",
     "ts-dedent": "^2.2.0",
     "tsup": "^8.5.0",
-    "typescript": "^4.4.4"
+    "typescript": "^5.9.2"
   },
   "sideEffects": false
 }
