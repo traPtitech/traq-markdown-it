@@ -6,8 +6,8 @@ export type {
   EmbeddingFile,
   EmbeddingMessage
 } from './embeddingExtractor'
-export { MarkdownRenderResult, traQMarkdownIt } from './traQMarkdownIt'
-export { AnimeEffect, SizeEffect } from './stamp'
+export type { MarkdownRenderResult, traQMarkdownIt } from './traQMarkdownIt'
+export type { AnimeEffect, SizeEffect } from './stamp'
 
 export { createHighlightFunc } from './highlight'
 export { default as markPlugin } from 'markdown-it-mark'
