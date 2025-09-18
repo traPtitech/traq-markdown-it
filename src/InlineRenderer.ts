@@ -1,5 +1,5 @@
 import type { Options } from 'markdown-it'
-import Renderer, { RenderRuleRecord } from 'markdown-it/lib/renderer.js'
+import Renderer, { type RenderRuleRecord } from 'markdown-it/lib/renderer.js'
 import type Token from 'markdown-it/lib/token.js'
 import { escapeHtml } from './util'
 
