@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 16.x
           cache: npm
@@ -25,9 +25,9 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 16.x
           cache: npm
@@ -41,9 +41,9 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 16.x
           cache: npm
@@ -57,9 +57,9 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 16.x
           cache: npm
@@ -73,9 +73,9 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 16.x
           cache: npm
@@ -89,9 +89,9 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 16.x
           cache: npm
@@ -109,8 +109,8 @@ jobs:
     needs: [test]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
-      - uses: actions/download-artifact@v4
+        uses: actions/checkout@v5
+      - uses: actions/download-artifact@v5
         with:
           name: coverage
           path: ./coverage
