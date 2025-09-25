@@ -7,6 +7,9 @@ jobs:
   release:
     name: release
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: checkout
         uses: actions/checkout@v5
@@ -16,11 +19,11 @@ jobs:
           node-version: 16.x
           registry-url: 'https://registry.npmjs.org'
           cache: npm
+      - name: update npm
+        run: npm install -g npm@latest
       - name: npm ci
         run: npm ci
       - name: run build
         run: npm run build
       - name: release
         run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
