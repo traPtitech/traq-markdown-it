@@ -2,7 +2,7 @@ name: CI
 on:
   push:
     branches:
-      - 'master'
+      - "master"
   pull_request:
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v5
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: npm
       - name: check npm ci
         run: npm ci
@@ -29,7 +29,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v5
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: npm
       - name: npm ci
         run: npm ci
@@ -45,7 +45,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v5
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: npm
       - name: npm ci
         run: npm ci
@@ -61,7 +61,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v5
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: npm
       - name: npm ci
         run: npm ci
@@ -77,7 +77,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v5
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: npm
       - name: npm ci
         run: npm ci
@@ -93,7 +93,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v5
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: npm
       - name: npm ci
         run: npm ci
