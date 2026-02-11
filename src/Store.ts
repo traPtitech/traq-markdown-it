@@ -1,4 +1,4 @@
-import type { User, Channel, UserGroup, Stamp } from '@traptitech/traq'
+import type { Channel, Stamp, User, UserGroup } from '@traptitech/traq'
 
 export interface Store {
   getUser(id: string): Readonly<Pick<User, 'id'>> | undefined
@@ -21,4 +21,6 @@ export interface Store {
    * href属性にセットされるので`javascript:`などのXSSに注意すること
    */
   generateChannelHref(id: string): string
+  // 後方互換性のために optional にしている
+  generateStampHref?: (fileId: string) => string
 }

@@ -4,7 +4,9 @@ import { escapeHtml } from './util'
 import type { Store } from './Store'
 import { animeEffects, sizeEffects } from './data/stampEffects'
 
-let store: Readonly<Pick<Store, 'getUserByName' | 'getStampByName'>>
+let store: Readonly<
+  Pick<Store, 'getUserByName' | 'getStampByName' | 'generateStampHref'>
+>
 let baseUrl = ''
 
 export const animeEffectSet: ReadonlySet<string> = new Set(animeEffects)
@@ -127,6 +129,13 @@ export const renderHexStamp = (match: Readonly<RegExpExecArray>): string => {
   )
 }
 
+export const getStampImageUrl = (fileId: string) => {
+  if (store.generateStampHref) {
+    return store.generateStampHref(fileId)
+  }
+  return `${baseUrl}/api/v3/files/${fileId}`
+}
+
 export const renderUserStamp = (
   stampName: string,
   raw: string,
@@ -143,7 +152,7 @@ export const renderUserStamp = (
     raw,
     stampName,
     stampName,
-    `${baseUrl}/api/v3/files/${user.iconFileId}`,
+    getStampImageUrl(user.iconFileId),
     effects
   )
 }
@@ -162,7 +171,7 @@ export const renderNormalStamp = (
     raw,
     stampName,
     stamp.name,
-    `${baseUrl}/api/v3/files/${stamp.fileId}`,
+    getStampImageUrl(stamp.fileId),
     effects
   )
 }
@@ -211,7 +220,9 @@ const stampRegExp =
  */
 export default function stampPlugin(
   md: MarkdownIt,
-  _store: Readonly<Pick<Store, 'getUserByName' | 'getStampByName'>>,
+  _store: Readonly<
+    Pick<Store, 'getUserByName' | 'getStampByName' | 'generateStampHref'>
+  >,
   _baseUrl?: string
 ): void {
   store = _store
