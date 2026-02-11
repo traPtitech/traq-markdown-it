@@ -220,7 +220,9 @@ const stampRegExp =
  */
 export default function stampPlugin(
   md: MarkdownIt,
-  _store: Readonly<Pick<Store, 'getUserByName' | 'getStampByName'>>,
+  _store: Readonly<
+    Pick<Store, 'getUserByName' | 'getStampByName' | 'generateStampHref'>
+  >,
   _baseUrl?: string
 ): void {
   store = _store
