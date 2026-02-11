@@ -1,8 +1,8 @@
 import json from 'markdown-it-json'
 import type { Store } from './Store'
 import type MarkdownIt from 'markdown-it'
-import type StateInline from 'markdown-it/lib/rules_inline/state_inline'
-import type StateBlock from 'markdown-it/lib/rules_block/state_block'
+import type StateInline from 'markdown-it/lib/rules_inline/state_inline.mjs'
+import type StateBlock from 'markdown-it/lib/rules_block/state_block.mjs'
 
 let store: Readonly<Store>
 

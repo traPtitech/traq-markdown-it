@@ -1,8 +1,6 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-if  [-e npm]; then
+if command -v npm >/dev/null 2>&1; then
   npm run lint
 else
-  npm.cmd run lint
+  echo "husky: npm not found in PATH" >&2
+  exit 127
 fi

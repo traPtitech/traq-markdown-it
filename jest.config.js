@@ -3,8 +3,9 @@ module.exports = {
     '^#/(.+)': '<rootDir>/src/$1'
   },
   transform: {
-    '^.+\\.ts$': 'es-jest'
+    '^.+\\.m?(ts|js)?$': 'es-jest'
   },
+  transformIgnorePatterns: ['node_modules/(?!(markdown-it)/)'],
   coverageDirectory: './coverage/',
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.ts'],

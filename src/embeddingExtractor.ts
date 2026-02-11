@@ -1,4 +1,4 @@
-import type Token from 'markdown-it/lib/token'
+import type Token from 'markdown-it/lib/token.mjs'
 
 const uuidRegexp = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/
 
@@ -58,8 +58,9 @@ export default class EmbeddingExtractor {
       url.origin !== this.embeddingOrigin ||
       type === 'url' ||
       type === 'internal'
-    )
+    ) {
       return undefined
+    }
     const id = url.pathname.split('/')[2] ?? ''
     return uuidRegexp.test(id) ? id : undefined
   }

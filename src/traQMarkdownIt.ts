@@ -9,9 +9,9 @@ import mila from 'markdown-it-link-attributes'
 import filter from 'markdown-it-image-filter'
 import { createHighlightFunc } from './highlight'
 import defaultWhitelist from './default/domain_whitelist'
-import type Token from 'markdown-it/lib/token'
+import type Token from 'markdown-it/lib/token.mjs'
 import type { Store } from './Store'
-import EmbeddingExtractor, { EmbeddingOrUrl } from './embeddingExtractor'
+import EmbeddingExtractor, { type EmbeddingOrUrl } from './embeddingExtractor'
 import { InlineRenderer } from './InlineRenderer'
 
 export type MarkdownRenderResult = {

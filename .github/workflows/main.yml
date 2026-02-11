@@ -11,12 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 16.x
-          cache: npm
+          node-version-file: package.json
       - name: check npm ci
         run: npm ci
   lint:
@@ -25,12 +24,11 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 16.x
-          cache: npm
+          node-version-file: package.json
       - name: npm ci
         run: npm ci
       - name: run lint
@@ -41,12 +39,11 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 16.x
-          cache: npm
+          node-version-file: package.json
       - name: npm ci
         run: npm ci
       - name: run format
@@ -57,12 +54,11 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 16.x
-          cache: npm
+          node-version-file: package.json
       - name: npm ci
         run: npm ci
       - name: run type-check
@@ -73,12 +69,11 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 16.x
-          cache: npm
+          node-version-file: package.json
       - name: npm ci
         run: npm ci
       - name: run build
@@ -89,17 +84,16 @@ jobs:
     needs: [packages]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
       - name: setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 16.x
-          cache: npm
+          node-version-file: package.json
       - name: npm ci
         run: npm ci
       - name: run test
         run: npm run test
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: coverage
           path: ./coverage
@@ -109,9 +103,11 @@ jobs:
     needs: [test]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
-      - uses: actions/download-artifact@v4
+        uses: actions/checkout@v6
+      - uses: actions/download-artifact@v6
         with:
           name: coverage
           path: ./coverage
-      - uses: codecov/codecov-action@v2
+      - uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

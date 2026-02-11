@@ -178,7 +178,12 @@ $link-highlight-background-color: #faffad !default;
 
   code,
   pre {
-    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    font-family:
+      SFMono-Regular,
+      Consolas,
+      Liberation Mono,
+      Menlo,
+      monospace;
     font-size: 0.85em;
     border-radius: 4px;
     background-color: $code-background-color;
@@ -312,7 +317,12 @@ $link-highlight-background-color: #faffad !default;
   code {
     display: inline;
     padding: 2px 6px;
-    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    font-family:
+      SFMono-Regular,
+      Consolas,
+      Liberation Mono,
+      Menlo,
+      monospace;
     font-size: 0.85em;
     border-radius: 4px;
     background-color: $code-background-color;

@@ -1,10 +1,10 @@
 import stampPlugin, {
-  renderNormalStamp,
-  renderUserStamp,
-  renderHexStamp,
   hexReg,
+  hslReg,
+  renderHexStamp,
   renderHslStamp,
-  hslReg
+  renderNormalStamp,
+  renderUserStamp
 } from '#/stamp'
 import { setup } from './setupMd'
 
