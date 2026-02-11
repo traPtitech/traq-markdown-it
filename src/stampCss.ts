@@ -1,5 +1,5 @@
 import type MarkdownIt from 'markdown-it'
-import regexp from '@traptitech/markdown-it-regexp'
+import regexp from './regexpPlugin'
 
 // See stamp.ts stampRegExp
 const stampRegExp = /:(?:[a-zA-Z0-9+_-]{1,32}|@[a-zA-Z0-9_-]+)(?:\.[\w+-.]+)?:/

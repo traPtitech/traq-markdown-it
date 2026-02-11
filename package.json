@@ -44,7 +44,6 @@
   "homepage": "https://github.com/traPtitech/traq-markdown-it#readme",
   "dependencies": {
     "@traptitech/markdown-it-katex": "^3.6.0",
-    "@traptitech/markdown-it-regexp": "^0.5.3",
     "@traptitech/markdown-it-spoiler": "^1.1.6",
     "highlight.js": "^11.11.1",
     "katex": "^0.16.28",
