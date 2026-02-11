@@ -9,8 +9,8 @@ let baseUrl = ''
 
 export const animeEffectSet: ReadonlySet<string> = new Set(animeEffects)
 export const sizeEffectSet: ReadonlySet<string> = new Set(sizeEffects)
-export type AnimeEffect = typeof animeEffects[number]
-export type SizeEffect = typeof sizeEffects[number]
+export type AnimeEffect = (typeof animeEffects)[number]
+export type SizeEffect = (typeof sizeEffects)[number]
 
 const animeEffectAliasMap: ReadonlyMap<AnimeEffect, AnimeEffect> = new Map([
   ['marquee', 'conga'],
