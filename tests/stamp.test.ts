@@ -202,4 +202,16 @@ describe('stamp', () => {
       expect(actual).toBe(expected)
     })
   }
+
+  {
+    it.concurrent('should use generateStampHref if exists', () => {
+      const { store } = setupWithStamp()
+      store.generateStampHref = (fileId: string) =>
+        `https://example.com/${fileId}`
+
+      const actual = md.render(':one:').trim()
+      const expected = `<p><i class="emoji message-emoji " title=":one:" style="background-image: url(https://example.com/e97518db-ebb8-450f-9b4a-273234e68491);">:one:</i></p>`
+      expect(actual).toBe(expected)
+    })
+  }
 })
