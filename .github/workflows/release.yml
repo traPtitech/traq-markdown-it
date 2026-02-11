@@ -3,7 +3,7 @@ name: automatic publish
 on:
   push:
     tags:
-      - '*'
+      - "*"
 
 jobs:
   release:
@@ -16,14 +16,12 @@ jobs:
 
     steps:
       - name: checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: setup Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
-          node-version: '22'
-          registry-url: 'https://registry.npmjs.org'
-          cache: npm
+          node-version-file: package.json
 
       - name: update npm
         run: npm install -g npm@latest
