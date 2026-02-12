@@ -63,7 +63,7 @@
     "@typescript-eslint/parser": "^8.55.0",
     "@typescript/lib-dom": "npm:@types/web@^0.0.330",
     "es-jest": "^2.1.0",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jest": "^29.13.0",
     "globals": "^17.3.0",
