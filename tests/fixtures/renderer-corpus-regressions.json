@@ -1,0 +1,27 @@
+[
+  {
+    "name": "tight bullet list followed by a blank-line node",
+    "markdown": "- item\n\n\n# heading",
+    "html": "<ul>\n<li>item<br>\n</li>\n</ul>\n<h1>heading</h1>\n"
+  },
+  {
+    "name": "tight ordered list followed by a blank-line node",
+    "markdown": "1. first\n2. second\n\n\n# heading",
+    "html": "<ol>\n<li>first</li>\n<li>second<br>\n</li>\n</ol>\n<h1>heading</h1>\n"
+  },
+  {
+    "name": "nested tight lists followed by a blank-line node",
+    "markdown": "- outer\n  - inner\n\n\n# heading",
+    "html": "<ul>\n<li>outer\n<ul>\n<li>inner<br>\n</li>\n</ul>\n</li>\n</ul>\n<h1>heading</h1>\n"
+  },
+  {
+    "name": "consecutive blank-line nodes after a tight paragraph",
+    "markdown": "- item\n\n\n\n# heading",
+    "html": "<ul>\n<li>item<br>\n<br>\n</li>\n</ul>\n<h1>heading</h1>\n"
+  },
+  {
+    "name": "loose list retains paragraph tags before a blank-line node",
+    "markdown": "- first\n\n- second\n\n\n# heading",
+    "html": "<ul>\n<li>\n<p>first</p>\n</li>\n<li>\n<p>second</p>\n<br>\n</li>\n</ul>\n<h1>heading</h1>\n"
+  }
+]

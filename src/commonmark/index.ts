@@ -180,14 +180,17 @@ export function plugin({
       const tight = tightList(ctx.ancestors.at(-1))
       const content = children
         .map((child, i) => {
+          const rendered = ctx.blocks([child])
+          // A line break following a tight paragraph needs no leading whitespace.
           const separator =
             tight &&
             i > 0 &&
             children[i - 1].kind === names.Paragraph &&
-            child.kind !== names.CodeBlock
+            child.kind !== names.CodeBlock &&
+            !rendered.startsWith('<br>')
               ? '\n'
               : ''
-          return separator + ctx.blocks([child])
+          return separator + rendered
         })
         .join('')
       return (
