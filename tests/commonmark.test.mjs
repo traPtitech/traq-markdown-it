@@ -5,7 +5,7 @@ import MarkdownIt from 'markdown-it'
 import { escapeHtml } from 'markdown-it/lib/common/utils.mjs'
 import { renderer } from '@traptitech/traq-markdown-it'
 import { preset } from '@traptitech/traq-markdown-it/commonmark'
-import { runtime } from './setup.mjs'
+import { commonParser } from './setup.mjs'
 const fixtures = JSON.parse(
   await readFile(
     new URL('./fixtures/commonmark-0.31.2.json', import.meta.url),
@@ -13,8 +13,8 @@ const fixtures = JSON.parse(
   )
 )
 
-test('CommonMark fixture inputs match markdown-it with the same escaped-HTML policy', () => {
-  const parser = runtime.parser(runtime.presets.commonmark)
+test('CommonMark fixture inputs match markdown-it with the same escaped-HTML policy', async () => {
+  const parser = await commonParser()
   const view = renderer(
     preset({ validateLink: () => true, validateImage: () => true })
   )

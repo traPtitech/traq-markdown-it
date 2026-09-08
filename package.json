@@ -27,7 +27,11 @@
       "types": "./dist/traq/v1.d.ts",
       "import": "./dist/traq/v1.js"
     },
-    "./index.css": "./dist/index.css"
+    "./index.css": "./dist/index.css",
+    "./definitions": {
+      "types": "./dist/core/definitions.d.ts",
+      "import": "./dist/core/definitions.js"
+    }
   },
   "files": [
     "dist/core",

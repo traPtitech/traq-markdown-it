@@ -64,11 +64,7 @@ for (const [file, text] of files) {
           file.startsWith('src/core/') &&
           specifier.startsWith('@traq-markdown-parser/ts/')
         )
-          assert.equal(
-            specifier,
-            '@traq-markdown-parser/ts/definitions',
-            `${file}: core must not know grammar payloads`
-          )
+          assert.fail(`${file}: core must not depend on parser contracts`)
       }
     }
     ts.forEachChild(node, visit)

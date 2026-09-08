@@ -15,7 +15,7 @@ import {
   renderTokens,
   checked
 } from '../core/tokens.js'
-import { Plugin as Declaration } from '@traq-markdown-parser/ts/definitions'
+import { Plugin as Declaration } from '../core/definitions.js'
 import { Plugin } from '../core/plugin.js'
 import { PresetBuilder } from '../core/preset.js'
 import { validateLink as defaultPolicy } from './policy.js'

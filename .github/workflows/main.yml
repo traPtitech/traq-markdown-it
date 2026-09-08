@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           repository: traq-markdown-parser/sdk
-          ref: dd01b4ef6df41d72158241916da0c04fa0f5f83d
+          ref: 0c258c5e2e7308fa34a0d578d8bc863b4d7ec1b3
           path: traq-markdown-parser/sdk
       - uses: actions/setup-node@v6
         with:
@@ -35,3 +35,4 @@ jobs:
       - run: npm run check:architecture
       - run: npm run check:package
       - run: npx prettier --check src tests examples scripts README.md package.json tsconfig.json
+

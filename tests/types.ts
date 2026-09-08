@@ -1,5 +1,5 @@
-import { Plugin as Declaration } from '@traq-markdown-parser/ts/definitions'
-import { loadRuntime, type Document } from '@traq-markdown-parser/ts'
+import { Plugin as Declaration } from '@traptitech/traq-markdown-it/definitions'
+import { createParser, presets, type Document } from '@traq-markdown-parser/ts'
 import { names, isKnownNode } from '@traq-markdown-parser/ts/commonmark/nodes'
 import {
   renderer,
@@ -11,8 +11,7 @@ import { plugin } from '@traptitech/traq-markdown-it/commonmark'
 import { v1 } from '@traptitech/traq-markdown-it/traq'
 import type { Store } from '@traptitech/traq-markdown-it/trap'
 
-const runtime = await loadRuntime(new Uint8Array())
-const parser = runtime.parser(runtime.presets.traq.v1)
+const parser = await createParser(new Uint8Array(), presets.traq.v1)
 const view = renderer(v1.html())
 const result: string = view.render(parser.parse('text'))
 const openDocument = {} as Document<true>

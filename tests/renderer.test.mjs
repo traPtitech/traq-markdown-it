@@ -1,8 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import MarkdownIt from 'markdown-it'
-import { Plugin as Declaration } from '@traq-markdown-parser/ts/definitions'
-import { Plugin as Syntax } from '@traq-markdown-parser/ts'
+import { Plugin as Declaration } from '@traptitech/traq-markdown-it/definitions'
 import * as commonNodes from '@traq-markdown-parser/ts/commonmark/nodes'
 import * as html from '@traptitech/traq-markdown-it'
 import * as common from '@traptitech/traq-markdown-it/commonmark'
@@ -10,7 +9,7 @@ import * as generic from '@traptitech/traq-markdown-it/generic'
 import * as trap from '@traptitech/traq-markdown-it/trap'
 import * as trapNodes from '@traq-markdown-parser/ts/trap/nodes'
 import * as traq from '@traptitech/traq-markdown-it/traq'
-import { runtime, parser } from './setup.mjs'
+import { commonParser, parser } from './setup.mjs'
 
 const build = plugin => new html.PresetBuilder().add(plugin).build()
 
@@ -48,32 +47,16 @@ test('replacement preserves defaults and earlier snapshots', () => {
   )
 })
 
-test('one declaration supplies independent syntax and rendering implementations', () => {
-  const group = Declaration.group('custom')
-  const declaration = group.new('math')
-  const syntax = new Syntax(declaration).add(
-    runtime.plugins.generic.math.inlineRules[0]
-  )
+test('renderer declarations customize Rust-produced nodes', () => {
+  const declaration = Declaration.group('custom').new('math')
   const presentation = new html.Plugin(declaration).on(
     'markdown_generic_contracts::math::InlineMathData',
     (node, ctx) => ctx.fallback(node)
   )
-  assert.equal(syntax.namespace, group)
-  const grammar = runtime
-    .builder()
-    .add(runtime.plugins.commonmark.core)
-    .add(syntax)
-    .build()
-  const local = runtime.parser(grammar)
-  try {
-    const view = html.renderer(
-      new html.PresetBuilder().add(common.plugin()).add(presentation).build()
-    )
-    assert.equal(view.render(local.parse('$x$')), '<p>$x$</p>\n')
-  } finally {
-    local.dispose()
-    grammar.dispose()
-  }
+  const view = html.renderer(
+    new html.PresetBuilder().add(common.plugin()).add(presentation).build()
+  )
+  assert.equal(view.render(parser.parse('$x$')), '<p>$x$</p>\n')
 })
 
 test('composition validates selected names without changing earlier presets', () => {
@@ -168,9 +151,9 @@ test('empty presets escape source without implicitly enabling CommonMark', () =>
   )
 })
 
-test('tight lists preserve paragraphs owned by blockquotes and nested loose lists', () => {
+test('tight lists preserve paragraphs owned by blockquotes and nested loose lists', async () => {
   const md = new MarkdownIt()
-  const local = runtime.parser(runtime.presets.commonmark)
+  const local = await commonParser()
   try {
     const view = html.renderer(common.preset())
     for (const source of [

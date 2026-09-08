@@ -3,7 +3,7 @@ export interface Implementation {
   declaration: Declaration
   handlers: Map<string, Handler>
 }
-import { Plugin as Declaration } from '@traq-markdown-parser/ts/definitions'
+import { Plugin as Declaration } from './definitions.js'
 
 const implementations = new WeakMap<Plugin, Implementation>()
 export function implementation(plugin: Plugin) {

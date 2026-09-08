@@ -3,27 +3,22 @@
 型付き Markdown AST から HTML を生成する traQ 向けのフロントエンドライブラリです。8.0 の新 API では、構文解析を [traq-markdown-parser/sdk](https://github.com/traq-markdown-parser/sdk) に分離しています。
 
 ```ts
-import { loadRuntime } from '@traq-markdown-parser/ts'
+import { createParser, presets } from '@traq-markdown-parser/ts'
 import { renderer } from '@traptitech/traq-markdown-it'
 import { v1 } from '@traptitech/traq-markdown-it/traq'
 import '@traptitech/traq-markdown-it/index.css'
 
-const runtime = await loadRuntime(wasmBytes)
+const parser = await createParser(wasmBytes, presets.traq.v1)
 try {
-  const parser = runtime.parser(runtime.presets.traq.v1)
-  try {
-    const view = renderer(v1.html({ store }))
-    const html: string = view.render(parser.parse('**hello** :stamp:'))
-    const inline: string = view.renderInline(parser.parseInline('**hello**'))
-  } finally {
-    parser.dispose()
-  }
+  const view = renderer(v1.html({ store }))
+  const html: string = view.render(parser.parse('**hello** :stamp:'))
+  const inline: string = view.renderInline(parser.parseInline('**hello**'))
 } finally {
-  runtime.dispose()
+  parser.dispose()
 }
 ```
 
-`store` はスタンプ画像や参照先 URL を解決するアプリケーション側のオブジェクトです。省略も可能で、解決できない参照やスタンプは文字列として表示します。Runtime と Parser はアプリケーション内で再利用してください。
+`store` はスタンプ画像や参照先 URL を解決するアプリケーション側のオブジェクトです。省略も可能で、解決できない参照やスタンプは文字列として表示します。Parser はアプリケーション内で再利用してください。
 
 ## 所有する機能
 
@@ -53,7 +48,7 @@ const view = renderer(new PresetBuilder().add(common).build())
 
 `on(kind, handler)` は追加、`replace(kind, handler)` は既存 handler の変更です。handler は HTML 文字列を返します。原文や payload の文字列を埋め込むときは `context.escape()`、子ノードは `context.inline()` / `context.blocks()`、原文へのフォールバックは `context.fallback()` を使用してください。HTML 構文は既定でエスケープします。
 
-独自 Plugin は `@traq-markdown-parser/ts/definitions` の共有宣言から作ります。構文側と表示側で同じ宣言を共有できます。builder は追加時の実装を保持するため、後から Plugin を変更しても既存 preset は変化しません。
+独自の表示 Plugin は `@traptitech/traq-markdown-it/definitions` の宣言から作ります。構文のプリセットは Rust 側で定義します。builder は追加時の実装を保持するため、後から Plugin を変更しても既存 preset は変化しません。
 
 ## 開発
 

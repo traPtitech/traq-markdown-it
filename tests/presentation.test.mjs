@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { renderer } from '@traptitech/traq-markdown-it'
 import { v1 } from '@traptitech/traq-markdown-it/traq'
-import { parser, runtime } from './setup.mjs'
+import { parser, commonParser } from './setup.mjs'
 
 test('traQ presentation combines tables, marks, spoilers, math, and highlighted code', () => {
   const view = renderer(v1.html())
@@ -66,8 +66,8 @@ test('stamp stores are isolated and unrecognized effects preserve escaped source
   assert.equal(unsafe.renderInline(parser.parseInline(':wave:')), ':wave:')
 })
 
-test('reference highlighting and link/image policies belong to each renderer', t => {
-  const common = runtime.parser(runtime.presets.commonmark)
+test('reference highlighting and link/image policies belong to each renderer', async t => {
+  const common = await commonParser()
   t.after(() => common.dispose())
   const view = renderer(
     v1.html({

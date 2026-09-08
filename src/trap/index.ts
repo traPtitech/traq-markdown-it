@@ -21,7 +21,7 @@ export interface Options {
 }
 import { names, isKnownNode } from '@traq-markdown-parser/ts/trap/nodes'
 import { token, pair, tokenHandler, checked } from '../core/tokens.js'
-import { Plugin as Declaration } from '@traq-markdown-parser/ts/definitions'
+import { Plugin as Declaration } from '../core/definitions.js'
 import { Plugin } from '../core/plugin.js'
 import { stampRenderer } from './stamp.js'
 import { validateLink as defaultPolicy } from '../commonmark/policy.js'

@@ -1,4 +1,4 @@
-import type { PluginGroup } from '@traq-markdown-parser/ts/definitions'
+import type { PluginGroup } from './definitions.js'
 import type { Plugin, Implementation } from './plugin.js'
 import type { Preset, Handler } from './types.js'
 import { implementation } from './plugin.js'
