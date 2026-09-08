@@ -1,6 +1,6 @@
 # traq-markdown-it
 
-型付き Markdown AST から HTML を生成する traQ 向けのフロントエンドライブラリです。8.0 の新 API では、構文解析を [traq-markdown-parser/traq](https://github.com/traq-markdown-parser/traq) に分離しています。
+型付き Markdown AST から HTML を生成する traQ 向けのフロントエンドライブラリです。構文解析を [traq-markdown-parser/traq](https://github.com/traq-markdown-parser/traq) に分離しています。
 
 ```ts
 import { createRuntime, presets } from '@traq-markdown-parser/traq'
