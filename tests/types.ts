@@ -19,6 +19,13 @@ const runtime = await createRuntime(new Uint8Array())
 const parser = runtime.createParser(presets.traq.v1)
 const view = renderer(v1.html())
 const result: string = view.render(parser.parse('text'))
+const messageView = v1.messageRenderer({ origin: 'https://q.example.test' })
+const messageHtml: string = messageView.render(
+  parser.parse('text')
+).renderedText
+const previewHtml: string = messageView.renderInline(
+  parser.parse('text')
+).renderedText
 const openDocument = {} as Document<true>
 const openResult: string = view.render(openDocument)
 const custom = plugin().replace(names.Link, (node, context) => {

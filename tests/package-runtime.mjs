@@ -30,6 +30,12 @@ try {
     'background-color: #ff0000'
   ])
     assert(output.includes(text), text)
+  const messages = v1.messageRenderer({ origin: 'https://q.example.test' })
+  const message = parser.parse(
+    'hello\nhttps://q.example.test/files/00000000-0000-0000-0000-000000000001'
+  )
+  assert.equal(messages.renderInline(message).renderedText, 'hello')
+  assert.equal(messages.render(message).embeddings[0].type, 'file')
   const custom = renderer(new PresetBuilder().add(plugin()).build())
   assert.equal(
     custom.renderInline(parser.parseInline('**shared declaration**')),

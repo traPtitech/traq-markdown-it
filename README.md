@@ -21,6 +21,23 @@ try {
 
 `store` はスタンプ画像や参照先 URL を解決するアプリケーション側のオブジェクトです。省略も可能で、解決できない参照やスタンプは文字列として表示します。Runtime と Parser はアプリケーション内で再利用してください。
 
+## traQ の本文・引用・添付とプレビュー
+
+traQ のメッセージ表示には、本文 HTML とカード用の情報をまとめて返す `v1.messageRenderer` を使います。
+
+```ts
+const messages = v1.messageRenderer({ store, origin: 'https://q.example.test' })
+const document = parser.parse(source)
+const { renderedText, embeddings } = messages.render(document)
+const preview = messages.renderInline(document).renderedText
+```
+
+通常表示では末尾の裸の添付・引用 URL を本文から除き、`embeddings` にファイル・メッセージ ID と外部 URL を返します。明示的なリンクは本文に残し、spoiler・コード内の URL はカードにしません。入力 AST は変更しないため、通常表示とプレビューで同じ document を再利用できます。
+
+`messages.renderInline` は全文の AST を一行プレビューにします。通常の改行・強制改行・空行はスペースに、見出しやリストはマーカー付きの表示にし、残った添付・引用リンクは短いラベルに置き換えます。コード内容の改行は文字列として保持します。ブロック数式もインライン表示にし、既定の数式サイズを制限します。
+
+ここには `parser.parse(source)` の結果を渡します。`parser.parseInline` と汎用 `renderer.renderInline` はインライン構文用で、メッセージ全体をプレビューにする API ではありません。
+
 ## 所有する機能
 
 | 公開入口            | 責務                                                               |

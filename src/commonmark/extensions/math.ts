@@ -1,12 +1,17 @@
 import katex from 'katex'
 import { escapeHtml } from '../../core/html.js'
 
-export function math(tex: string, displayMode: boolean) {
+export function math(
+  tex: string,
+  displayMode: boolean,
+  options: { maxSize?: number; macros?: Record<string, string> } = {}
+) {
   try {
     const html = katex.renderToString(tex, {
       displayMode,
       output: 'html',
       maxSize: 100,
+      ...options,
       strict: code => (code === 'unicodeTextInMathMode' ? 'ignore' : 'warn')
     })
     return displayMode ? `<p class="katex-block is-scroll">${html}</p>\n` : html
