@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           repository: traq-markdown-parser/sdk
-          ref: 585b40ca620924c7af895a118a9722d5c1bfc092
+          ref: 5c2388a340717730728f332bfd2b32512037a395
           path: traq-markdown-parser/sdk
       - uses: actions/setup-node@v6
         with:
