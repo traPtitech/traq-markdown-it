@@ -1,15 +1,15 @@
 import { readFile } from 'node:fs/promises'
-import { createParser, presets } from '@traq-markdown-parser/ts'
+import { createRuntime, presets } from '@traq-markdown-parser/ts'
 import { renderer } from '@traptitech/traq-markdown-it'
 import { v1 } from '@traptitech/traq-markdown-it/traq'
 
-const parser = await createParser(
+const runtime = await createRuntime(
   await readFile(
     new URL(import.meta.resolve('@traq-markdown-parser/ts/parser.wasm'))
-  ),
-  presets.traq.v1
+  )
 )
 try {
+  const parser = runtime.createParser(presets.traq.v1)
   const view = renderer(v1.html())
   console.log(
     view.render(
@@ -17,5 +17,5 @@ try {
     )
   )
 } finally {
-  parser.dispose()
+  runtime.dispose()
 }

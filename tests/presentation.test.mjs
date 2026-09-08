@@ -66,8 +66,8 @@ test('stamp stores are isolated and unrecognized effects preserve escaped source
   assert.equal(unsafe.renderInline(parser.parseInline(':wave:')), ':wave:')
 })
 
-test('reference highlighting and link/image policies belong to each renderer', async t => {
-  const common = await commonParser()
+test('reference highlighting and link/image policies belong to each renderer', t => {
+  const common = commonParser()
   t.after(() => common.dispose())
   const view = renderer(
     v1.html({

@@ -3,22 +3,23 @@
 型付き Markdown AST から HTML を生成する traQ 向けのフロントエンドライブラリです。8.0 の新 API では、構文解析を [traq-markdown-parser/sdk](https://github.com/traq-markdown-parser/sdk) に分離しています。
 
 ```ts
-import { createParser, presets } from '@traq-markdown-parser/ts'
+import { createRuntime, presets } from '@traq-markdown-parser/ts'
 import { renderer } from '@traptitech/traq-markdown-it'
 import { v1 } from '@traptitech/traq-markdown-it/traq'
 import '@traptitech/traq-markdown-it/index.css'
 
-const parser = await createParser(wasmBytes, presets.traq.v1)
+const runtime = await createRuntime(wasmBytes)
 try {
+  const parser = runtime.createParser(presets.traq.v1)
   const view = renderer(v1.html({ store }))
   const html: string = view.render(parser.parse('**hello** :stamp:'))
   const inline: string = view.renderInline(parser.parseInline('**hello**'))
 } finally {
-  parser.dispose()
+  runtime.dispose()
 }
 ```
 
-`store` はスタンプ画像や参照先 URL を解決するアプリケーション側のオブジェクトです。省略も可能で、解決できない参照やスタンプは文字列として表示します。Parser はアプリケーション内で再利用してください。
+`store` はスタンプ画像や参照先 URL を解決するアプリケーション側のオブジェクトです。省略も可能で、解決できない参照やスタンプは文字列として表示します。Runtime と Parser はアプリケーション内で再利用してください。
 
 ## 所有する機能
 

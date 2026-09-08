@@ -13,8 +13,8 @@ const fixtures = JSON.parse(
   )
 )
 
-test('CommonMark fixture inputs match markdown-it with the same escaped-HTML policy', async () => {
-  const parser = await commonParser()
+test('CommonMark fixture inputs match markdown-it with the same escaped-HTML policy', () => {
+  const parser = commonParser()
   const view = renderer(
     preset({ validateLink: () => true, validateImage: () => true })
   )

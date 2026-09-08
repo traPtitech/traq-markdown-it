@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
-import { createParser, presets } from '@traq-markdown-parser/ts'
+import { createRuntime, presets } from '@traq-markdown-parser/ts'
 import { renderer, PresetBuilder } from '@traptitech/traq-markdown-it'
 import { plugin } from '@traptitech/traq-markdown-it/commonmark'
 import { v1 } from '@traptitech/traq-markdown-it/traq'
@@ -10,13 +10,13 @@ const css = await readFile(
   'utf8'
 )
 assert(css.includes('.markdown-body') && css.includes('.emoji'))
-const parser = await createParser(
+const runtime = await createRuntime(
   await readFile(
     new URL(import.meta.resolve('@traq-markdown-parser/ts/parser.wasm'))
-  ),
-  presets.traq.v1
+  )
 )
 try {
+  const parser = runtime.createParser(presets.traq.v1)
   const document = parser.parse('**package** $x$ !!hidden!! :0xff0000:')
   const output = renderer(v1.html()).render(document)
   for (const text of [
@@ -32,7 +32,7 @@ try {
     '<strong>shared declaration</strong>'
   )
 } finally {
-  parser.dispose()
+  runtime.dispose()
 }
 console.log(
   'Two packed packages: declarations, HTML, CSS, and Wasm integration passed'

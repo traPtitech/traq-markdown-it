@@ -151,9 +151,9 @@ test('empty presets escape source without implicitly enabling CommonMark', () =>
   )
 })
 
-test('tight lists preserve paragraphs owned by blockquotes and nested loose lists', async () => {
+test('tight lists preserve paragraphs owned by blockquotes and nested loose lists', () => {
   const md = new MarkdownIt()
-  const local = await commonParser()
+  const local = commonParser()
   try {
     const view = html.renderer(common.preset())
     for (const source of [
