@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           repository: traq-markdown-parser/traq
-          ref: f197e886a9a1267c9905f88e2383f9625824b108
+          ref: e61d9082ba8b0a4e926c47be12d5ac3b719622c6
           path: traq-markdown-parser/traq
       - uses: actions/setup-node@v6
         with:
