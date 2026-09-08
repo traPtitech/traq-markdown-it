@@ -11,13 +11,17 @@ export class PluginGroup {
   constructor(name: string, parent: PluginGroup | null = null) {
     if (parent !== null && !(parent instanceof PluginGroup))
       throw new TypeError('Expected PluginGroup')
+
     this.name = label(name)
     this.parent = parent
+
     Object.freeze(this)
   }
+
   group(name: string) {
     return new PluginGroup(name, this)
   }
+
   new(name: string) {
     return new Plugin(name, this)
   }
@@ -30,10 +34,13 @@ export class Plugin {
   constructor(name: string, namespace: PluginGroup | null = null) {
     if (namespace !== null && !(namespace instanceof PluginGroup))
       throw new TypeError('Expected PluginGroup')
+
     this.name = label(name)
     this.namespace = namespace
+
     Object.freeze(this)
   }
+
   static group(name: string) {
     return new PluginGroup(name)
   }

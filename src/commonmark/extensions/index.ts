@@ -1,7 +1,3 @@
-export interface Options {
-  /** Return trusted HTML. KaTeX is used by default. */
-  math?(tex: string, displayMode: boolean): string
-}
 import type { Node, RenderContext } from '../../core/types.js'
 import type { RowData } from '@traq-markdown-parser/traq/generic/nodes'
 import { names, isKnownNode } from '@traq-markdown-parser/traq/generic/nodes'
@@ -10,10 +6,16 @@ import { Plugin as Declaration } from '../../core/definitions.js'
 import { Plugin } from '../../core/plugin.js'
 import { math as defaultMath } from './math.js'
 
+export interface Options {
+  /** Return trusted HTML. KaTeX is used by default. */
+  math?(tex: string, displayMode: boolean): string
+}
+
 function table(node: Node, ctx: RenderContext) {
   const rows = (node.children ?? []).map(row => {
     if (!isKnownNode(row) || row.kind !== names.Row)
       throw new TypeError('Invalid table row')
+
     return row
   })
   const row = (node: Node & { data: RowData }) =>
@@ -22,6 +24,7 @@ function table(node: Node, ctx: RenderContext) {
       .map(cell => {
         if (!isKnownNode(cell) || cell.kind !== names.Cell)
           throw new TypeError('Invalid table cell')
+
         const tag = node.data.header ? 'th' : 'td'
         const attrs = cell.data.alignment
           ? attributes([['style', 'text-align:' + cell.data.alignment]])
@@ -39,6 +42,7 @@ function table(node: Node, ctx: RenderContext) {
       })
       .join('') +
     '</tr>\n'
+
   const head = rows.filter(r => r.data.header),
     body = rows.filter(r => !r.data.header)
   return (
@@ -49,9 +53,12 @@ function table(node: Node, ctx: RenderContext) {
     '</table>\n'
   )
 }
+
 const declaration = Declaration.group('generic').new('presentation')
+
 export function plugin({ math = defaultMath }: Options = {}) {
   const result = new Plugin(declaration)
+
   result.on(
     names.Mark,
     checked(

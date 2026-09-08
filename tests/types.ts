@@ -26,6 +26,7 @@ const messageHtml: string = messageView.render(
 const previewHtml: string = messageView.renderInline(
   parser.parse('text')
 ).renderedText
+
 const openDocument = {} as Document<true>
 const openResult: string = view.render(openDocument)
 const custom = plugin().replace(names.Link, (node, context) => {
@@ -47,6 +48,7 @@ const store: Store = {
   generateUserHref: id => '#' + id
 }
 renderer(v1.html({ store, math: tex => tex, highlight: code => code }))
+
 // @ts-expect-error handlers return HTML strings
 new Plugin(declaration).on('invalid', () => [])
 // @ts-expect-error presets have runtime identity

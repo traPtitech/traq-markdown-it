@@ -26,6 +26,7 @@ const sdk = path.resolve(
   root,
   packageJson.devDependencies['@traq-markdown-parser/traq'].slice(5)
 )
+
 const tempRoot = await realpath(tmpdir())
 const directory = await mkdtemp(path.join(tempRoot, 'traq-renderer-package-'))
 try {

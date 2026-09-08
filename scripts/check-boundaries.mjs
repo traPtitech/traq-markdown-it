@@ -4,6 +4,7 @@ import path from 'node:path'
 import ts from 'typescript'
 
 const files = new Map()
+
 async function collect(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const file = directory + '/' + entry.name
@@ -13,6 +14,7 @@ async function collect(directory) {
   }
 }
 await collect('src')
+
 for (const [file, text] of files) {
   assert(
     file.endsWith('.ts') && !file.endsWith('.d.ts'),

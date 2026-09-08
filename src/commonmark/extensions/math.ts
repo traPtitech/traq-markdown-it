@@ -14,6 +14,7 @@ export function math(
       ...options,
       strict: code => (code === 'unicodeTextInMathMode' ? 'ignore' : 'warn')
     })
+
     return displayMode ? `<p class="katex-block is-scroll">${html}</p>\n` : html
   } catch (error) {
     if (!(error instanceof katex.ParseError)) throw error
@@ -21,6 +22,7 @@ export function math(
     const classes = displayMode
       ? 'katex-block katex-error is-scroll'
       : 'katex-error'
+
     return (
       `<${tag} class="${classes}" title="${escapeHtml(String(error))}">${escapeHtml(tex)}</${tag}>` +
       (displayMode ? '\n' : '')

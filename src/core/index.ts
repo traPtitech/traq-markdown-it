@@ -5,6 +5,9 @@ import type {
   Renderer,
   RenderContext
 } from './types.js'
+import { handlers as presetHandlers } from './preset.js'
+import { escapeHtml } from './html.js'
+
 export type {
   Node,
   Document,
@@ -13,15 +16,16 @@ export type {
   RenderContext,
   Handler
 } from './types.js'
-import { handlers as presetHandlers } from './preset.js'
-import { escapeHtml } from './html.js'
+
 export { Plugin } from './plugin.js'
 export { PresetBuilder } from './preset.js'
 
 export function renderer(preset: Preset): Renderer {
   const handlers = presetHandlers(preset)
+
   function render(document: Document, block: boolean) {
     let bytes: Uint8Array | undefined
+
     const fallback = (node: Node, block: boolean) => {
       bytes ??= new TextEncoder().encode(document.source)
       const text = escapeHtml(
@@ -29,6 +33,7 @@ export function renderer(preset: Preset): Renderer {
       )
       return block ? '<p>' + text + '</p>\n' : text
     }
+
     function nodes(
       values: Node[] = [],
       block = false,
@@ -37,7 +42,9 @@ export function renderer(preset: Preset): Renderer {
       return values
         .map(node => {
           const handler = handlers.get(node.kind)
+
           if (!handler) return fallback(node, block)
+
           const parents = [...ancestors, node]
           const context: RenderContext = {
             source: document.source,
@@ -47,6 +54,7 @@ export function renderer(preset: Preset): Renderer {
             blocks: values => nodes(values, true, parents),
             fallback: node => fallback(node, block)
           }
+
           const output = handler(node, context)
           if (typeof output !== 'string')
             throw new TypeError('Render handlers must return HTML strings')
@@ -54,6 +62,7 @@ export function renderer(preset: Preset): Renderer {
         })
         .join('')
     }
+
     return nodes(document.children, block)
   }
   return Object.freeze({

@@ -5,10 +5,12 @@ export interface Node {
   data: unknown
   children?: Node[]
 }
+
 export interface Document {
   source: string
   children: Node[]
 }
+
 export interface RenderContext {
   /** Ancestors in outermost-to-innermost order, excluding the current node. */
   ancestors: readonly Node[]
@@ -19,12 +21,16 @@ export interface RenderContext {
   blocks(nodes?: Node[]): string
   fallback(node: Node): string
 }
+
 /** Handlers return trusted HTML. Escape values obtained from the document. */
 export type Handler = (node: Node, context: RenderContext) => string
+
 declare const identity: unique symbol
+
 export interface Preset {
   readonly [identity]: 'renderer-preset'
 }
+
 export interface Renderer {
   render(document: Document): string
   renderInline(document: Document): string

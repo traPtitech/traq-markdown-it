@@ -5,9 +5,11 @@ import {
   embeddingFromUrl
 } from '@traptitech/traq-markdown-it/traq/v1'
 import { parser, commonParser } from './setup.mjs'
+
 const origin = 'https://q.example.test',
   fileId = '00000000-0000-0000-0000-000000000001',
   messageId = '00000000-0000-0000-0000-000000000002'
+
 const file = origin + '/files/' + fileId,
   quote = origin + '/messages/' + messageId
 const view = messageRenderer({ origin })

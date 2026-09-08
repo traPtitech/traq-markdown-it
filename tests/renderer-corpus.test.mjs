@@ -11,7 +11,9 @@ const fixtures = JSON.parse(
     'utf8'
   )
 )
+
 const view = renderer(v1.html())
+
 for (const { name, markdown, html } of fixtures)
   test('corpus regression: ' + name, () => {
     assert.equal(view.render(parser.parse(markdown)), html)

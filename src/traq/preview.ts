@@ -16,22 +16,18 @@ import type { Options } from './v1.js'
 const blocks = (nodes: Node[] | undefined, ctx: RenderContext) =>
   (nodes ?? []).map(node => ctx.inline([node])).join(' ')
 
-/** A traQ message preview is a flattened document, not inline-only parsing. */
-export function configurePreview(
-  common: Plugin,
-  generic: Plugin,
-  trap: Plugin,
-  options: Options
-) {
+function configureCommonPreview(common: Plugin, options: Options) {
   for (const kind of [names.Softbreak, names.Hardbreak])
     common.replace(
       kind,
       checked(kind, isKnownNode, () => ' ')
     )
+
   common.replace(
     names.Paragraph,
     checked(names.Paragraph, isKnownNode, (n, ctx) => ctx.inline(n.children))
   )
+
   common.replace(
     names.Heading,
     checked(
@@ -40,6 +36,7 @@ export function configurePreview(
       (n, ctx) => '#'.repeat(n.data.level) + ' ' + ctx.inline(n.children)
     )
   )
+
   common.replace(
     names.Blockquote,
     checked(
@@ -48,10 +45,12 @@ export function configurePreview(
       (n, ctx) => '> ' + blocks(n.children, ctx)
     )
   )
+
   common.replace(
     names.List,
     checked(names.List, isKnownNode, (n, ctx) => blocks(n.children, ctx))
   )
+
   common.replace(
     names.ListItem,
     checked(
@@ -60,6 +59,7 @@ export function configurePreview(
       (n, ctx) => n.data.marker + ' ' + blocks(n.children, ctx)
     )
   )
+
   common.replace(
     names.ThematicBreak,
     checked(
@@ -68,6 +68,7 @@ export function configurePreview(
       n => ' ' + escapeHtml(n.data.marker) + ' '
     )
   )
+
   common.replace(
     names.CodeBlock,
     checked(
@@ -76,16 +77,20 @@ export function configurePreview(
       n => '<code>' + escapeHtml(n.data.literal) + '</code>'
     )
   )
+
   common.replace(
     names.HtmlBlock,
     checked(names.HtmlBlock, isKnownNode, n => escapeHtml(n.data.literal))
   )
+
   common.replace(
     names.Image,
     checked(names.Image, isKnownNode, (n, ctx) => {
       const label = escapeHtml(n.data.label_source)
+
       if (!(options.validateLink ?? defaultPolicy)(n.data.destination))
         return label
+
       return (
         '<a' +
         attributes([
@@ -100,6 +105,9 @@ export function configurePreview(
       )
     })
   )
+}
+
+function configureGenericPreview(generic: Plugin) {
   generic.replace(
     genericNames.Table,
     checked(genericNames.Table, genericNode, (n, ctx) =>
@@ -107,11 +115,13 @@ export function configurePreview(
         .map(row => {
           if (!genericNode(row) || row.kind !== genericNames.Row)
             throw new TypeError('Invalid table row')
+
           return (
             (row.children ?? [])
               .map(cell => {
                 if (!genericNode(cell) || cell.kind !== genericNames.Cell)
                   throw new TypeError('Invalid table cell')
+
                 return '| ' + ctx.inline(cell.children)
               })
               .join(' ') + ' |'
@@ -120,8 +130,23 @@ export function configurePreview(
         .join(' ')
     )
   )
+}
+
+function configureTrapPreview(trap: Plugin) {
   trap.replace(
     trapNames.BlankLine,
     checked(trapNames.BlankLine, trapNode, () => ' ')
   )
+}
+
+/** A traQ message preview is a flattened document, not inline-only parsing. */
+export function configurePreview(
+  common: Plugin,
+  generic: Plugin,
+  trap: Plugin,
+  options: Options
+) {
+  configureCommonPreview(common, options)
+  configureGenericPreview(generic)
+  configureTrapPreview(trap)
 }
