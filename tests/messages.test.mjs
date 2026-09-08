@@ -84,6 +84,25 @@ test('preview labels retained card links without removing explicit labels from m
   assert.match(view.render(parser.parse('<' + file + '>')).renderedText, /<a /)
 })
 
+test('preview preserves explicit quote links and their labels', () => {
+  for (const source of [
+    '[AAA](' + quote + ')',
+    '[**AAA**](' + quote + ')',
+    '[AAA][quote]\n\n[quote]: ' + quote,
+    '<' + quote + '>'
+  ]) {
+    const document = parser.parse(source),
+      result = view.renderInline(document)
+    assert.match(result.renderedText, /<a /)
+    assert.doesNotMatch(result.renderedText, /\[\[引用メッセージ\]\]/)
+    assert.equal(
+      result.renderedText,
+      view.render(document).renderedText.trim().slice(3, -4)
+    )
+    assert.deepEqual(result.embeddings, [{ type: 'message', id: messageId }])
+  }
+})
+
 test('traQ preview flattens full-document block structure and break nodes', () => {
   assert.equal(
     view.renderInline({

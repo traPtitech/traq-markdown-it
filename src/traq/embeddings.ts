@@ -91,7 +91,14 @@ export function prepareMessage(
   function labels(nodes: Node[]): Node[] {
     return nodes.map(node => {
       const embedding = links.get(node)
-      if (embedding && embedding.type !== 'url')
+      if (
+        embedding &&
+        (embedding.type === 'file' ||
+          (embedding.type === 'message' &&
+            isKnownNode(node) &&
+            node.kind === names.Link &&
+            node.data.form === 'linkify'))
+      )
         return {
           ...node,
           children: [
