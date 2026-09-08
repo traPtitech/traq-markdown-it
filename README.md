@@ -1,9 +1,9 @@
 # traq-markdown-it
 
-型付き Markdown AST から HTML を生成する traQ 向けのフロントエンドライブラリです。8.0 の新 API では、構文解析を [traq-markdown-parser/sdk](https://github.com/traq-markdown-parser/sdk) に分離しています。
+型付き Markdown AST から HTML を生成する traQ 向けのフロントエンドライブラリです。8.0 の新 API では、構文解析を [traq-markdown-parser/traq](https://github.com/traq-markdown-parser/traq) に分離しています。
 
 ```ts
-import { createRuntime, presets } from '@traq-markdown-parser/ts'
+import { createRuntime, presets } from '@traq-markdown-parser/traq'
 import { renderer } from '@traptitech/traq-markdown-it'
 import { v1 } from '@traptitech/traq-markdown-it/traq'
 import '@traptitech/traq-markdown-it/index.css'
@@ -53,15 +53,15 @@ const view = renderer(new PresetBuilder().add(common).build())
 
 ## 開発
 
-Node.js 24 以降を使います。開発用の SDK は次の相対配置に置きます。
+Node.js 24 以降を使います。開発用の traQ Markdown 配布リポジトリは次の相対配置に置きます。
 
 ```text
 GitHub/
-  traq-markdown-parser/sdk/
+  traq-markdown-parser/traq/
   traPtitech/traq-markdown-it/
 ```
 
-先に SDK で `npm ci` と `npm run build` を実行し、このリポジトリで次を実行します。
+先に `traq-markdown-parser/traq` で `npm ci` と `npm run build` を実行し、このリポジトリで次を実行します。
 
 ```sh
 npm ci

@@ -4,8 +4,8 @@ export interface Options {
 }
 import type { Node } from '../../core/types.js'
 import type { TokenContext } from '../../core/tokens.js'
-import type { RowData } from '@traq-markdown-parser/ts/generic/nodes'
-import { names, isKnownNode } from '@traq-markdown-parser/ts/generic/nodes'
+import type { RowData } from '@traq-markdown-parser/traq/generic/nodes'
+import { names, isKnownNode } from '@traq-markdown-parser/traq/generic/nodes'
 import { pair, inlineToken, tokenHandler, checked } from '../../core/tokens.js'
 import { Plugin as Declaration } from '../../core/definitions.js'
 import { Plugin } from '../../core/plugin.js'

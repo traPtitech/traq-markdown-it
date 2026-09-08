@@ -6,7 +6,7 @@ export interface Options {
   highlight?(code: string, language: string): string
   linkAttributes?: Readonly<Record<string, string>>
 }
-import { names, isKnownNode } from '@traq-markdown-parser/ts/commonmark/nodes'
+import { names, isKnownNode } from '@traq-markdown-parser/traq/commonmark/nodes'
 import {
   token,
   pair,

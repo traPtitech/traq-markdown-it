@@ -1,6 +1,10 @@
 import { Plugin as Declaration } from '@traptitech/traq-markdown-it/definitions'
-import { createRuntime, presets, type Document } from '@traq-markdown-parser/ts'
-import { names, isKnownNode } from '@traq-markdown-parser/ts/commonmark/nodes'
+import {
+  createRuntime,
+  presets,
+  type Document
+} from '@traq-markdown-parser/traq'
+import { names, isKnownNode } from '@traq-markdown-parser/traq/commonmark/nodes'
 import {
   renderer,
   Plugin,

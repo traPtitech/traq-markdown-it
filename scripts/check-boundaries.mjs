@@ -48,7 +48,7 @@ for (const [file, text] of files) {
       } else {
         assert.notEqual(
           specifier,
-          '@traq-markdown-parser/ts',
+          '@traq-markdown-parser/traq',
           `${file}: rendering must not load the Wasm runtime`
         )
         assert(
@@ -62,7 +62,7 @@ for (const [file, text] of files) {
           )
         if (
           file.startsWith('src/core/') &&
-          specifier.startsWith('@traq-markdown-parser/ts/')
+          specifier.startsWith('@traq-markdown-parser/traq/')
         )
           assert.fail(`${file}: core must not depend on parser contracts`)
       }

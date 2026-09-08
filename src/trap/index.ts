@@ -1,5 +1,5 @@
 import type { Node } from '../core/types.js'
-import type { ReferenceData } from '@traq-markdown-parser/ts/trap/nodes'
+import type { ReferenceData } from '@traq-markdown-parser/traq/trap/nodes'
 export interface Store {
   getMe?(): Readonly<{ id: string }> | undefined
   getUserGroup?(
@@ -19,7 +19,7 @@ export interface Options {
   baseUrl?: string
   validateLink?(destination: string): boolean
 }
-import { names, isKnownNode } from '@traq-markdown-parser/ts/trap/nodes'
+import { names, isKnownNode } from '@traq-markdown-parser/traq/trap/nodes'
 import { token, pair, tokenHandler, checked } from '../core/tokens.js'
 import { Plugin as Declaration } from '../core/definitions.js'
 import { Plugin } from '../core/plugin.js'

@@ -24,7 +24,7 @@ const npm = (args, cwd) => run([npmCli, ...args], cwd)
 const packageJson = JSON.parse(await readFile(path.join(root, 'package.json')))
 const sdk = path.resolve(
   root,
-  packageJson.devDependencies['@traq-markdown-parser/ts'].slice(5)
+  packageJson.devDependencies['@traq-markdown-parser/traq'].slice(5)
 )
 const tempRoot = await realpath(tmpdir())
 const directory = await mkdtemp(path.join(tempRoot, 'traq-renderer-package-'))

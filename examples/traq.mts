@@ -1,11 +1,11 @@
 import { readFile } from 'node:fs/promises'
-import { createRuntime, presets } from '@traq-markdown-parser/ts'
+import { createRuntime, presets } from '@traq-markdown-parser/traq'
 import { renderer } from '@traptitech/traq-markdown-it'
 import { v1 } from '@traptitech/traq-markdown-it/traq'
 
 const runtime = await createRuntime(
   await readFile(
-    new URL(import.meta.resolve('@traq-markdown-parser/ts/parser.wasm'))
+    new URL(import.meta.resolve('@traq-markdown-parser/traq/parser.wasm'))
   )
 )
 try {

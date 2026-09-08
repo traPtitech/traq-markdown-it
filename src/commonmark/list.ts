@@ -1,6 +1,6 @@
 import type { Node } from '../core/types.js'
 import type { TokenContext } from '../core/tokens.js'
-import type { List as ListData } from '@traq-markdown-parser/ts/commonmark/nodes'
+import type { List as ListData } from '@traq-markdown-parser/traq/commonmark/nodes'
 /** Hide only paragraphs directly inside items of this tight list.
  * Nested lists and blockquotes own the paragraphs inside their containers.
  */

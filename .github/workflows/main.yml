@@ -14,20 +14,20 @@ jobs:
           path: traPtitech/traq-markdown-it
       - uses: actions/checkout@v6
         with:
-          repository: traq-markdown-parser/sdk
-          ref: 5c2388a340717730728f332bfd2b32512037a395
-          path: traq-markdown-parser/sdk
+          repository: traq-markdown-parser/traq
+          ref: f197e886a9a1267c9905f88e2383f9625824b108
+          path: traq-markdown-parser/traq
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
       - uses: actions/setup-go@v6
         with:
-          go-version-file: traq-markdown-parser/sdk/go/go.mod
-          cache-dependency-path: traq-markdown-parser/sdk/go/go.sum
+          go-version-file: traq-markdown-parser/traq/go/go.mod
+          cache-dependency-path: traq-markdown-parser/traq/go/go.sum
       - run: npm ci
-        working-directory: traq-markdown-parser/sdk
+        working-directory: traq-markdown-parser/traq
       - run: npm run build
-        working-directory: traq-markdown-parser/sdk
+        working-directory: traq-markdown-parser/traq
       - run: npm ci
       - run: npm run build
       - run: npm run typecheck

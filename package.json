@@ -69,7 +69,7 @@
     "markdown-it": "^14.1.0"
   },
   "devDependencies": {
-    "@traq-markdown-parser/ts": "file:../../traq-markdown-parser/sdk",
+    "@traq-markdown-parser/traq": "file:../../traq-markdown-parser/traq",
     "@types/katex": "^0.16.8",
     "@types/markdown-it": "^14.2.0",
     "@types/node": "26.3.0",
@@ -83,6 +83,6 @@
   "private": true,
   "type": "module",
   "peerDependencies": {
-    "@traq-markdown-parser/ts": "^0.1.0"
+    "@traq-markdown-parser/traq": "^0.1.0"
   }
 }
