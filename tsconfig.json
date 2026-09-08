@@ -1,32 +1,13 @@
 {
-  "include": ["src", "tests"],
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "lib": ["ESNext", "dom"],
-    "declaration": true,
-    "sourceMap": true,
-    "rootDir": ".",
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-    "verbatimModuleSyntax": true,
-    "moduleResolution": "node",
-    "baseUrl": ".",
-    "paths": {
-      "#/*": ["src/*"]
-    },
-    "jsx": "react",
-    "esModuleInterop": true,
-    "skipLibCheck": true
-  }
+    "declaration": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"]
 }

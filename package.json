@@ -1,36 +1,53 @@
 {
   "name": "@traptitech/traq-markdown-it",
-  "version": "7.1.0",
-  "description": "Markdown parser for traQ.",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "version": "8.0.0",
+  "description": "Composable HTML rendering for the shared Rust Markdown parser.",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
     },
-    "./index.css": "./dist/index.css",
-    "./src/*": "./src/*"
+    "./commonmark": {
+      "types": "./dist/commonmark/index.d.ts",
+      "import": "./dist/commonmark/index.js"
+    },
+    "./generic": {
+      "types": "./dist/commonmark/extensions/index.d.ts",
+      "import": "./dist/commonmark/extensions/index.js"
+    },
+    "./trap": {
+      "types": "./dist/trap/index.d.ts",
+      "import": "./dist/trap/index.js"
+    },
+    "./traq": {
+      "types": "./dist/traq/index.d.ts",
+      "import": "./dist/traq/index.js"
+    },
+    "./traq/v1": {
+      "types": "./dist/traq/v1.d.ts",
+      "import": "./dist/traq/v1.js"
+    },
+    "./index.css": "./dist/index.css"
   },
   "files": [
-    "dist",
-    "src"
+    "dist/core",
+    "dist/commonmark",
+    "dist/trap",
+    "dist/traq",
+    "dist/index.css",
+    "LICENSE"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
   "scripts": {
-    "start": "tsup src/index.ts --watch src",
-    "build": "tsup src/index.ts && npm run build:css",
-    "build:css": "sass ./src/css/index.scss ./dist/index.css",
-    "test": "jest",
-    "test:update": "jest --updateSnapshot",
-    "lint": "eslint --cache .",
-    "format": "prettier --cache --write .",
-    "type-check": "tsc --noEmit",
-    "prepare": "husky"
+    "build": "tsc && sass --no-source-map src/traq/css/index.scss dist/index.css",
+    "test": "node --test tests/*.test.mjs",
+    "typecheck": "tsc --noEmit && tsc -p tests/tsconfig.json",
+    "check:architecture": "node scripts/check-boundaries.mjs",
+    "check:package": "node scripts/package-check.mjs",
+    "format": "prettier --write src tests examples scripts README.md package.json tsconfig.json",
+    "example": "node examples/traq.mts"
   },
   "repository": {
     "type": "git",
@@ -43,37 +60,25 @@
   },
   "homepage": "https://github.com/traPtitech/traq-markdown-it#readme",
   "dependencies": {
-    "@traptitech/markdown-it-katex": "^3.6.0",
-    "@traptitech/markdown-it-spoiler": "^1.1.6",
     "highlight.js": "^11.11.1",
     "katex": "^0.16.28",
-    "markdown-it": "^14.1.0",
-    "markdown-it-container": "^4.0.0",
-    "markdown-it-image-filter": "^1.1.0",
-    "markdown-it-json": "^1.0.2",
-    "markdown-it-link-attributes": "^4.0.1",
-    "markdown-it-mark": "^4.0.0"
+    "markdown-it": "^14.1.0"
   },
   "devDependencies": {
-    "@traptitech/traq": "^3.27.1-0",
-    "@types/jest": "^30.0.0",
+    "@traq-markdown-parser/ts": "file:../../traq-markdown-parser/sdk",
     "@types/katex": "^0.16.8",
-    "@types/markdown-it": "14.1.2",
-    "@typescript-eslint/eslint-plugin": "^8.55.0",
-    "@typescript-eslint/parser": "^8.55.0",
-    "@typescript/lib-dom": "npm:@types/web@^0.0.330",
-    "es-jest": "^2.1.0",
-    "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-jest": "^29.13.0",
-    "globals": "^17.3.0",
-    "husky": "^9.1.7",
-    "jest": "^30.2.0",
+    "@types/markdown-it": "^14.2.0",
+    "@types/node": "26.3.0",
     "prettier": "^3.8.1",
     "sass": "^1.97.3",
-    "ts-dedent": "^2.2.0",
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "6.0.3"
   },
-  "sideEffects": false
+  "sideEffects": [
+    "./dist/index.css"
+  ],
+  "private": true,
+  "type": "module",
+  "peerDependencies": {
+    "@traq-markdown-parser/ts": "^0.1.0"
+  }
 }

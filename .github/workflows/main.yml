@@ -1,113 +1,37 @@
 name: CI
-on:
-  push:
-    branches:
-      - 'master'
-  pull_request:
-
+on: [push, pull_request]
+permissions:
+  contents: read
 jobs:
-  packages:
-    name: check npm install
+  check:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: traPtitech/traq-markdown-it
     steps:
-      - name: checkout
-        uses: actions/checkout@v6
-      - name: setup Node
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v6
         with:
-          node-version-file: package.json
-      - name: check npm ci
-        run: npm ci
-  lint:
-    name: run lint
-    runs-on: ubuntu-latest
-    needs: [packages]
-    steps:
-      - name: checkout
-        uses: actions/checkout@v6
-      - name: setup Node
-        uses: actions/setup-node@v6
+          path: traPtitech/traq-markdown-it
+      - uses: actions/checkout@v6
         with:
-          node-version-file: package.json
-      - name: npm ci
-        run: npm ci
-      - name: run lint
-        run: npm run lint
-  format:
-    name: run format
-    runs-on: ubuntu-latest
-    needs: [packages]
-    steps:
-      - name: checkout
-        uses: actions/checkout@v6
-      - name: setup Node
-        uses: actions/setup-node@v6
+          repository: traq-markdown-parser/sdk
+          ref: dd01b4ef6df41d72158241916da0c04fa0f5f83d
+          path: traq-markdown-parser/sdk
+      - uses: actions/setup-node@v6
         with:
-          node-version-file: package.json
-      - name: npm ci
-        run: npm ci
-      - name: run format
-        run: npx prettier --check .
-  type-check:
-    name: run type-check
-    runs-on: ubuntu-latest
-    needs: [packages]
-    steps:
-      - name: checkout
-        uses: actions/checkout@v6
-      - name: setup Node
-        uses: actions/setup-node@v6
+          node-version: '24'
+      - uses: actions/setup-go@v6
         with:
-          node-version-file: package.json
-      - name: npm ci
-        run: npm ci
-      - name: run type-check
-        run: npm run type-check
-  build:
-    name: run build
-    runs-on: ubuntu-latest
-    needs: [packages]
-    steps:
-      - name: checkout
-        uses: actions/checkout@v6
-      - name: setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: package.json
-      - name: npm ci
-        run: npm ci
-      - name: run build
-        run: npm run build
-  test:
-    name: run test
-    runs-on: ubuntu-latest
-    needs: [packages]
-    steps:
-      - name: checkout
-        uses: actions/checkout@v6
-      - name: setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: package.json
-      - name: npm ci
-        run: npm ci
-      - name: run test
-        run: npm run test
-      - uses: actions/upload-artifact@v6
-        with:
-          name: coverage
-          path: ./coverage
-  codecov:
-    name: Upload coverage to Codecov
-    runs-on: ubuntu-latest
-    needs: [test]
-    steps:
-      - name: checkout
-        uses: actions/checkout@v6
-      - uses: actions/download-artifact@v6
-        with:
-          name: coverage
-          path: ./coverage
-      - uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          go-version-file: traq-markdown-parser/sdk/go/go.mod
+          cache-dependency-path: traq-markdown-parser/sdk/go/go.sum
+      - run: npm ci
+        working-directory: traq-markdown-parser/sdk
+      - run: npm run build
+        working-directory: traq-markdown-parser/sdk
+      - run: npm ci
+      - run: npm run build
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run check:architecture
+      - run: npm run check:package
+      - run: npx prettier --check src tests examples scripts README.md package.json tsconfig.json
