@@ -64,15 +64,15 @@
   },
   "homepage": "https://github.com/traPtitech/traq-markdown-it#readme",
   "dependencies": {
+    "entities": "^4.5.0",
     "highlight.js": "^11.11.1",
-    "katex": "^0.16.28",
-    "markdown-it": "^14.1.0"
+    "katex": "^0.16.28"
   },
   "devDependencies": {
     "@traq-markdown-parser/traq": "file:../../traq-markdown-parser/traq",
     "@types/katex": "^0.16.8",
-    "@types/markdown-it": "^14.2.0",
     "@types/node": "26.3.0",
+    "markdown-it": "^14.1.0",
     "prettier": "^3.8.1",
     "sass": "^1.97.3",
     "typescript": "6.0.3"

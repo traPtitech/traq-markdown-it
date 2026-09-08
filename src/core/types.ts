@@ -10,6 +10,8 @@ export interface Document {
   children: Node[]
 }
 export interface RenderContext {
+  /** Ancestors in outermost-to-innermost order, excluding the current node. */
+  ancestors: readonly Node[]
   source: string
   /** Escape text before including it in a custom HTML handler. */
   escape(text: string): string

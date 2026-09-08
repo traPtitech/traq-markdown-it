@@ -5,6 +5,10 @@ import { renderer, PresetBuilder } from '@traptitech/traq-markdown-it'
 import { plugin } from '@traptitech/traq-markdown-it/commonmark'
 import { v1 } from '@traptitech/traq-markdown-it/traq'
 
+assert.throws(() => import.meta.resolve('markdown-it'), {
+  code: 'ERR_MODULE_NOT_FOUND'
+})
+
 const css = await readFile(
   new URL(import.meta.resolve('@traptitech/traq-markdown-it/index.css')),
   'utf8'

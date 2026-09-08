@@ -20,7 +20,7 @@ export interface Options {
   validateLink?(destination: string): boolean
 }
 import { names, isKnownNode } from '@traq-markdown-parser/traq/trap/nodes'
-import { token, pair, tokenHandler, checked } from '../core/tokens.js'
+import { attributes, escapeHtml, checked } from '../core/html.js'
 import { Plugin as Declaration } from '../core/definitions.js'
 import { Plugin } from '../core/plugin.js'
 import { stampRenderer } from './stamp.js'
@@ -32,7 +32,7 @@ function reference(
   validateLink: (destination: string) => boolean
 ) {
   const { type, id, label } = node.data
-  if (!store) return [token('text', '', 0, label)]
+  if (!store) return escapeHtml(label)
   const me = store.getMe?.()
   const href =
     type === 'user'
@@ -40,21 +40,23 @@ function reference(
       : type === 'group'
         ? store.generateUserGroupHref?.(id)
         : store.generateChannelHref?.(id)
-  if (!href || !validateLink(href)) return [token('text', '', 0, label)]
+  if (!href || !validateLink(href)) return escapeHtml(label)
   const highlight =
     type === 'user'
       ? id === me?.id
       : type === 'group' &&
         (store.getUserGroup?.(id)?.members?.some(u => u.id === me?.id) ?? false)
   const cls = `message-${type}-link`
-  const tokens = pair('traq_extends_link', 'a', [token('text', '', 0, label)], {
-    attrs: [
+  return (
+    '<a' +
+    attributes([
       ['href', href],
       ['class', highlight ? `${cls}-highlight ${cls}` : cls]
-    ]
-  })
-  tokens[0].meta = { type, data: type === 'channel' ? label : id }
-  return tokens
+    ]) +
+    '>' +
+    escapeHtml(label) +
+    '</a>'
+  )
 }
 const declaration = Declaration.group('trap').new('presentation')
 export function plugin({
@@ -65,28 +67,21 @@ export function plugin({
   const result = new Plugin(declaration)
   result.on(
     names.Reference,
-    tokenHandler(
-      checked(names.Reference, isKnownNode, node =>
-        reference(node, store, validateLink)
-      )
+    checked(names.Reference, isKnownNode, node =>
+      reference(node, store, validateLink)
     )
   )
   result.on(
     names.Spoiler,
-    tokenHandler(
-      checked(names.Spoiler, isKnownNode, (n, ctx) =>
-        pair('spoiler', 'span', ctx.inline(n.children), {
-          attrs: [['class', 'spoiler']],
-          markup: '!!'
-        })
-      )
+    checked(
+      names.Spoiler,
+      isKnownNode,
+      (n, ctx) => '<span class="spoiler">' + ctx.inline(n.children) + '</span>'
     )
   )
   result.on(
     names.BlankLine,
-    tokenHandler(
-      checked(names.BlankLine, isKnownNode, () => [token('hardbreak', 'br')])
-    )
+    checked(names.BlankLine, isKnownNode, () => '<br>\n')
   )
   const stamp = stampRenderer({ store, baseUrl })
   result.on(

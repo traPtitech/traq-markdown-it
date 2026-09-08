@@ -1,6 +1,6 @@
 import hljs from 'highlight.js'
 import defaultSubset from './languages.js'
-import { escapeHtml } from '../core/tokens.js'
+import { escapeHtml } from '../core/html.js'
 const noHighlightRe = /^(no-?highlight|plain|text)$/i
 export const createHighlightFunc =
   (preClass: string, withCaption = true, useSubsetForAuto = true) =>

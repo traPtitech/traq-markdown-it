@@ -1,5 +1,5 @@
 import katex from 'katex'
-import { escapeHtml } from '../../core/tokens.js'
+import { escapeHtml } from '../../core/html.js'
 
 export function math(tex: string, displayMode: boolean) {
   try {

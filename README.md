@@ -34,7 +34,7 @@ try {
 
 traQ preset は改行、コードのハイライトとキャプション、KaTeX、外部リンク属性、画像ドメインの既定方針を組み合わせます。文法の採用と表示 handler の採用は独立しているため、画像ノードを扱う場合も parser 側の文法構成に従います。
 
-markdown-it は内部の HTML シリアライズに使用します。公開 API は AST を受け取り HTML 文字列を返します。従来の `traQMarkdownIt`、markdown-it instance、Token 配列、`installParser` は公開しません。以前の `render()` が返していた `renderedText` / `embeddings` オブジェクトとの互換はありません。
+AST を直接たどって HTML 文字列を生成します。実行時に markdown-it は使用しません。markdown-it は CommonMark の出力を比較するテスト専用の開発用依存です。
 
 ## 表示を変更する
 

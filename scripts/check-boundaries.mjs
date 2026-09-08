@@ -55,11 +55,10 @@ for (const [file, text] of files) {
           !specifier.startsWith('@traptitech/traq-markdown-it'),
           `${file}: use internal relative imports`
         )
-        if (specifier.startsWith('markdown-it/'))
-          assert(
-            file.startsWith('src/core/'),
-            `${file}: token backend stays in core`
-          )
+        assert(
+          !/^markdown-it(?:\/|$)/.test(specifier),
+          `${file}: rendering must not depend on markdown-it`
+        )
         if (
           file.startsWith('src/core/') &&
           specifier.startsWith('@traq-markdown-parser/traq/')

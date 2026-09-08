@@ -1,6 +1,6 @@
 import type { Options } from './index.js'
 
-import { escapeHtml } from '../core/tokens.js'
+import { escapeHtml } from '../core/html.js'
 import { validateLink } from '../commonmark/policy.js'
 import { animeEffects, sizeEffects } from './stamp-effects.js'
 

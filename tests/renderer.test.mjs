@@ -192,3 +192,32 @@ test('CommonMark owns link policy and rejects malformed known payloads', () => {
     /Invalid render payload/
   )
 })
+
+test('direct HTML rendering escapes attributes, image text, and fence info', t => {
+  const parser = commonParser()
+  t.after(() => parser.dispose())
+  const view = html.renderer(
+    common.preset({ linkAttributes: { title: '"<&' } })
+  )
+  assert.equal(
+    view.renderInline(parser.parseInline('[x](/url)')),
+    '<a href="/url" title="&quot;&lt;&amp;">x</a>'
+  )
+  assert.throws(
+    () => common.plugin({ linkAttributes: { 'x onclick': 'bad' } }),
+    /Invalid HTML attribute/
+  )
+  assert.equal(
+    view.renderInline(parser.parseInline('![**bold** `code` &quot;](/image)')),
+    '<img src="/image" alt="bold code &quot;">'
+  )
+  assert.equal(
+    view.render(parser.parse('```a\\+b&quot;\n<&\n```')),
+    '<pre><code class="language-a+b&quot;">&lt;&amp;\n</code></pre>\n'
+  )
+  const extended = html.renderer(traq.v1.html({ validateImage: () => true }))
+  assert.equal(
+    extended.renderInline(parser.parseInline('![日本語](/image)')),
+    '<img src="/image" alt="日本語">'
+  )
+})

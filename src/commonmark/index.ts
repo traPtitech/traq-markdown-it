@@ -6,23 +6,47 @@ export interface Options {
   highlight?(code: string, language: string): string
   linkAttributes?: Readonly<Record<string, string>>
 }
+import { decodeHTMLStrict } from 'entities'
+import type { Node } from '../core/types.js'
 import { names, isKnownNode } from '@traq-markdown-parser/traq/commonmark/nodes'
-import {
-  token,
-  pair,
-  inlineToken,
-  tokenHandler,
-  renderTokens,
-  checked
-} from '../core/tokens.js'
+import { attributes, escapeHtml, checked } from '../core/html.js'
 import { Plugin as Declaration } from '../core/definitions.js'
 import { Plugin } from '../core/plugin.js'
 import { PresetBuilder } from '../core/preset.js'
 import { validateLink as defaultPolicy } from './policy.js'
-import { listChildren } from './list.js'
 
 const declaration = Declaration.group('commonmark').new('core')
 export { names as nodes }
+function tightList(node?: Node) {
+  return (
+    !!node && isKnownNode(node) && node.kind === names.List && node.data.tight
+  )
+}
+function imageText(nodes: Node[] = [], source: string): string {
+  return nodes
+    .map(node => {
+      if (!isKnownNode(node))
+        return new TextDecoder().decode(
+          new TextEncoder()
+            .encode(source)
+            .subarray(node.span.start, node.span.end)
+        )
+      switch (node.kind) {
+        case names.Text:
+          return node.data.value
+        case names.HtmlInline:
+          return node.data.literal
+        case names.Softbreak:
+        case names.Hardbreak:
+          return '\n'
+        case names.InlineCode:
+          return node.data.literal
+        default:
+          return imageText(node.children, source)
+      }
+    })
+    .join('')
+}
 export function plugin({
   validateLink = defaultPolicy,
   validateImage = validateLink,
@@ -30,202 +54,188 @@ export function plugin({
   highlight,
   linkAttributes = {}
 }: Options = {}) {
-  const attributes = Object.entries(linkAttributes)
+  const linkAttrs = attributes(Object.entries(linkAttributes))
   const result = new Plugin(declaration)
   result.on(
     names.Text,
-    tokenHandler(
-      checked(names.Text, isKnownNode, n => [
-        token('text', '', 0, n.data.value)
-      ])
-    )
+    checked(names.Text, isKnownNode, n => escapeHtml(n.data.value))
   )
   result.on(
     names.InlineCode,
-    tokenHandler(
-      checked(names.InlineCode, isKnownNode, n => [
-        token('code_inline', 'code', 0, n.data.literal)
-      ])
+    checked(
+      names.InlineCode,
+      isKnownNode,
+      n => '<code>' + escapeHtml(n.data.literal) + '</code>'
     )
   )
   result.on(
     names.Softbreak,
-    tokenHandler(
-      checked(names.Softbreak, isKnownNode, () => [
-        token(breaks ? 'hardbreak' : 'softbreak', 'br')
-      ])
-    )
+    checked(names.Softbreak, isKnownNode, () => (breaks ? '<br>\n' : '\n'))
   )
   result.on(
     names.Hardbreak,
-    tokenHandler(
-      checked(names.Hardbreak, isKnownNode, () => [token('hardbreak', 'br')])
-    )
+    checked(names.Hardbreak, isKnownNode, () => '<br>\n')
   )
   result.on(
     names.Emphasis,
-    tokenHandler(
-      checked(names.Emphasis, isKnownNode, (n, ctx) =>
-        pair('em', 'em', ctx.inline(n.children))
-      )
+    checked(
+      names.Emphasis,
+      isKnownNode,
+      (n, ctx) => '<em>' + ctx.inline(n.children) + '</em>'
     )
   )
   result.on(
     names.Strong,
-    tokenHandler(
-      checked(names.Strong, isKnownNode, (n, ctx) =>
-        pair('strong', 'strong', ctx.inline(n.children))
-      )
+    checked(
+      names.Strong,
+      isKnownNode,
+      (n, ctx) => '<strong>' + ctx.inline(n.children) + '</strong>'
     )
   )
   result.on(
     names.Link,
-    tokenHandler(
-      checked(names.Link, isKnownNode, (n, ctx) => {
-        if (!validateLink(n.data.destination)) return ctx.inline(n.children)
-        const attrs: [string, string][] = [
-          ['href', n.data.destination],
-          ...attributes
-        ]
-        if (n.data.title !== null) attrs.push(['title', n.data.title])
-        return pair('link', 'a', ctx.inline(n.children), {
-          attrs,
-          markup: n.data.form === 'explicit' ? '' : n.data.form
-        })
-      })
-    )
+    checked(names.Link, isKnownNode, (n, ctx) => {
+      const content = ctx.inline(n.children)
+      if (!validateLink(n.data.destination)) return content
+      return (
+        '<a' +
+        attributes([['href', n.data.destination]]) +
+        linkAttrs +
+        (n.data.title === null ? '' : attributes([['title', n.data.title]])) +
+        '>' +
+        content +
+        '</a>'
+      )
+    })
   )
   result.on(
     names.Image,
-    tokenHandler(
-      checked(names.Image, isKnownNode, (n, ctx) => {
-        if (!validateImage(n.data.destination)) return ctx.fallback(n)
-        const t = token('image', 'img', 0, n.data.label_source)
-        t.attrs = [
+    checked(names.Image, isKnownNode, (n, ctx) => {
+      if (!validateImage(n.data.destination)) return ctx.fallback(n)
+      return (
+        '<img' +
+        attributes([
           ['src', n.data.destination],
-          ['alt', '']
-        ]
-        if (n.data.title !== null) t.attrs.push(['title', n.data.title])
-        t.children = ctx.inline(n.children)
-        return [t]
-      })
-    )
+          ['alt', imageText(n.children, ctx.source)]
+        ]) +
+        (n.data.title === null ? '' : attributes([['title', n.data.title]])) +
+        '>'
+      )
+    })
   )
   result.on(
     names.Paragraph,
-    tokenHandler(
-      checked(names.Paragraph, isKnownNode, (n, ctx) =>
-        pair('paragraph', 'p', [inlineToken(ctx.inline(n.children))], {
-          block: true
-        })
-      )
-    )
+    checked(names.Paragraph, isKnownNode, (n, ctx) => {
+      const content = ctx.inline(n.children)
+      return ctx.ancestors.at(-1)?.kind === names.ListItem &&
+        tightList(ctx.ancestors.at(-2))
+        ? content
+        : '<p>' + content + '</p>\n'
+    })
   )
   result.on(
     names.Heading,
-    tokenHandler(
-      checked(names.Heading, isKnownNode, (n, ctx) =>
-        pair(
-          'heading',
-          `h${n.data.level}`,
-          [inlineToken(ctx.inline(n.children))],
-          {
-            block: true
-          }
-        )
-      )
+    checked(
+      names.Heading,
+      isKnownNode,
+      (n, ctx) =>
+        '<h' +
+        n.data.level +
+        '>' +
+        ctx.inline(n.children) +
+        '</h' +
+        n.data.level +
+        '>\n'
     )
   )
   result.on(
     names.Blockquote,
-    tokenHandler(
-      checked(names.Blockquote, isKnownNode, (n, ctx) =>
-        pair('blockquote', 'blockquote', ctx.blocks(n.children), {
-          block: true,
-          markup: '>'
-        })
-      )
+    checked(
+      names.Blockquote,
+      isKnownNode,
+      (n, ctx) =>
+        '<blockquote>' +
+        (n.children?.length ? '\n' : '') +
+        ctx.blocks(n.children) +
+        '</blockquote>\n'
     )
   )
   result.on(
     names.List,
-    tokenHandler(
-      checked(names.List, isKnownNode, (n, ctx) =>
-        pair(
-          n.data.ordered ? 'ordered_list' : 'bullet_list',
-          n.data.ordered ? 'ol' : 'ul',
-          listChildren(n, ctx),
-          {
-            block: true,
-            attrs:
-              n.data.ordered && n.data.start !== 1
-                ? [['start', String(n.data.start)]]
-                : null
-          }
-        )
+    checked(names.List, isKnownNode, (n, ctx) => {
+      const tag = n.data.ordered ? 'ol' : 'ul'
+      const attrs =
+        n.data.ordered && n.data.start !== 1
+          ? attributes([['start', String(n.data.start)]])
+          : ''
+      return (
+        '<' + tag + attrs + '>\n' + ctx.blocks(n.children) + '</' + tag + '>\n'
       )
-    )
+    })
   )
   result.on(
     names.ListItem,
-    tokenHandler(
-      checked(names.ListItem, isKnownNode, (n, ctx) =>
-        pair('list_item', 'li', ctx.blocks(n.children), {
-          block: true,
-          markup: n.data.marker.slice(-1),
-          info: n.data.marker.slice(0, -1)
+    checked(names.ListItem, isKnownNode, (n, ctx) => {
+      const children = n.children ?? []
+      const tight = tightList(ctx.ancestors.at(-1))
+      const content = children
+        .map((child, i) => {
+          const separator =
+            tight &&
+            i > 0 &&
+            children[i - 1].kind === names.Paragraph &&
+            child.kind !== names.CodeBlock
+              ? '\n'
+              : ''
+          return separator + ctx.blocks([child])
         })
+        .join('')
+      return (
+        '<li>' +
+        (children.length && !(tight && children[0].kind === names.Paragraph)
+          ? '\n'
+          : '') +
+        content +
+        '</li>\n'
       )
-    )
+    })
   )
   result.on(
     names.CodeBlock,
-    tokenHandler(
-      checked(names.CodeBlock, isKnownNode, n => {
-        const t = token(
-          n.data.fenced ? 'fence' : 'code_block',
-          'code',
-          0,
-          n.data.literal
-        )
-        Object.assign(t, { info: n.data.info, block: true })
-        if (highlight && n.data.fenced)
-          return [token('html_block', '', 0, renderTokens([t], { highlight }))]
-        return [t]
-      })
-    )
+    checked(names.CodeBlock, isKnownNode, n => {
+      const language = n.data.fenced
+        ? (n.data.info ?? '')
+            .replace(
+              /\\([!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~])|&(?:#[xX][0-9a-fA-F]+|#\d+|[a-zA-Z][a-zA-Z0-9]+);/g,
+              (match, escaped) => escaped ?? decodeHTMLStrict(match)
+            )
+            .trim()
+            .split(/\s+/)[0]
+        : ''
+      const content =
+        (n.data.fenced && highlight?.(n.data.literal, language)) ||
+        escapeHtml(n.data.literal)
+      if (content.startsWith('<pre')) return content + '\n'
+      const attrs = language
+        ? attributes([['class', 'language-' + language]])
+        : ''
+      return '<pre><code' + attrs + '>' + content + '</code></pre>\n'
+    })
   )
   result.on(
     names.ThematicBreak,
-    tokenHandler(
-      checked(names.ThematicBreak, isKnownNode, n => {
-        const t = token('hr', 'hr')
-        Object.assign(t, { block: true, markup: n.data.marker })
-        return [t]
-      })
-    )
+    checked(names.ThematicBreak, isKnownNode, () => '<hr>\n')
   )
   result.on(
     names.HtmlInline,
-    tokenHandler(
-      checked(names.HtmlInline, isKnownNode, n => [
-        token('text', '', 0, n.data.literal)
-      ])
-    )
+    checked(names.HtmlInline, isKnownNode, n => escapeHtml(n.data.literal))
   )
   result.on(
     names.HtmlBlock,
-    tokenHandler(
-      checked(names.HtmlBlock, isKnownNode, n =>
-        pair(
-          'escaped_html',
-          'p',
-          [inlineToken([token('text', '', 0, n.data.literal)])],
-          {
-            block: true
-          }
-        )
-      )
+    checked(
+      names.HtmlBlock,
+      isKnownNode,
+      n => '<p>' + escapeHtml(n.data.literal) + '</p>\n'
     )
   )
   return result
