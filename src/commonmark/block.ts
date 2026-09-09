@@ -13,6 +13,16 @@ function tightList(node?: Node) {
 
 type BlockOptions = Pick<Options, 'highlight'>
 
+function codeLanguage(info: string) {
+  return info
+    .replace(
+      /\\([!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~])|&(?:#[xX][0-9a-fA-F]+|#\d+|[a-zA-Z][a-zA-Z0-9]+);/g,
+      (match, escaped) => escaped ?? decodeHTMLStrict(match)
+    )
+    .trim()
+    .split(/\s+/)[0]
+}
+
 export function registerBlockHandlers(
   result: Plugin,
   { highlight }: BlockOptions
@@ -110,15 +120,7 @@ export function registerBlockHandlers(
   result.on(
     names.CodeBlock,
     checked(names.CodeBlock, isKnownNode, n => {
-      const language = n.data.fenced
-        ? (n.data.info ?? '')
-            .replace(
-              /\\([!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~])|&(?:#[xX][0-9a-fA-F]+|#\d+|[a-zA-Z][a-zA-Z0-9]+);/g,
-              (match, escaped) => escaped ?? decodeHTMLStrict(match)
-            )
-            .trim()
-            .split(/\s+/)[0]
-        : ''
+      const language = n.data.fenced ? codeLanguage(n.data.info ?? '') : ''
       const content =
         (n.data.fenced && highlight?.(n.data.literal, language)) ||
         escapeHtml(n.data.literal)

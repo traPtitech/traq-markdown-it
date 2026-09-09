@@ -31,6 +31,10 @@ function imageText(nodes: Node[] = [], source: string): string {
     .join('')
 }
 
+function titleAttribute(title: string | null) {
+  return title === null ? '' : attributes([['title', title]])
+}
+
 type InlineOptions = Required<
   Pick<Options, 'validateLink' | 'validateImage' | 'breaks' | 'linkAttributes'>
 >
@@ -94,7 +98,7 @@ export function registerInlineHandlers(
         '<a' +
         attributes([['href', n.data.destination]]) +
         linkAttrs +
-        (n.data.title === null ? '' : attributes([['title', n.data.title]])) +
+        titleAttribute(n.data.title) +
         '>' +
         content +
         '</a>'
@@ -113,7 +117,7 @@ export function registerInlineHandlers(
           ['src', n.data.destination],
           ['alt', imageText(n.children, ctx.source)]
         ]) +
-        (n.data.title === null ? '' : attributes([['title', n.data.title]])) +
+        titleAttribute(n.data.title) +
         '>'
       )
     })
