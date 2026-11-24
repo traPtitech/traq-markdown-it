@@ -32,8 +32,8 @@ export class InlineRenderer extends Renderer {
         .map(([key, val]) => `${escapeHtml(key)}="${escapeHtml(val)}"`)
         .join(' ')
       return `<a href="${
-        token.attrGet('src') ?? ''
-      }" ${attrsStr} data-is-image>${token.content}</a>`
+        escapeHtml(token.attrGet('src') ?? '')
+      }" ${attrsStr} data-is-image>${escapeHtml(token.content)}</a>`
     }
 
     this.blockRules.code_block = this.rules.code_inline

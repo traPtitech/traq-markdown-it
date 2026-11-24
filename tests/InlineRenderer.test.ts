@@ -154,6 +154,12 @@ describe('InlineRenderer', () => {
       expected: '<a href="url" title="title" data-is-image>image</a>'
     },
     {
+      name: 'escapes image text and URL for HTML',
+      input: '![A & B](https://example.org/image?a=1&b=2)',
+      expected:
+        '<a href="https://example.org/image?a=1&amp;b=2"  data-is-image>A &amp; B</a>'
+    },
+    {
       name: 'can render table',
       input: dedent`
         | 1 | 2 |
