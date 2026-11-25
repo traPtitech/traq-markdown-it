@@ -46,7 +46,7 @@
     "@traptitech/markdown-it-katex": "3.6.0",
     "@traptitech/markdown-it-spoiler": "1.1.6",
     "highlight.js": "11.11.1",
-    "katex": "0.16.28",
+    "katex": "0.18.2",
     "markdown-it": "14.3.3",
     "markdown-it-container": "4.0.0",
     "markdown-it-image-filter": "1.1.0",
